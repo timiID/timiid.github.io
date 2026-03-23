@@ -95,7 +95,7 @@ function applyFilter() {
         </button>
         <button @click="applyFilter" 
           class="flex-[2] lg:flex-none px-10 py-5 bg-orange-600 rounded-2xl transition-all duration-500 hover:scale-105 active:scale-95 shadow-[0_15px_40px_rgba(234,88,12,0.3)]">
-          <span class="text-xs font-[1000] uppercase tracking-[0.2em] text-white">Apply Parameters</span>
+          <span class="text-xs font-[1000] uppercase tracking-[0.2em] text-white">Apply Filters</span>
         </button>
       </div>
     </div>
