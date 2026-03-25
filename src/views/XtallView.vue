@@ -40,7 +40,7 @@
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Crysta (Xtall) Bahasa Indonesia</span>
           </h2>
           <p :class="['mt-2 text-sm md:text-base leading-relaxed font-medium', isDark ? 'text-slate-400' : 'text-slate-600']">
-            Selamat datang di database Xtall Timi DB. Gunakan fitur pencarian di bawah untuk menemukan xtall yang cocok.
+            Selamat datang di halaman Xtall Timi DB. Gunakan fitur pencarian di bawah untuk menemukan xtall yang cocok.
           </p>
         </div>
       </section>
