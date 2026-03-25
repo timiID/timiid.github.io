@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+
+import HomeView from '../views/HomeView.vue'
 import ListBag from '../views/ListBag.vue'
 import MainQuest from '../views/MainQuest.vue'
 import XtallView from '../views/XtallView.vue'
@@ -7,15 +9,22 @@ import CalculatorMQ from '../views/CalculatorMQ.vue'
 import BSCalculator from '../views/BSCalculator.vue'
 import XtallDetail from '../views/XtallDetail.vue'
 import XtallAdvancedSearch from '../views/XtallAdvancedSearch.vue'
+import EventList from '../views/EventList.vue'
+import LevelingGuide from '../views/LevelingGuide.vue'
 
 const routes = [
   {
-    path: '/',
+      path: '/',
+      name: 'home',
+      component: HomeView
+    },
+  {
+    path: '/bag-list',
     name: 'bag',
     component: ListBag
   },
   {
-    path: '/mq',
+    path: '/mq-list',
     name: 'mainquest',
     component: MainQuest
   },
@@ -46,7 +55,18 @@ const routes = [
     name: 'xtall-detail',
     component: XtallDetail,
     props: true
-  }
+  },
+  // ================= OTHER =================
+  {
+      path: '/event',
+      name: 'Event-List',
+      component: EventList
+    },
+    {
+      path: '/lvling',
+      name: 'Leveling-Guide',
+      component: LevelingGuide
+    },
 ]
 
 const router = createRouter({

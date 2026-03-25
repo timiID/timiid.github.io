@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import AppLayout from './layouts/AppLayout.vue'
+import AppLayout from './Layouts/AppLayout.vue'
 
 const isDark = ref(false)
 
