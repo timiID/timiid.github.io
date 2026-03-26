@@ -22,13 +22,13 @@ const navLinks = {
 };
 
 // DATA BACKGROUND (Efek Bintang & Debu)
-const stars = Array.from({ length: 140 }, (_, i) => ({
+const stars = Array.from({ length: 90 }, (_, i) => ({
   id: i, size: Math.random() * 7 + 5 + 'px', top: Math.random() * 100 + '%',
-  left: Math.random() * 100 + '%', delay: Math.random() * 15 + 's'
+  left: Math.random() * 100 + '%', delay: Math.random() * 7 + 's'
 }))
 const dusts = Array.from({ length: 40 }, (_, i) => ({
   id: i, size: Math.random() * 2 + 1 + 'px', top: Math.random() * 100 + '%',
-  left: Math.random() * 100 + '%', duration: Math.random() * 15 + 10 + 's', delay: Math.random() * 10 + 's'
+  left: Math.random() * 100 + '%', duration: Math.random() * 10 + 7 + 's', delay: Math.random() * 10 + 's'
 }))
 
 const setItemRef = (el, path) => {
