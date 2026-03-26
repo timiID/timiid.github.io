@@ -397,7 +397,7 @@ const eventList = [
   { 
     title: { en: 'Megiston', id: 'Megiston' }, 
     icon: '⚔️', 
-    monthKeys: ['12'],
+    monthKeys: ['13'],
     period: { en: 'End/ Special Event', id: 'Event Akhir/Spesial' }, 
     desc: { en: 'The brutal combat tournament by hero Megiston.', id: 'Turnamen tempur brutal oleh pahlawan Megiston.' },
     tags: { en: ['Tournament'], id: ['Turnamen'] }
