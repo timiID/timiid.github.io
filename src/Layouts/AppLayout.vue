@@ -23,10 +23,10 @@ const navLinks = {
 
 // DATA BACKGROUND (Efek Bintang & Debu)
 const stars = Array.from({ length: 90 }, (_, i) => ({
-  id: i, size: Math.random() * 7 + 5 + 'px', top: Math.random() * 100 + '%',
+  id: i, size: Math.random() * 4 + 3 + 'px', top: Math.random() * 100 + '%',
   left: Math.random() * 100 + '%', delay: Math.random() * 7 + 's'
 }))
-const dusts = Array.from({ length: 40 }, (_, i) => ({
+const dusts = Array.from({ length: 100 }, (_, i) => ({
   id: i, size: Math.random() * 2 + 1 + 'px', top: Math.random() * 100 + '%',
   left: Math.random() * 100 + '%', duration: Math.random() * 10 + 7 + 's', delay: Math.random() * 10 + 's'
 }))

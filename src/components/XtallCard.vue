@@ -29,15 +29,15 @@
     </div>
 
     <div class="lg:col-span-6">
-      <div
-        :class="[
-          'h-full relative rounded-[2.5rem] overflow-hidden transition-all duration-500',
-          'ring-1 backdrop-blur-xl shadow-2xl',
-          isDark
-            ? 'bg-white/[0.03] ring-white/10 shadow-black/50'
-            : 'bg-white/80 ring-slate-200 shadow-slate-300/50'
-        ]"
-      >
+  <div
+    :class="[
+      'h-full relative rounded-[2.5rem] overflow-hidden transition-all duration-500',
+      'ring-1 backdrop-blur-md shadow-2xl', /* backdrop-blur dikurangi dikit biar transparan bening */
+      isDark
+        ? 'bg-purple-900/10 ring-white/10 shadow-black/50'  /* Dark: Lebih transparan (40%) */
+        : 'bg-white/40 ring-slate-200 shadow-slate-300/50' /* Light: Lebih transparan (40%) */
+    ]"
+  >
         <div class="p-6 md:p-10 flex flex-col md:flex-row gap-8 items-start">
           <div class="shrink-0 mx-auto md:mx-0">
             <div
@@ -56,17 +56,18 @@
             </div>
           </div>
 
-          <div class="flex-1 space-y-5 w-full">
-            <h3
-              :class="[
-                'text-2xl md:text-4xl font-[1000] uppercase italic tracking-tighter bg-clip-text text-transparent bg-gradient-to-r',
-                isDark 
-                  ? 'from-white via-cyan-200 to-blue-300' 
-                  : 'from-indigo-900 via-purple-800 to-blue-900'
-              ]"
-            >
-              {{ xtall.name }}
-            </h3>
+          <div class="flex-1 space-y-5 w-full min-w-0"> 
+  <h3
+    :class="[
+      'text-2xl md:text-4xl font-[1000] uppercase italic tracking-tighter bg-clip-text text-transparent bg-gradient-to-r',
+      'break-words leading-none pb-2', /* TAMBAHKAN break-words DAN leading-none */
+      isDark 
+        ? 'from-white via-cyan-200 to-blue-300' 
+        : 'from-indigo-900 via-purple-800 to-blue-900'
+    ]"
+  >
+    {{ xtall.name }}
+  </h3>
 
             <div
               :class="[
@@ -97,8 +98,8 @@
                         : stat.includes('-')
                           ? 'text-rose-600'
                           : isDark
-                            ? 'bg-clip-text text-transparent bg-gradient-to-r from-slate-100 to-slate-400'
-                            : 'bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-indigo-800'
+                            ? 'bg-clip-text text-transparent bg-gradient-to-b from-slate-100 to-slate-400'
+                            : 'bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-indigo-800'
                     ]"
                   >
                     {{ stat }}

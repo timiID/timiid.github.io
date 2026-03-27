@@ -1,15 +1,36 @@
 <template>
-  <div :class="['min-h-screen relative overflow-hidden font-sans transition-all duration-700', isDark ? 'bg-[#020617] text-slate-200' : 'bg-slate-50 text-slate-900']">
+  <div :class="['font-sans transition-all duration-700 w-full', 
+                isDark ? 'text-slate-200' : 'text-slate-900']">  
     
-    <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
       <div :class="['absolute inset-0 bg-[url(\'/images/logo.png\')] bg-center bg-no-repeat bg-[length:60%_auto] opacity-[0.03]', isDark ? 'brightness-200' : 'invert opacity-[0.02]']"></div>
-      <div v-if="isDark" class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full animate-pulse"></div>
-      <div v-if="isDark" class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[120px] rounded-full animate-pulse"></div>
     </div>
 
     <div v-if="xtall" class="relative z-10 max-w-5xl mx-auto p-6 md:p-20 animate-fade-in">
       
-      <button @click="$router.push('/xtall')" class="group flex items-center gap-3 mb-10 transition-all hover:-translate-x-2">
+      <button @click="toggleFavorite" 
+  :class="['absolute top-[60px] right-6 px-8 py-3.5 rounded-4xl flex items-center gap-3 transition-all duration-500 z-20 font-black uppercase italic text-[11px] tracking-[0.15em] border-2 shadow-lg group overflow-hidden', 
+    isFavorite 
+      ? (isDark 
+          ? 'bg-gradient-to-r from-slate-800 to-slate-900 border-white/10 text-slate-400 shadow-black/40' 
+          : 'bg-gradient-to-r from-slate-100 to-slate-200 border-slate-300 text-slate-500 shadow-slate-200')
+      : (isDark 
+          ? 'bg-gradient-to-r from-red-600 to-rose-700 border-red-500/50 text-white shadow-red-900/20' 
+          : 'bg-gradient-to-r from-red-500 to-red-600 border-red-400 text-white shadow-red-200')
+  ]">
+
+  <svg :class="['w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-125', 
+               isFavorite ? (isDark ? 'text-yellow-500' : 'text-yellow-400') : 'text-white']" 
+       fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+  </svg>
+
+  <span class="relative z-10">{{ isFavorite ? 'Saved' : 'Favorite' }}</span>
+  
+  <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+</button>
+
+      <button @click="$router.push('/xtall')" class="group flex items-center gap-3 mb-5 transition-all hover:-translate-x-2">
         <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
           <svg class="w-5 h-5 text-cyan-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"/></svg>
         </div>
@@ -17,15 +38,11 @@
       </button>
 
       <div class="grid lg:grid-cols-12 gap-12 items-start">
-        
         <div class="lg:col-span-5 space-y-2 animate-slide-right">
           <div :class="['relative aspect-square rounded-[3.5rem] border-4 flex items-center justify-center overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition-all duration-700 group',
             isDark ? 'bg-slate-900 border-white/20' : 'bg-white border-slate-300']">
-            
             <div :class="['absolute inset-0 opacity-30 blur-3xl animate-pulse transition-colors duration-700', getGlowColor(xtall.type)]"></div>
-            
             <img :src="getIconPath(xtall.type)" class="relative w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-700 group-hover:scale-110 animate-float" />
-            
             <div :class="['absolute bottom-8 px-6 py-2 rounded-2xl border-2 font-black text-[10px] tracking-widest uppercase shadow-2xl whitespace-nowrap transition-all duration-500 group-hover:scale-110', getBadgeColor(xtall.type)]">
               {{ formatBadgeText(xtall.type) }}
             </div>
@@ -37,16 +54,15 @@
             <p :class="['text-xs font-black uppercase tracking-[0.4em] mb-2 drop-shadow-sm', getLabelColor(xtall.name)]">
               {{ formatBadgeText(xtall.type) }}
             </p>            
-                <h1 :class="[
-  'text-5xl md:text-7xl font-[1000] tracking-tighter italic uppercase leading-none mb-4 drop-shadow-2xl transition-all duration-500 brightness-100 saturate-70',
-  getLabelColor(xtall.type),
-  isDark ? '[-webkit-text-stroke:1px_white]' : '[-webkit-text-stroke:1px_black]'
-]"
-:style="{
-  /* Membuat efek gradient menggelap ke bawah tanpa merusak stroke */
-  maskImage: 'linear-gradient(to bottom, black 10%, rgba(0,0,0,0.5) 100%)',
-  webkitMaskImage: 'linear-gradient(to bottom, black 10%, rgba(0,0,0,0.5) 100%)'
-}">
+            <h1 :class="[
+    'text-4xl md:text-6xl lg:text-7xl font-[1000] tracking-tighter italic uppercase leading-[0.9] mb-4 drop-shadow-2xl transition-all duration-500 break-words max-w-full', 
+    getLabelColor(xtall.type), 
+    isDark ? '[-webkit-text-stroke:1px_white]' : '[-webkit-text-stroke:1px_black]'
+  ]"
+  :style="{ 
+    maskImage: 'linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 100%)', 
+    webkitMaskImage: 'linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 100%)' 
+  }">
   {{ xtall.name }}
 </h1>
             <div class="flex items-center gap-4">
@@ -57,12 +73,10 @@
 
           <div :class="['p-8 md:p-12 rounded-[3rem] border-2 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] backdrop-blur-3xl relative overflow-hidden transition-all hover:border-cyan-500/50',
             isDark ? 'bg-slate-900/80 border-white/10 shadow-black' : 'bg-white border-slate-200 shadow-slate-300']">
-            
             <div class="absolute top-0 right-0 p-8 text-8xl opacity-[0.05] grayscale pointer-events-none animate-spin-slow">✨</div>
             <h3 class="text-xs font-black uppercase tracking-[0.5em] text-slate-500 mb-8 flex items-center gap-3">
               <span class="w-2 h-2 bg-cyan-500 rounded-full animate-ping"></span> Status/ Effect
             </h3>
-
             <div class="space-y-5">
               <div v-for="(stat, idx) in parseStats(xtall.view)" :key="idx" 
                 class="flex items-start gap-4 group/stat animate-fade-in" 
@@ -85,7 +99,6 @@
                 <span class="text-cyan-500 group-hover:-translate-x-2 transition-transform">←</span> {{ previousEvo.name }}
               </p>
             </div>
-
             <div v-if="nextEvo" @click="goToXtall(nextEvo.code)"
               :class="['group p-6 rounded-[2.5rem] border-2 cursor-pointer transition-all duration-500 hover:-translate-y-2 shadow-xl', 
               isDark ? 'bg-slate-900 border-white/5 hover:border-purple-500/50 hover:shadow-purple-900/20' : 'bg-white border-slate-200 hover:border-purple-500 shadow-slate-200']">
@@ -95,12 +108,11 @@
               </p>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
-    <div v-else class="h-screen flex items-center justify-center">
+    <div v-else class="py-60 flex items-center justify-center">
        <div class="relative w-24 h-24">
          <div class="absolute inset-0 border-4 border-cyan-500/20 rounded-full"></div>
          <div class="absolute inset-0 border-4 border-t-cyan-500 rounded-full animate-spin"></div>
@@ -110,7 +122,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { crystalData } from '../data/store.js';
 // Crysta Biasa
@@ -127,6 +139,21 @@ import armorEnhancerCrystas from "@/assets/icons/enhance_armor_crysta.png";
 import additionalEnhancerCrystas from "@/assets/icons/enhance_additional_crysta.png";
 import specialEnhancerCrystas from "@/assets/icons/enhace_special_crysta.png";
 
+// State untuk menyimpan daftar ID favorit
+const favorites = ref(JSON.parse(localStorage.getItem('xtall_favs') || '[]'));
+
+// Cek apakah Xtall ini sudah difavoritkan
+const isFavorite = computed(() => favorites.value.includes(String(props.id)));
+
+const toggleFavorite = () => {
+  const idStr = String(props.id);
+  if (isFavorite.value) {
+    favorites.value = favorites.value.filter(favId => favId !== idStr);
+  } else {
+    favorites.value.push(idStr);
+  }
+  localStorage.setItem('xtall_favs', JSON.stringify(favorites.value));
+};
 
 const props = defineProps(['id', 'isDark']);
 const router = useRouter();
@@ -182,7 +209,15 @@ const formatBadgeText = (type) => {
 const previousEvo = computed(() => xtall.value?.link ? crystalData.find(c => String(c.code) === String(xtall.value.link)) : null);
 const nextEvo = computed(() => xtall.value ? crystalData.find(c => String(c.link) === String(xtall.value.code)) : null);
 const goToXtall = (code) => { router.push(`/xtall/${code}`); };
-watch(() => props.id, () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+watch(() => props.id, () => {
+  // Cari container yang lo kasih overflow-y-auto di App.vue
+  const container = document.getElementById('app-container'); 
+  if (container) {
+    container.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
 const parseStats = (view) => view ? (Array.isArray(view) ? view : view.split(/,|\n/).map(s => s.trim()).filter(s => s)) : [];
 
 const getIconPath = (type) => {

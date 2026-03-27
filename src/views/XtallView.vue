@@ -113,57 +113,20 @@
 </section>
 
       <main class="space-y-6 relative z-10 pb-20 overflow-visible">
-        <div v-for="(xtall, idx) in paginatedResults" :key="xtall.code" 
-          class="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-stretch animate-entry"
-          :style="{ animationDelay: (idx * 70) + 'ms' }">
-          
-          <div class="lg:col-span-3 flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-visible pb-2 scroll-hide"> 
-            <div v-if="getBaseFor(xtall)" @click="setSearch(getBaseFor(xtall).name)"
-              :class="['flex-shrink-0 w-[200px] lg:w-full p-5 rounded-[1.5rem] border-2 cursor-pointer transition-all shadow-xl relative overflow-hidden group',
-              isDark ? 'bg-slate-900/30 border-white/10 hover:border-cyan-500/50' : 'bg-white border-slate-200 hover:border-cyan-400']">
-              <div class="absolute left-0 top-0 h-full w-2 bg-gradient-to-b from-sky-400 to-blue-600 opacity-40"></div>
-              <span class="text-[9px] font-black uppercase text-cyan-500 tracking-widest">Previous</span>
-              <p :class="['text-xs font-bold truncate', isDark ? 'text-slate-300' : 'text-slate-700']">{{ getBaseFor(xtall).name }}</p>
-            </div>
-            <div v-else class="hidden lg:block flex-1 opacity-5 border-l-2 border-slate-500 ml-4"></div>
-          </div>
-
-          <div class="lg:col-span-6 relative">
-            <div :class="['h-full rounded-[2.5rem] border-2 transition-all shadow-2xl overflow-hidden',
-              isDark ? 'bg-[#0b1226]/90 border-white/10' : 'bg-white border-slate-200']">
-              <div class="p-6 md:p-10 flex flex-col md:flex-row gap-8 items-start">
-                <div :class="['w-24 h-24 md:w-32 md:h-32 rounded-[2.5rem] border-2 flex items-center justify-center shrink-0 mx-auto md:mx-0',
-                  isDark ? 'bg-slate-950 border-white/10' : 'bg-slate-50 border-slate-200']">
-                  <img :src="getIconPath(xtall)" class="w-16 h-16 md:w-20 md:h-20 object-contain" />
-                </div>
-                <div class="flex-1 w-full space-y-4">
-                  <h3 :class="['text-2xl md:text-3xl font-[1000] tracking-tighter uppercase italic', getLabelColor(xtall)]">{{ xtall.name }}</h3>
-                  <div :class="['p-5 rounded-3xl border-2', isDark ? 'bg-white/[0.02] border-white/5' : 'bg-slate-50 border-slate-100']">
-                    <div v-for="(stat, sIdx) in parseStats(xtall.view)" :key="sIdx" class="text-xs md:text-sm font-bold mb-1">
-                      <p :class="[stat.includes('Dengan') ? 'text-green-500 italic' : (stat.includes('-') ? 'text-red-500' : (isDark ? 'text-slate-300' : 'text-slate-600'))]">
-                        {{ stat }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-3 flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-visible pb-2 scroll-hide">
-            <template v-if="getEvoFor(xtall).length">
-              <div v-for="evo in getEvoFor(xtall)" :key="evo.code" @click="setSearch(evo.name)"
-                :class="['flex-shrink-0 w-[200px] lg:w-full p-5 rounded-[1.5rem] border-2 cursor-pointer transition-all shadow-xl relative overflow-hidden group',
-                isDark ? 'bg-slate-900/30 border-white/10 hover:border-purple-500/50' : 'bg-white border-slate-200 hover:border-purple-400']">
-                <div class="absolute right-0 top-0 h-full w-2 bg-gradient-to-b from-purple-400 to-yellow-700 opacity-40"></div>
-                <span class="text-[9px] font-black uppercase text-purple-500 tracking-widest block text-right">Next Upgrade</span>
-                <p :class="['text-xs font-bold truncate text-right', isDark ? 'text-slate-300' : 'text-slate-700']">{{ evo.name }}</p>
-              </div>
-            </template>
-            <div v-else class="hidden lg:block flex-1 opacity-5 border-r-2 border-slate-500 mr-4"></div>
-          </div>
-        </div>
-      </main>
+  <XtallCard 
+    v-for="(xtall, idx) in paginatedResults" 
+    :key="xtall.code"
+    :xtall="xtall"
+    :idx="idx"
+    :isDark="isDark"
+    :baseXtall="getBaseFor(xtall)"
+    :evoXtalls="getEvoFor(xtall)"
+    :iconPath="getIconPath(xtall)"
+    :labelColor="getLabelColor(xtall)"
+    :badgeColorClass="getBadgeColor(xtall.type)"
+    @set-search="setSearch"
+  />
+</main>
 
       <div v-if="totalPages > 1" class="flex justify-center gap-2 py-10">
         <button @click="currentPage--" :disabled="currentPage === 1" class="w-12 h-12 rounded-xl border-2 disabled:opacity-20">«</button>
@@ -190,6 +153,8 @@ import weaponCrystas from "@/assets/icons/crysta_senjata.jpg";
 import armorCrystas from "@/assets/icons/crysta_zirah.jpg";
 import additionalCrystas from "@/assets/icons/crysta_pelengkap.jpg";
 import specialCrystas from "@/assets/icons/crysta_tambahan.jpg";
+
+import XtallCard from '@/components/XtallCard.vue'
 
 // Enhancer (Crysta Upgrade/Up)
 // Sesuai permintaanmu: crysta_up.jpg digunakan untuk normalEnhancerCrystas
@@ -361,12 +326,12 @@ const getIconPath = (xtall) => {
 
 const getBadgeColor = (type) => {
   const map = { 
-    'NORMAL': 'bg-blue-500/10 text-blue-500 border-blue-500/40', 
-    'UPGRADE': 'bg-purple-500/10 text-purple-500 border-purple-500/40', 
+    'NORMAL': 'bg-blue-300/50 text-blue-500 border-blue-500/40', 
+    'UPGRADE': 'bg-gray-700/50 text-gray-500 border-gray-500/40', 
     'ADDITIONAL': 'bg-yellow-500/10 text-yellow-500 border-yellow-500/40', 
-    'WEAPON': 'bg-red-500/10 text-red-500 border-red-500/40', 
-    'ARMOR': 'bg-green-500/10 text-green-500 border-green-500/40', 
-    'SPECIAL': 'bg-pink-500/10 text-pink-500 border-pink-500/40' 
+    'WEAPON': 'bg-red-500/20 text-red-500 border-red-500/40', 
+    'ARMOR': 'bg-green-500/20 text-green-500 border-green-500/40', 
+    'SPECIAL': 'bg-purple-500/20 text-purple-500 border-purple-500/40' 
   };
   return map[type?.toUpperCase()] || 'bg-slate-500/10 text-slate-500 border-slate-500/40';
 };

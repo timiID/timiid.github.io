@@ -11,6 +11,8 @@ import XtallDetail from '../views/XtallDetail.vue'
 import XtallAdvancedSearch from '../views/XtallAdvancedSearch.vue'
 import EventList from '../views/EventList.vue'
 import LevelingGuide from '../views/LevelingGuide.vue'
+import Favorite from '../views/FavoriteView.vue'
+
 
 const routes = [
   {
@@ -66,6 +68,11 @@ const routes = [
       path: '/lvling',
       name: 'Leveling-Guide',
       component: LevelingGuide
+    },
+    {
+      path: '/favorite',
+      name: 'Favorite',
+      component: Favorite
     },
 ]
 
