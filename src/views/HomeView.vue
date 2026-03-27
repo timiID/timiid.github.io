@@ -1,6 +1,13 @@
 <script setup>
 import { useRouter } from 'vue-router';
 
+import normalCrystas from "@/assets/icons/crysta_normal.jpg";
+import weaponCrystas from "@/assets/icons/crysta_senjata.jpg";
+import armorCrystas from "@/assets/icons/crysta_zirah.jpg";
+import additionalCrystas from "@/assets/icons/crysta_pelengkap.jpg";
+import specialCrystas from "@/assets/icons/crysta_tambahan.jpg";
+import favoriteCrystaIcon from "@/assets/icons/crysta_favorite.png";
+
 import iconBag from '@/assets/iconfromhome/bag.png'
 import iconMq from '@/assets/iconfromhome/mq.png'
 import iconMqCalc from '@/assets/iconfromhome/mq_calc.png'
@@ -20,6 +27,24 @@ onMounted(() => {
   // Ambil data crystal yang ID-nya ada di favorit, limit 5 aja biar gak kepenuhan
   favoriteXtalls.value = crystalData.filter(c => favIds.includes(String(c.code))).slice(0, 5);
 });
+
+// --- TAMBAHKAN PROPS ISDARK ---
+const props = defineProps({
+  isDark: Boolean
+});
+
+// --- TAMBAHKAN FUNGSI INI ---
+const getIconPath = (type) => {
+  if (type && type.includes('Upgrade')) return favoriteCrystaIcon;
+  const icons = {
+    'Normal': normalCrystas,
+    'Senjata': weaponCrystas,
+    'Zirah': armorCrystas,
+    'Pelengkap': additionalCrystas,
+    'Tambahan': specialCrystas
+  };
+  return icons[type] || favoriteCrystaIcon;
+};
 
 const router = useRouter();
 
@@ -85,6 +110,12 @@ const other = [
   }
   ];
 
+onMounted(() => {
+  const favIds = JSON.parse(localStorage.getItem('xtall_favs') || '[]');
+  // Ambil maksimal 5 saja untuk di Home
+  favoriteXtalls.value = crystalData.filter(c => favIds.includes(String(c.code))).slice(0, 5);
+});
+
 const navigateTo = (path) => router.push(path);
 </script>
 
@@ -97,9 +128,9 @@ const navigateTo = (path) => router.push(path);
              class="w-32 h-32 md:w-48 md:h-48 object-cover drop-shadow-[0_0_30px_rgba(99,102,241,0.5)] animate-float-slow mb-6" />
         
         <h1 class="text-4xl md:text-6xl font-[800] italic uppercase tracking-tighter leading-none transition-all">
-      <span :class="text-white">TIMI </span>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
-        </h1>
+  <span :class="isDark ? 'text-white' : 'text-slate-900'">TIMI </span>
+  <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
+</h1>
         
         <p class="max-w-xl text-sm md:text-lg opacity-70 font-medium leading-relaxed italic uppercase tracking-widest">
           "Your ultimate companion for Toram Online adventures."
@@ -111,30 +142,45 @@ const navigateTo = (path) => router.push(path);
     </div>
 
     <div v-if="favoriteXtalls && favoriteXtalls.length > 0" class="w-full max-w-6xl mb-12 animate-slide-up">
-      <div class="flex items-center gap-6 mb-8 opacity-50">
-        <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-red-500 to-rose-500"></div>
-        <h2 class="font-black italic text-xl tracking-tighter uppercase shrink-0 text-rose-500">
-          Your Favorites
-        </h2>
-        <div class="h-[1px] flex-1 bg-gradient-to-r from-rose-500 via-red-500 to-transparent"></div>
-      </div>
+  
+  <div class="flex items-center justify-between mb-8 px-2">
+    <div class="flex items-center gap-4">
+      <h2 class="font-black italic text-xl tracking-tighter uppercase text-rose-500">
+        Your Favorites
+      </h2>
+      <div class="h-[2px] w-24 bg-gradient-to-r from-rose-500 to-transparent opacity-30"></div>
+    </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        <div v-for="fav in favoriteXtalls" :key="fav.code"
-             @click="navigateTo(`/xtall/${fav.code}`)"
-             class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <img :src="getIconPath(fav.type)" class="w-7 h-7 object-contain drop-shadow-md" />
-            </div>
-            <div class="text-left overflow-hidden">
-              <h4 class="text-[11px] font-black uppercase tracking-tight truncate">{{ fav.name }}</h4>
-              <p class="text-[8px] opacity-40 font-bold uppercase tracking-widest">{{ fav.type }}</p>
-            </div>
-          </div>
+    <button @click="navigateTo('/favorite')" 
+            :class="[
+              'group flex items-center gap-2 px-5 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all duration-300 shadow-lg active:scale-95',
+              isDark 
+                ? 'bg-rose-600 border-b-4 border-rose-800 text-white hover:bg-rose-500 hover:-translate-y-0.5' 
+                : 'bg-rose-500 border-b-4 border-rose-700 text-white hover:bg-rose-400 hover:-translate-y-0.5'
+            ]">
+      <span>View All</span>
+      <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+    <div v-for="fav in favoriteXtalls" :key="fav.code"
+         @click="navigateTo(`/xtall/${fav.code}`)"
+         class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <img :src="getIconPath(fav.type)" class="w-7 h-7 object-contain drop-shadow-md" />
+        </div>
+        <div class="text-left overflow-hidden">
+          <h4 class="text-[11px] font-black uppercase tracking-tight truncate">{{ fav.name }}</h4>
+          <p class="text-[8px] opacity-40 font-bold uppercase tracking-widest">{{ fav.type }}</p>
         </div>
       </div>
     </div>
+  </div>
+</div>
     <div class="w-full max-w-6xl flex items-center gap-6 my-16 opacity-50">
       <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-blue-500 to-purple-500"></div>
       <h2 class="font-black italic text-2xl tracking-tighter uppercase shrink-0">
