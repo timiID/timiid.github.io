@@ -1,6 +1,6 @@
 "use strict";
 
-export const LV_CAP = 315;
+export const LV_CAP = 320;
 
 export const quest_data = {
     "Custom Experience Value": 0,
@@ -155,6 +155,7 @@ export const mq_data = {
     "The Young Man and the Old Tree": 234000000,
     "The Village of Lixis": 240000000,
     "Visions of a Distant Past": 246000000,
+    "As the Roots Come to Light": 252100000,
 
 };
 
