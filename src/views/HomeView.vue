@@ -97,7 +97,7 @@ const navigateTo = (path) => router.push(path);
              class="w-32 h-32 md:w-48 md:h-48 object-cover drop-shadow-[0_0_30px_rgba(99,102,241,0.5)] animate-float-slow mb-6" />
         
         <h1 class="text-4xl md:text-6xl font-[800] italic uppercase tracking-tighter leading-none transition-all">
-          <span class="text-white">TIMI </span>
+      <span :class="text-white">TIMI </span>
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
         </h1>
         
@@ -148,7 +148,7 @@ const navigateTo = (path) => router.push(path);
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-7 w-full max-w-6xl animate-slide-up">
       <div v-for="item in features" :key="item.path"
            @click="navigateTo(item.path)"
-           class="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:shadow-2xl hover:shadow-indigo-500/10">
+           class="group relative overflow-hidden rounded-[2rem] border border-black/80 bg-white/25 backdrop-blur-xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:shadow-2xl hover:shadow-indigo-500/10">
         <div :class="['absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br', item.color]"></div>
         <div class="relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left">
           <div class="mb-4 h-16 flex items-center justify-center">
@@ -156,7 +156,7 @@ const navigateTo = (path) => router.push(path);
           </div>
           <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
           <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
-          <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-indigo-400 group-hover:text-indigo-300 transition-colors uppercase">
+          <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-purple-400 group-hover:text-indigo-300 transition-colors uppercase">
             Open Tools <span class="group-hover:translate-x-1 transition-transform">→</span>
           </div>
         </div>
@@ -176,7 +176,7 @@ const navigateTo = (path) => router.push(path);
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-7 w-full max-w-6xl animate-slide-up">
       <div v-for="item in other" :key="item.path"
            @click="navigateTo(item.path)"
-           class="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:shadow-2xl hover:shadow-indigo-500/10">
+           class="group relative overflow-hidden rounded-[2rem] border border-black/50 bg-white/15 backdrop-blur-xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:shadow-2xl hover:shadow-indigo-500/10">
         <div :class="['absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br', item.color]"></div>
         <div class="relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left">
           <div class="mb-4 h-16 flex items-center justify-center">
@@ -184,7 +184,7 @@ const navigateTo = (path) => router.push(path);
           </div>
           <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
           <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
-          <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-indigo-400 group-hover:text-indigo-300 transition-colors uppercase">
+          <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-orange-400 group-hover:text-indigo-300 transition-colors uppercase">
             Open Tools <span class="group-hover:translate-x-1 transition-transform">→</span>
           </div>
         </div>
@@ -200,7 +200,7 @@ const navigateTo = (path) => router.push(path);
               <span class="text-2xl font-black italic tracking-tighter text-white">TIMI <span class="text-indigo-500">DB</span></span>
             </div>
             <p class="text-xs leading-loose max-w-sm font-medium opacity-70">
-              The most advanced digital archival project for Toram Online. Built for adventurers, by adventurers.
+              The most advanced digital database project for Toram Online. Built for adventurers, by adventurers.
             </p>
           </div>
           <div class="space-y-4">
