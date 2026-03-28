@@ -1,6 +1,12 @@
 <template>
   <div class="max-w-7xl mx-auto space-y-12 pb-20">
     <div class="text-center space-y-4">
+    <button @click="$router.push('/')" class="group flex items-center gap-3 mb-10 transition-all hover:-translate-x-2">
+        <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+          <svg class="w-5 h-5 text-cyan-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"/></svg>
+        </div>
+        <span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 group-hover:opacity-100 group-hover:text-cyan-500">Back</span>
+      </button>
       <div class="inline-block px-4 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 text-[10px] font-black tracking-[0.3em] uppercase">
         TIMI DB-LEVELING LIST
       </div>
@@ -21,7 +27,7 @@
 
     <div class="sticky top-4 z-30 p-4 rounded-[2.5rem] border backdrop-blur-xl transition-all duration-500 shadow-2xl"
          :class="isDark ? 'bg-slate-900/80 border-white/10 shadow-indigo-500/5' : 'bg-white/80 border-slate-200 shadow-slate-200/50'">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
         <div class="relative group">
           <input v-model="searchQuery" type="text" placeholder="Search Boss or Map..." 
                  class="w-full pl-12 pr-4 py-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-transparent focus:border-indigo-500 transition-all outline-none text-xs font-bold uppercase tracking-wider">
@@ -45,15 +51,15 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-      <div class="p-8 rounded-[2.5rem] border bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 text-white shadow-2xl shadow-indigo-500/20 flex flex-col justify-center">
+      <div class="p-4 rounded-[2.5rem] border bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 text-white shadow-2xl shadow-indigo-500/20 flex flex-col justify-center">
         <h2 class="text-2xl font-black italic mb-4 uppercase tracking-tighter">Mastering the EXP System</h2>
         <p class="text-sm leading-relaxed opacity-90 font-medium italic">
           Toram Online currently has a maximum level cap of 315. While you can level up anywhere, specific "Popular Spots" provide optimal EXP efficiency. The core mechanic relies on the +/- 9 Level Difference Rule: to gain maximum experience, your character's level should not differ by more than 9 levels from the target Mob or Boss.
         </p>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div v-for="(tip, i) in tips" :key="i" 
-          class="p-6 rounded-[2rem] border transition-transform hover:-translate-y-1"
+          class="p-2 rounded-[2rem] border transition-transform hover:-translate-y-1"
           :class="isDark ? 'bg-slate-900/40 border-white/5' : 'bg-white border-slate-200 shadow-sm'">
           <div class="text-2xl mb-2">{{ tip.icon }}</div>
           <h4 class="font-black text-xs uppercase tracking-wider mb-1">{{ tip.title }}</h4>
@@ -61,7 +67,10 @@
         </div>
       </div>
     </div>
-
+<p class="text-lg leading-relaxed opacity-90 font-bold italic">
+        ➡️ Result
+        </p>
+        
     <div v-if="filteredSpots.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
       <div v-for="(spot, index) in filteredSpots" :key="index" 
         class="group relative flex flex-col rounded-[2.5rem] border transition-all duration-500"

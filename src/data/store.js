@@ -3675,6 +3675,13 @@ export const crystalData = [
           name: "Sanmurbon",
           view: `\n.ATK +12%\nPhysical Pierce +10%\nCritical Rate +16\nMATK -4%\nKekebalan Fisik -20%\nDengan Zirah Berat:\nKekebalan Fisik +24%`,
         },   
+        {
+          code: 530,
+          link: 490,
+          type: "UPGRADE",
+          name: "Grandanbit",
+          view: `\nMATK +12%\nCritical Damage +8\nDex +5%\nAccuracy -20%`,
+        }
       ];
       
       import iconNormal from '@/assets/icons/crysta_normal.jpg'

@@ -14,7 +14,7 @@
         <div :class="cardClass">
           <p class="text-[10px] font-black uppercase tracking-widest text-orange-500/60 mb-6 border-b border-orange-500/10 pb-2">Character Parameters</p>
           
-          <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+          <div class="grid grid-cols-3 gap-x-4 gap-y-5">
             <div v-for="(val, stat) in form.stats" :key="stat" class="transition-all hover:scale-105">
               <label class="block text-[9px] font-black text-slate-500 uppercase mb-1.5 ml-1">{{ stat }}</label>
               <input type="number" v-model.number="form.stats[stat]" 
@@ -22,7 +22,7 @@
             </div>
           </div>
 
-          <div class="mt-8 pt-6 border-t dark:border-white/5 border-slate-100 grid grid-cols-2 gap-3">
+          <div class="mt-8 pt-6 border-t dark:border-white/5 border-slate-100 grid grid-cols-4 gap-3">
             <div v-for="bonus in [['eStr', 'STR+'], ['eStrP', 'STR%'], ['eDex', 'DEX+'], ['eDexP', 'DEX%']]" :key="bonus[0]">
               <label class="block text-[8px] font-black text-slate-500 uppercase mb-1 ml-1">{{ bonus[1] }}</label>
               <input type="number" v-model.number="form[bonus[0]]" 
@@ -76,7 +76,8 @@
         </div>
       </div>
 
-      <div class="lg:col-span-4 space-y-6 animate-float-slow">
+
+      <div class="lg:col-span-3 space-y-5 animate-float-slow">
         <div :class="[cardClass, 'relative overflow-hidden group shadow-2xl']">
           <div class="absolute -right-10 -top-10 w-32 h-32 bg-orange-500/10 blur-[50px]"></div>
           
@@ -148,7 +149,7 @@ const cardClass = computed(() => [
 const craftTypes = ["Armor", "1H Sword", "2H Sword", "Bow", "Bowgun", "Staff", "Magic Device", "Knuckle", "Halberd", "Katana"];
 
 const form = reactive({
-    level: 305, craftType: "Armor",
+    level: 320, craftType: "Armor",
     stats: { STR: 0, INT: 0, VIT: 0, DEX: 0, AGI: 0, TEC: 0 },
     eStr: 0, eStrP: 0, eDex: 0, eDexP: 0,
     prof: BS.HIGHEST_PROF || 280,

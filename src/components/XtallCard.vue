@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-stretch animate-entry"
+    class="flex flex-col lg:grid lg:grid-cols-12 gap-2 items-stretch animate-entry"
     :style="animationStyle"
   >
     <div class="lg:col-span-3 flex flex-row lg:flex-col gap-3">

@@ -1,7 +1,7 @@
 <template>
 
   <div class="min-h-screen pt-24 pb-20 px-4">
-  <button @click="$router.push('/xtall')" class="group flex items-center gap-3 mb-10 transition-all hover:-translate-x-2">
+  <button @click="$router.push('/')" class="group flex items-center gap-3 mb-10 transition-all hover:-translate-x-2">
         <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
           <svg class="w-5 h-5 text-cyan-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"/></svg>
         </div>
