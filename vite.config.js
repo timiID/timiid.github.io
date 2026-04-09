@@ -3,7 +3,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
-  base: '/toram-vue/', // ← nama repo GitHub
+  base: '/', // Ubah dari '/toram-vue/' menjadi '/'
+  // ... rest of config
   plugins: [vue()],
   resolve: {
     alias: {
