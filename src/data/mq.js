@@ -1,27 +1,27 @@
 // Data yang diambil dari Seeder PHP sebelumnya
 export const mqData = [
-    { id: 1, chapter: 'Chapter 1', nama_item: 'Colon Leaf (Daun Colon)', jumlah: 'x5' },
-    { id: 2, chapter: 'Chapter 1', nama_item: 'Hard Dragon Skin (Sisik Naga)', jumlah: 'x2' },
-    { id: 3, chapter: 'Chapter 1', nama_item: 'Lamb Meat (Daging Domba)', jumlah: 'x1' },
-    { id: 4, chapter: 'Chapter 1', nama_item: 'Fairy Feather (Sayap Peri)', jumlah: 'x3' },
-    { id: 5, chapter: 'Chapter 1', nama_item: 'Thick Beak (Paruh tebal)', jumlah: 'x3' },
-    { id: 6, chapter: 'Chapter 1', nama_item: 'Vine (Sulur)', jumlah: 'x3' },
-    { id: 7, chapter: 'Chapter 2', nama_item: 'Swordsman Stone Coin (Koin Ksatria)', jumlah: 'x20' },
-    { id: 8, chapter: 'Chapter 3', nama_item: 'Sand Mole Meat (Daging Tikus Pasir)', jumlah: 'x1' },
-    { id: 9, chapter: 'Chapter 3', nama_item: 'Beast Claw (Cakar Binatang Buas)', jumlah: 'x5' },
-    { id: 10, chapter: 'Chapter 3', nama_item: 'Sand Frog Skin (Kulit Kodok Pasir)', jumlah: 'x5' },
-    { id: 11, chapter: 'Chapter 3', nama_item: 'Jagged Fang (Taring Bergerigi)', jumlah: 'x10' },
-    { id: 12, chapter: 'Chapter 3', nama_item: 'Saham Crystal (Kristal Saham)', jumlah: 'x5' },
-    { id: 13, chapter: 'Chapter 3', nama_item: 'Spiritual Gemstone (Permata Jiwa)', jumlah: 'x1' },
-    { id: 14, chapter: 'Chapter 8', nama_item: 'Rokoko Grape (Anggur rokoko)', jumlah: 'x5' },
-    { id: 15, chapter: 'Chapter 9', nama_item: 'Labilans Wood (Kayu labilans)', jumlah: 'x10' },
-    { id: 16, chapter: 'Chapter 11', nama_item: 'Broken Horn (Tanduk Patah)', jumlah: 'x20' },
-    { id: 17, chapter: 'Chapter 12', nama_item: 'Jabali Stone (Batu Jabali)', jumlah: 'x5' },
-    { id: 18, chapter: 'Chapter 12', nama_item: 'Growing Ore (Biji Berkembang)', jumlah: 'x5' },
-    { id: 19, chapter: 'Chapter 14', nama_item: 'Kulit Tebal Berlendir (Slimy Thick Skin)', jumlah: 'x20' },
-    { id: 20, chapter: 'Chapter 14', nama_item: 'Akar Melilit (Tangled Roots)', jumlah: 'x10' },
-    { id: 21, chapter: 'Chapter 14', nama_item: 'Kayu Menabra (Menabra Wood)', jumlah: 'x10' },
-    { id: 22, chapter: 'Chapter 15', nama_item: 'Pupuk Keruh (Stagnant Fertillizer)', jumlah: 'x10' },
+    { id: 1, chapter: 'Chapter 1', name_en: 'Colon Leaf', name_id: 'Daun Colon', jumlah: 'x5' },
+    { id: 2, chapter: 'Chapter 1', name_en: 'Hard Dragon Skin', name_id: 'Sisik Naga Keras', jumlah: 'x2' },
+    { id: 3, chapter: 'Chapter 1', name_en: 'Lamb Meat', name_id: 'Daging Domba', jumlah: 'x1' },
+    { id: 4, chapter: 'Chapter 1', name_en: 'Fairy Feather', name_id: 'Sayap Peri', jumlah: 'x3' },
+    { id: 5, chapter: 'Chapter 1', name_en: 'Thick Beak', name_id: 'Paruh Tebal', jumlah: 'x3' },
+    { id: 6, chapter: 'Chapter 1', name_en: 'Vine', name_id: 'Sulur', jumlah: 'x3' },
+    { id: 7, chapter: 'Chapter 2', name_en: 'Swordsman Stone Coin', name_id: 'Koin Batu Ksatria', jumlah: 'x20' },
+    { id: 8, chapter: 'Chapter 3', name_en: 'Sand Mole Meat', name_id: 'Daging Tikus Pasir', jumlah: 'x1' },
+    { id: 9, chapter: 'Chapter 3', name_en: 'Beast Claw', name_id: 'Cakar Binatang Buas', jumlah: 'x5' },
+    { id: 10, chapter: 'Chapter 3', name_en: 'Sand Frog Skin', name_id: 'Kulit Kodok Pasir', jumlah: 'x5' },
+    { id: 11, chapter: 'Chapter 3', name_en: 'Jagged Fang', name_id: 'Taring Bergerigi', jumlah: 'x10' },
+    { id: 12, chapter: 'Chapter 3', name_en: 'Saham Crystal', name_id: 'Kristal Saham', jumlah: 'x5' },
+    { id: 13, chapter: 'Chapter 3', name_en: 'Spiritual Gemstone', name_id: 'Permata Jiwa', jumlah: 'x1' },
+    { id: 14, chapter: 'Chapter 8', name_en: 'Rokoko Grape', name_id: 'Anggur Rokoko', jumlah: 'x5' },
+    { id: 15, chapter: 'Chapter 9', name_en: 'Labilans Wood', name_id: 'Kayu Labilans', jumlah: 'x10' },
+    { id: 16, chapter: 'Chapter 11', name_en: 'Broken Horn', name_id: 'Tanduk Patah', jumlah: 'x20' },
+    { id: 17, chapter: 'Chapter 12', name_en: 'Jabali Stone', name_id: 'Batu Jabali', jumlah: 'x5' },
+    { id: 18, chapter: 'Chapter 12', name_en: 'Growing Ore', name_id: 'Biji Berkembang', jumlah: 'x5' },
+    { id: 19, chapter: 'Chapter 14', name_en: 'Slimy Thick Skin', name_id: 'Kulit Tebal Berlendir', jumlah: 'x20' },
+    { id: 20, chapter: 'Chapter 14', name_en: 'Tangled Roots', name_id: 'Akar Melilit', jumlah: 'x10' },
+    { id: 21, chapter: 'Chapter 14', name_en: 'Menabra Wood', name_id: 'Kayu Menabra', jumlah: 'x10' },
+    { id: 22, chapter: 'Chapter 15', name_en: 'Stagnant Fertilizer', name_id: 'Pupuk Keruh', jumlah: 'x10' },
 ];
 
 // --- HELPER FUNCTIONS ---
@@ -36,11 +36,12 @@ export const getAllChapters = () => {
     });
 }
 
-// Fungsi Pencarian berdasarkan Nama Item atau Chapter
+// Fungsi Pencarian berdasarkan Nama Item (EN/ID) atau Chapter
 export function searchMQ(keyword) {
     const key = keyword.toLowerCase();
     return mqData.filter(m =>
-        (m.nama_item && m.nama_item.toLowerCase().includes(key)) ||
+        (m.name_id && m.name_id.toLowerCase().includes(key)) ||
+        (m.name_en && m.name_en.toLowerCase().includes(key)) ||
         (m.chapter && m.chapter.toLowerCase().includes(key))
     );
 }
