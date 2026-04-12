@@ -129,7 +129,7 @@ const navigateTo = (path) => router.push(path);
         
         <h1 class="text-4xl md:text-6xl font-[800] italic uppercase tracking-tighter leading-none transition-all">
   <span :class="isDark ? 'text-white' : 'text-slate-900'">TIMI </span>
-  <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
+  <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB㋡</span>
 </h1>
         
         <p class="max-w-xl text-sm md:text-lg opacity-70 font-medium leading-relaxed italic uppercase tracking-widest">
@@ -140,7 +140,7 @@ const navigateTo = (path) => router.push(path);
   <a href="https://timiid.github.io/#/" 
      target="_blank" 
      class="font-black text-blue-500 hover:text-cyan-400 underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all">
-    TIMI DB
+    TIMI DB㋡
   </a> 
   • Toram Online Digital Database Project
 </p>
