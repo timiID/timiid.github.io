@@ -127,12 +127,24 @@
             Reset Filter
           </button>
         </div>
-        <div v-else>
-          <h3 class="text-2xl font-black text-white/20 italic uppercase tracking-tighter">No Crystals Saved</h3>
-          <button @click="$router.push('/xtall')" class="mt-6 px-10 py-4 bg-white text-black font-[1000] italic uppercase text-xs rounded-full hover:bg-red-500 hover:text-white transition-all">
-            Browse Database
-          </button>
-        </div>
+        <div v-else class="py-40 text-center animate-fade-in">
+  <h3 :class="[
+    'text-2xl font-black italic uppercase tracking-tighter transition-colors duration-500',
+    isDark ? 'text-white/20' : 'text-slate-900/30'
+  ]">
+    No Crysta Saved
+  </h3>
+
+  <button @click="$router.push('/xtall')" 
+          :class="[
+            'mt-6 px-10 py-4 font-[1000] italic uppercase text-xs rounded-full transition-all duration-300 shadow-xl active:scale-95',
+            isDark 
+              ? 'bg-white text-black hover:bg-rose-500 hover:text-white' 
+              : 'bg-slate-900 text-white hover:bg-rose-500 shadow-rose-500/20'
+          ]">
+    Browse Database
+  </button>
+</div>
       </div>
     </div>
   </div>
