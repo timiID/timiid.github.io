@@ -7,7 +7,11 @@ import './assets/main.css'
 if (!document.title) {
   document.title = 'Timi DB | Toram Online Database'
 }
-
+const redirect = sessionStorage.redirect;
+if (redirect) {
+  sessionStorage.removeItem('redirect');
+  router.replace(redirect);
+}
 const app = createApp(App)
 app.use(router)
 app.mount('#app')
