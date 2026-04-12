@@ -137,7 +137,7 @@ const navigateTo = (path) => router.push(path);
         </p>
         <p class="max-w-xl text-sm md:text-sm opacity-70 font-lower leading-relaxed italic uppercase tracking-widest">
   © 2026 
-  <a href="https://timiid.github.io/toram-vue/#/" 
+  <a href="https://timiid.github.io/#/" 
      target="_blank" 
      class="font-black text-blue-500 hover:text-cyan-400 underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all">
     TIMI DB
