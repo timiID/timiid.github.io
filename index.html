@@ -1,17 +1,24 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="https://timiid.github.io/images/logo.png" />
-  <link rel="apple-touch-icon" href="https://timiid.github.io/images/logo.png">
+
+  <!-- ✅ FAVICON -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/images/logo.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/logo.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/images/logo.png">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Timi DB | Toram Online Database & Calculator</title>
 
-<meta name="google-site-verification" content="6PG03Y7bpURdPN2sxmcDDg7jQYYsI8pGmZL9yIMIneI" />
- <!-- SEO -->
+  <meta name="google-site-verification" content="6PG03Y7bpURdPN2sxmcDDg7jQYYsI8pGmZL9yIMIneI" />
+
+  <!-- SEO -->
   <meta name="description" content="Complete Toram Online Database & Tools: MQ (Main Quest) Guide, EXP Calculator, Blacksmith Statting Calculator, Xtall List & Advanced Search (Indonesia Version), Bag Expansion Materials, Event List, Leveling Guide, and Favorite Xtall. Fast, accurate, and optimized to help you progress efficiently in Toram Online.">
+
   <meta name="keywords" content="
 Toram Online, Toram Database, Toram Online Database, Timi DB, Toram Tools,
 Toram MQ Guide, Toram Main Quest, MQ Calculator, EXP Calculator Toram,
@@ -21,9 +28,10 @@ Toram Bag Materials, Bag Expansion Toram,
 Toram Event List, Toram Leveling Guide, Leveling Toram,
 Toram Favorite Build, Toram Helper, Toram Indonesia Database
 ">
+
   <meta name="author" content="Timi ID - Toram Online Database Developer">
 
-  <!-- Canonical (PENTING) -->
+  <!-- Canonical -->
   <link rel="canonical" href="https://timiid.github.io/" />
 
   <!-- Open Graph -->
@@ -33,24 +41,27 @@ Toram Favorite Build, Toram Helper, Toram Indonesia Database
   <meta property="og:image" content="https://timiid.github.io/images/logo.png">
   <meta property="og:type" content="website">
 
+  <!-- Structured Data -->
   <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Timi DB",
-  "url": "https://timiid.github.io/",
-  "description": "Complete Toram Online Database & Tools: MQ (Main Quest) Guide, EXP Calculator, Blacksmith Statting Calculator, Xtall List & Advanced Search (Indonesia Version), Bag Expansion Materials, Event List, Leveling Guide, and Favorite Xtall. Fast, accurate, and optimized to help you progress efficiently in Toram Online."
-}
-</script>
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Timi DB",
+    "url": "https://timiid.github.io/",
+    "description": "Complete Toram Online Database & Tools: MQ (Main Quest) Guide, EXP Calculator, Blacksmith Statting Calculator, Xtall List & Advanced Search (Indonesia Version), Bag Expansion Materials, Event List, Leveling Guide, and Favorite Xtall. Fast, accurate, and optimized to help you progress efficiently in Toram Online."
+  }
+  </script>
+
 </head>
 
 <body>
 
-  <!-- 🔥 SEO FALLBACK  -->
-  <div id="app">
-  
-  </div>
+  <!-- Vue App -->
+  <div id="app"></div>
 
+  <!-- Vue Script -->
   <script type="module" src="/src/main.js"></script>
+
 </body>
 </html>
+```
