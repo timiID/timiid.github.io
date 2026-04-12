@@ -7,11 +7,7 @@ import './assets/main.css'
 if (!document.title) {
   document.title = 'Timi DB | Toram Online Database'
 }
-const redirect = sessionStorage.redirect;
-if (redirect) {
-  sessionStorage.removeItem('redirect');
-  router.replace(redirect);
-}
+
 const app = createApp(App)
 app.use(router)
 app.mount('#app')
@@ -19,3 +15,8 @@ app.mount('#app')
 window.addEventListener('unhandledrejection', e => {
   console.warn('Ignored async listener error:', e.reason)
 })
+const redirect = sessionStorage.redirect;
+if (redirect) {
+  sessionStorage.removeItem('redirect');
+  router.replace(redirect);
+}
