@@ -12,7 +12,7 @@ const route = useRoute();
 const router = useRouter();
 
 // --- STATE ---
-const locale = ref('id'); // Default Bahasa Indonesia
+const locale = ref('en'); // Default Bahasa Indonesia
 const search = ref(route.query.search || '');
 const selectedChapter = ref(route.query.chapter || 'Semua Chapter');
 const currentPage = ref(parseInt(route.query.page) || 1);
