@@ -157,7 +157,6 @@ import specialCrystas from "@/assets/icons/crysta_tambahan.jpg";
 import XtallCard from '@/components/XtallCard.vue'
 
 // Enhancer (Crysta Upgrade/Up)
-// Sesuai permintaanmu: crysta_up.jpg digunakan untuk normalEnhancerCrystas
 import normalEnhancerCrystas from "@/assets/icons/crysta_up.jpg"; 
 import weaponEnhancerCrystas from "@/assets/icons/enhance_weapon_crysta.png";
 import armorEnhancerCrystas from "@/assets/icons/enhance_armor_crysta.png";
