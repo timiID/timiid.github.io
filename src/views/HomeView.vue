@@ -137,7 +137,7 @@ const navigateTo = (path) => router.push(path);
         </p>
         <p class="max-w-xl text-sm md:text-sm opacity-70 font-lower leading-relaxed italic uppercase tracking-widest">
   © 2026 
-  <a href="https://timiid.github.io/#/" 
+  <a href="https://timiid.github.io/" 
      target="_blank" 
      class="font-black text-blue-500 hover:text-cyan-400 underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all">
     TIMI DB㋡
@@ -304,22 +304,22 @@ const navigateTo = (path) => router.push(path);
           <div class="space-y-4">
             <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Resources</h4>
             <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-              <li><a href="#/mq-list" class="hover:text-indigo-400 transition-colors">Main Quest List</a></li>
-              <li><a href="#/bag-list" class="hover:text-indigo-400 transition-colors">Bag Expansion List</a></li>
-              <li><a href="#/mq-calc" class="hover:text-indigo-400 transition-colors">Main Quest Calculator</a></li>
-              <li><a href="#/bs-calc" class="hover:text-indigo-400 transition-colors">Blacksmith Calculator</a></li>
-              <li><a href="#/xtall" class="hover:text-indigo-400 transition-colors">Xtall Database (Indonesia)</a></li>
-              <li><a href="#/event" class="hover:text-indigo-400 transition-colors">Event Guide</a></li>  
-              <li><a href="#/lvling" class="hover:text-indigo-400 transition-colors">Leveling Guide</a></li>                    
-              <li><a href="#/favorite" class="hover:text-indigo-400 transition-colors">Favorite Xtall</a></li>                    
+              <li><a href="/mq-list" class="hover:text-indigo-400 transition-colors">Main Quest List</a></li>
+              <li><a href="/bag-list" class="hover:text-indigo-400 transition-colors">Bag Expansion List</a></li>
+              <li><a href="/mq-calc" class="hover:text-indigo-400 transition-colors">Main Quest Calculator</a></li>
+              <li><a href="/bs-calc" class="hover:text-indigo-400 transition-colors">Blacksmith Calculator</a></li>
+              <li><a href="/xtall" class="hover:text-indigo-400 transition-colors">Xtall Database (Indonesia)</a></li>
+              <li><a href="/event" class="hover:text-indigo-400 transition-colors">Event Guide</a></li>  
+              <li><a href="/lvling" class="hover:text-indigo-400 transition-colors">Leveling Guide</a></li>                    
+              <li><a href="/favorite" class="hover:text-indigo-400 transition-colors">Favorite Xtall</a></li>                    
             </ul>
           </div>
           <div class="space-y-4">
             <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Project</h4>
             <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-              <li><a href="#" class="hover:text-indigo-400 transition-colors">About Timi DB</a></li>
-              <li><a href="#" class="hover:text-indigo-400 transition-colors">Contribution</a></li>
-              <li><a href="#" class="hover:text-indigo-400 transition-colors">Reference</a></li>
+              <li><a href="" class="hover:text-indigo-400 transition-colors">About Timi DB</a></li>
+              <li><a href="" class="hover:text-indigo-400 transition-colors">Contribution</a></li>
+              <li><a href="" class="hover:text-indigo-400 transition-colors">Reference</a></li>
             </ul>
           </div>
         </div>
