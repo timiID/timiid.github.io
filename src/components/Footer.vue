@@ -44,7 +44,7 @@ defineProps({
         <div class="space-y-4">
           <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Project</h4>
           <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-            <li><a href="#" class="hover:text-indigo-400 transition-colors">About Timi DB</a></li>
+            <li><a href="" class="hover:text-indigo-400 transition-colors">About Timi DB</a></li>
             <li><a href="https://www.facebook.com/J7Timi" target="_blank" class="hover:text-indigo-400 transition-colors">Contribution</a></li>
             <li><a href="https://en.toram.jp/" target="_blank" class="hover:text-indigo-400 transition-colors">Reference</a></li>
           </ul>
