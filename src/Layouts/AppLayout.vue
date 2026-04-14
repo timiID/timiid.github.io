@@ -200,7 +200,7 @@ watch(() => route.path, () => {
   height: 100%;
   background-image: url('/images/linearperfect.png');
   background-repeat: repeat;
-  opacity: 0.1; 
+  opacity: 0.3; 
   z-index: -1;
   pointer-events: none;
 }
