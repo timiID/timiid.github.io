@@ -198,7 +198,7 @@ watch(() => route.path, () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/images/lineargaming.png');
+  background-image: url('/images/linearperfect.png');
   background-repeat: repeat;
   opacity: 0.1; 
   z-index: -1;
