@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import Footer from '@/components/Footer.vue';
 
 const props = defineProps(['isDark']);
 defineEmits(['toggleDark']);
@@ -176,21 +177,48 @@ watch(() => route.path, () => {
     <main class="flex-1 max-w-7xl mx-auto pt-24 md:pt-36 px-4 pb-20 relative z-10 animate-fade-in w-full">
       <slot />
     </main>
+    <Footer :isDark="isDark" class="w-full" />
 
   </div>
 </template>
 
 <style scoped>
-/* background-attachment: fixed menjaga gradient tidak putus saat scroll */
+/* Base Container for Pattern Overlay */
+/* Update pada main container */
+.min-h-screen {
+  position: relative;
+  z-index: 1;
+}
+
+/* Pseudo-element untuk Background Pattern yang ikut scroll */
+.min-h-screen::before {
+  content: "";
+  position: absolute; /* BERUBAH DARI FIXED KE ABSOLUTE */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/lineargaming.png');
+  background-repeat: repeat;
+  opacity: 0.1; 
+  z-index: -1;
+  pointer-events: none;
+}
+
 .bg-mesh-dark {
   background-color: #020617;
   background-attachment: fixed;
-  background-image: radial-gradient(at 0% 0%, #1e1b4b 0, transparent 50%), radial-gradient(at 100% 0%, #450a0a 0, transparent 50%), radial-gradient(at 100% 100%, #3b0764 0, transparent 50%);
+  background-image: radial-gradient(at 0% 0%, #1e1b4b 0, transparent 50%), 
+                    radial-gradient(at 100% 0%, #450a0a 0, transparent 50%), 
+                    radial-gradient(at 100% 100%, #3b0764 0, transparent 50%);
 }
+
 .bg-mesh-light {
   background-color: #ffffff;
   background-attachment: fixed;
-  background-image: radial-gradient(at 0% 0%, #e0f2fe 0, transparent 50%), radial-gradient(at 100% 0%, #fee2e2 0, transparent 50%), radial-gradient(at 100% 100%, #f3e8ff 0, transparent 50%);
+  background-image: radial-gradient(at 0% 0%, #e0f2fe 0, transparent 50%), 
+                    radial-gradient(at 100% 0%, #fee2e2 0, transparent 50%), 
+                    radial-gradient(at 100% 100%, #f3e8ff 0, transparent 50%);
 }
 
 .shadow-glow { filter: drop-shadow(0 0 8px currentColor); }

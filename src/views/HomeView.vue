@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
+import Footer from '@/components/Footer.vue';
 
 import normalCrystas from "@/assets/icons/crysta_normal.jpg";
 import weaponCrystas from "@/assets/icons/crysta_senjata.jpg";
@@ -289,51 +290,6 @@ const navigateTo = (path) => router.push(path);
       </div>
     </div>
 
-    <footer class="mt-32 w-full transition-colors duration-500" :class="isDark ? 'bg-slate-900/80 text-slate-400' : 'bg-black text-slate-400'">
-      <div class="max-w-7xl mx-auto px-6 py-16">
-        <div class="grid grid-cols-1 md:grid-cols-6 gap-12">
-          <div class="md:col-span-2 space-y-6">
-            <div class="flex items-center gap-3">
-              <img src="/images/logo.png" class="w-10 h-10 grayscale brightness-200" alt="Logo" />
-              <span class="text-2xl font-black italic tracking-tighter text-white">TIMI <span class="text-indigo-500">DB</span></span>
-            </div>
-            <p class="text-xs leading-loose max-w-sm font-medium opacity-70">
-              The most advanced digital database project for Toram Online. Built for adventurers, by adventurers.
-            </p>
-          </div>
-          <div class="space-y-4">
-            <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Resources</h4>
-            <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-              <li><a href="/mq-list" class="hover:text-indigo-400 transition-colors">Main Quest List</a></li>
-              <li><a href="/bag-list" class="hover:text-indigo-400 transition-colors">Bag Expansion List</a></li>
-              <li><a href="/mq-calc" class="hover:text-indigo-400 transition-colors">Main Quest Calculator</a></li>
-              <li><a href="/bs-calc" class="hover:text-indigo-400 transition-colors">Blacksmith Calculator</a></li>
-              <li><a href="/xtall" class="hover:text-indigo-400 transition-colors">Xtall Database (Indonesia)</a></li>
-              <li><a href="/event" class="hover:text-indigo-400 transition-colors">Event Guide</a></li>  
-              <li><a href="/lvling" class="hover:text-indigo-400 transition-colors">Leveling Guide</a></li>                    
-              <li><a href="/favorite" class="hover:text-indigo-400 transition-colors">Favorite Xtall</a></li>                    
-            </ul>
-          </div>
-          <div class="space-y-4">
-            <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Project</h4>
-            <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-              <li><a href="" class="hover:text-indigo-400 transition-colors">About Timi DB</a></li>
-              <li><a href="" class="hover:text-indigo-400 transition-colors">Contribution</a></li>
-              <li><a href="" class="hover:text-indigo-400 transition-colors">Reference</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-50">
-            © 2026 TIMI DB • Toram Online Digital Database Project
-          </p>
-          <div class="flex gap-6 opacity-50">
-            <span class="text-[10px] font-black italic">STAY VIGILANT</span>
-            <span class="text-[10px] font-black italic">KEEP GRINDING</span>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
