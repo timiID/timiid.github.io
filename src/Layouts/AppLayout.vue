@@ -22,14 +22,14 @@ const navLinks = {
   '/xtall': 'XTALL ID'
 };
 
-// DATA BACKGROUND (Efek Bintang & Debu)
-const stars = Array.from({ length: 90 }, (_, i) => ({
-  id: i, size: Math.random() * 4 + 3 + 'px', top: Math.random() * 100 + '%',
-  left: Math.random() * 100 + '%', delay: Math.random() * 7 + 's'
-}))
-const dusts = Array.from({ length: 100 }, (_, i) => ({
-  id: i, size: Math.random() * 2 + 1 + 'px', top: Math.random() * 100 + '%',
-  left: Math.random() * 100 + '%', duration: Math.random() * 10 + 7 + 's', delay: Math.random() * 10 + 's'
+// DATA GELEMBUNG (Bubbles)
+const bubbles = Array.from({ length: 30 }, (_, i) => ({ 
+  id: i, 
+  size: Math.random() * 60 + 20 + 'px', 
+  top: Math.random() * 100 + '%',
+  left: Math.random() * 100 + '%', 
+  duration: Math.random() * 20 + 15 + 's', 
+  delay: Math.random() * -20 + 's' 
 }))
 
 const setItemRef = (el, path) => {
@@ -65,16 +65,22 @@ watch(() => route.path, () => {
 <template>
   <div :class="['min-h-screen flex flex-col transition-all duration-[1000ms] relative overflow-x-hidden', isDark ? 'bg-mesh-dark text-white' : 'bg-mesh-light text-slate-900']">
     
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      <div v-for="dust in dusts" :key="'dust-'+dust.id" 
-        class="absolute rounded-full blur-[1px] animate-pulse opacity-20" 
-        :class="isDark ? 'bg-indigo-400' : 'bg-blue-300'" 
-        :style="{ width: dust.size, height: dust.size, top: dust.top, left: dust.left, animationDuration: dust.duration, animationDelay: dust.delay }">
-      </div>
-      <div v-for="star in stars" :key="'star-'+star.id" 
-        class="absolute star-flare shadow-glow opacity-30 animate-twinkle" 
-        :class="isDark ? 'bg-white' : 'bg-indigo-600'" 
-        :style="{ width: star.size, height: star.size, top: star.top, left: star.left, animationDelay: star.delay }">
+    <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+      <div v-for="bubble in bubbles" :key="'bubble-'+bubble.id" 
+        class="absolute rounded-full border border-white/20 backdrop-blur-[1px] animate-float opacity-30 bubble-glow" 
+        :style="{ 
+          width: bubble.size, 
+          height: bubble.size, 
+          top: bubble.top, 
+          left: bubble.left, 
+          right: bubble.right, 
+          animationDuration: bubble.duration, 
+          animationDelay: bubble.delay,
+          background: isDark 
+            ? 'radial-gradient(circle at 30% 30%, rgb(83, 112, 142), transparent)' 
+            : 'radial-gradient(circle at 30% 30%, rgba(201, 177, 241, 0.6), rgb(81, 139, 232))'
+        }">
+        <div class="absolute top-1/4 left-1/4 right-1/4 w-1/4 h-1/4 bg-white/40 rounded-full blur-[1px]"></div>
       </div>
     </div>
 
@@ -86,35 +92,31 @@ watch(() => route.path, () => {
       isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
       isDark ? 'bg-[#0f172a] border-white/10' : 'bg-white border-slate-200'
     ]">
-      
-      <div class="flex justify-end p-0">
-        <button 
-          @click="isSidebarOpen = false" 
-          class="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/10 dark:hover:bg-white/10 group"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-colors" :class="isDark ? 'text-indigo-400 group-hover:text-white' : 'text-slate-600 group-hover:text-black'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="flex justify-end p-2">
+        <button @click="isSidebarOpen = false" class="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/10 dark:hover:bg-white/10 group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" :class="isDark ? 'text-indigo-400' : 'text-slate-600'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      <div class="px-[2%] pb-[8%] flex items-center gap-3">
-        <img src="/images/logo.png" class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20" alt="Logo" />
-        <span class="font-black italic text-[1.1rem] md:text-[1.3rem] leading-none">
+      <div class="px-6 pb-8 flex items-center gap-3">
+        <img src="/images/logo.png" class="w-10 h-10 rounded-full border border-white/20" alt="Logo" />
+        <span class="font-black italic text-lg leading-none">
           TIMI <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
         </span>
       </div>
 
-      <div class="flex-1 px-[5%] overflow-y-auto no-scrollbar flex flex-col gap-1 md:gap-2">
+      <div class="flex-1 px-4 overflow-y-auto no-scrollbar flex flex-col gap-2">
         <router-link v-for="(name, path) in navLinks" :key="path" :to="path"
-          class="py-[4%] px-[6%] rounded-xl font-bold transition-all flex items-center justify-between group text-[0.85rem] md:text-[0.95rem]"
+          class="py-3 px-4 rounded-xl font-bold transition-all flex items-center justify-between group text-sm"
           :class="route.path === path ? 'bg-indigo-600 text-white shadow-lg' : 'hover:bg-black/5 dark:hover:bg-white/5'">
           {{ name }}
           <span v-if="route.path === path" class="text-[0.6rem]">●</span>
         </router-link>
       </div>
 
-      <div class="p-[8%] border-t border-black/5 dark:border-white/5 text-center">
+      <div class="p-6 border-t border-black/5 dark:border-white/5 text-center">
         <p class="text-[10px] opacity-30 font-bold tracking-widest uppercase">Powered by Timi © 2026</p>
       </div>
     </aside>
@@ -150,18 +152,16 @@ watch(() => route.path, () => {
         </div>
 
         <div class="flex-1 flex justify-end items-center pr-2 md:pr-6 gap-3 md:gap-5">
-          <div class="flex flex-col items-end leading-none select-none transition-all duration-500">
-            <span :class="['text-[10px] md:text-[13px] font-black italic tracking-tighter transition-colors duration-500', 
-              isDark ? 'text-indigo-400' : 'text-slate-500']">
+          <div class="flex flex-col items-end leading-none select-none">
+            <span :class="['text-[10px] md:text-[13px] font-black italic tracking-tighter', isDark ? 'text-indigo-400' : 'text-slate-500']">
               {{ isDark ? 'DARK MODE' : 'LIGHT MODE' }}
             </span>
           </div>
 
           <div @click="$emit('toggleDark')" :class="['relative h-7 w-12 md:h-9 md:w-16 rounded-full cursor-pointer transition-all duration-500 border p-1 shadow-inner',
             isDark ? 'bg-indigo-950 border-white/20' : 'bg-blue-100 border-slate-300']">
-            
             <div :class="[
-              'absolute top-0.5 md:top-0.5 w-5 h-5 md:w-7 md:h-7 rounded-full flex items-center justify-center z-10 transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.27,1.55)] transform active:scale-90',
+              'absolute top-0.5 w-5 h-5 md:w-7 md:h-7 rounded-full flex items-center justify-center z-10 transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.27,1.55)] transform active:scale-90',
               isDark 
                 ? 'translate-x-5 md:translate-x-7 bg-gradient-to-br from-blue-300 to-cyan-800 shadow-[0_0_15px_3px_rgba(139,92,246,0.6)]' 
                 : 'translate-x-0 bg-gradient-to-br from-yellow-100 to-orange-400 shadow-[0_0_10px_2px_rgba(251,191,36,0.4)]'
@@ -170,78 +170,89 @@ watch(() => route.path, () => {
             </div>
           </div>
         </div>
-
       </div>
     </nav>
 
     <main class="flex-1 max-w-7xl mx-auto pt-24 md:pt-36 px-4 pb-20 relative z-10 animate-fade-in w-full">
       <slot />
     </main>
-    <Footer :isDark="isDark" class="w-full" />
 
+    <Footer :isDark="isDark" class="w-full" />
   </div>
 </template>
 
 <style scoped>
-/* Base Container for Pattern Overlay */
-/* Update pada main container */
 .min-h-screen {
   position: relative;
   z-index: 1;
 }
 
-/* Pseudo-element untuk Background Pattern yang ikut scroll */
+/* Background Pattern Overlay */
 .min-h-screen::before {
   content: "";
-  position: absolute; /* BERUBAH DARI FIXED KE ABSOLUTE */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
   background-image: url('/images/linearperfect.png');
   background-repeat: repeat;
-  opacity: 0.1; 
+  opacity: 0.06; 
   z-index: -1;
   pointer-events: none;
 }
 
+/* Animasi Float untuk Gelembung */
+@keyframes float {
+  0% { transform: translateY(0) translateX(0) rotate(0deg); }
+  33% { transform: translateY(-80px) translateX(25px) rotate(15deg); }
+  66% { transform: translateY(-40px) translateX(-25px) rotate(-10deg); }
+  100% { transform: translateY(0) translateX(0) rotate(0deg); }
+}
+
+.animate-float {
+  animation: float linear infinite;
+}
+
+.bubble-glow {
+  box-shadow: 
+    inset -5px -5px 12px rgba(255, 255, 255, 0.1),
+    inset 3px 3px 8px rgba(0, 0, 0, 0.05),
+    0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Mesh Backgrounds */
 .bg-mesh-dark {
   background-color: #020617;
-  background-attachment: fixed;
   background-image: radial-gradient(at 0% 0%, #1e1b4b 0, transparent 50%), 
                     radial-gradient(at 100% 0%, #450a0a 0, transparent 50%), 
                     radial-gradient(at 100% 100%, #3b0764 0, transparent 50%);
+  background-attachment: fixed;
 }
 
 .bg-mesh-light {
   background-color: #ffffff;
-  background-attachment: fixed;
   background-image: radial-gradient(at 0% 0%, #e0f2fe 0, transparent 50%), 
                     radial-gradient(at 100% 0%, #fee2e2 0, transparent 50%), 
                     radial-gradient(at 100% 100%, #f3e8ff 0, transparent 50%);
+  background-attachment: fixed;
 }
 
-.shadow-glow { filter: drop-shadow(0 0 8px currentColor); }
-.star-flare { clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%); }
-
-@keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } }
-.animate-twinkle { animation: twinkle 4s ease-in-out infinite; }
-
-@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
-
-/* Custom Scrollbar Modern */
-:global(::-webkit-scrollbar) {
-  width: 1px;
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
 }
-:global(::-webkit-scrollbar-track) {
-  background: transparent;
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+
+/* Scrollbar */
+:global(::-webkit-scrollbar) { width: 4px; }
+:global(::-webkit-scrollbar-track) { background: transparent; }
 :global(::-webkit-scrollbar-thumb) {
-  background: rgba(122, 7, 120, 0.9);
-  border-radius: 100px;
+  background: rgba(122, 7, 120, 0.5);
+  border-radius: 10px;
 }
-:global(::-webkit-scrollbar-thumb:hover) {
-  background: rgb(255, 11, 96);
-}
+:global(::-webkit-scrollbar-thumb:hover) { background: #ef4444; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>

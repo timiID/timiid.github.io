@@ -78,13 +78,16 @@ footer::before {
   left: 0;
   width: 100%;
   height: 100%;
-  /* Mengikuti scroll karena berada di dalam footer container yang absolute/relative */
-  background-image: url('/images/lineargaming.png');
-  background-repeat: repeat;
-  opacity: 0.2;
+  /* GANTI DISINI */
+  background-image: url('/images/logomy.png');
+  background-repeat: no-repeat; 
+  background-position: center;  
+  background-size: contain;     
+  opacity: 0.18;        
   z-index: 1;
   pointer-events: none;
 }
+
 
 /* Tambahkan efek gradasi gelap di atas pattern agar teks tetap kontras */
 footer::after {

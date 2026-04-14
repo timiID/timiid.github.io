@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted, nextTick } from 'vue'; // Tambah nextTick
 import { LV_CAP, mq_data, quest_data, getTotalXP, addXP } from '../data/toramData';
 
 defineProps({
@@ -34,6 +34,56 @@ const closeAllDropdowns = () => {
   isStartOpen.value = false;
   isEndOpen.value = false;
   isSQOpen.value = false;
+};
+
+// ... state lainnya ...
+
+const scrollPosStart = ref(0); // Simpan posisi scroll list Start
+const scrollPosEnd = ref(0);   // Simpan posisi scroll list End
+const startListRef = ref(null); // Ref untuk elemen HTML list Start
+const endListRef = ref(null);   // Ref untuk elemen HTML list End
+
+// Fungsi untuk buka dropdown sambil restore scroll
+const openStart = async () => {
+  isStartOpen.value = true;
+  isEndOpen.value = false;
+  await nextTick(); // Tunggu HTML selesai muncul
+  if (startListRef.value) {
+    startListRef.value.scrollTop = scrollPosStart.value;
+  }
+};
+
+const openEnd = async () => {
+  isEndOpen.value = true;
+  isStartOpen.value = false;
+  await nextTick();
+  if (endListRef.value) {
+    endListRef.value.scrollTop = scrollPosEnd.value;
+  }
+};
+
+// Fungsi simpan posisi saat di-scroll
+const handleScrollStart = (e) => {
+  scrollPosStart.value = e.target.scrollTop;
+};
+
+const handleScrollEnd = (e) => {
+  scrollPosEnd.value = e.target.scrollTop;
+};
+
+const scrollPosSQ = ref(0);   // Simpan posisi scroll list SQ
+const sqListRef = ref(null);   // Ref untuk elemen HTML list SQ
+
+const openSQ = async () => {
+  isSQOpen.value = true;
+  await nextTick();
+  if (sqListRef.value) {
+    sqListRef.value.scrollTop = scrollPosSQ.value;
+  }
+};
+
+const handleScrollSQ = (e) => {
+  scrollPosSQ.value = e.target.scrollTop;
 };
 
 // FORMAT OPSI MQ
@@ -150,12 +200,13 @@ const calculation = computed(() => {
             </div>
           </div>
 
-          <div v-if="activeTab === 'mq'" class="space-y-10 animate-in slide-in-from-bottom-4 duration-500">
+                    <div v-if="activeTab === 'mq'" class="space-y-10 animate-in slide-in-from-bottom-4 duration-500">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-white/5">
               
+              <!-- START FROM -->
               <div class="relative group select-container">
                 <label class="label-text" :class="isRangeInvalid ? 'text-red-400 animate-pulse' : 'text-indigo-400'">✦ Start From</label>
-                <div @click.stop="isStartOpen = !isStartOpen; isEndOpen = false" 
+                <div @click.stop="isStartOpen ? isStartOpen = false : openStart()" 
                      :class="['input-style flex items-center justify-between cursor-pointer active:scale-95', isDark ? 'dark-input' : 'light-input', isRangeInvalid ? '!border-red-500/50' : '']">
                   <span class="truncate font-black text-sm">{{ mqOptions.find(o => o.id === mqFromIdx)?.label }}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 transition-transform duration-500', isStartOpen ? 'rotate-180' : '']" viewBox="0 0 20 20" fill="currentColor">
@@ -163,7 +214,8 @@ const calculation = computed(() => {
                   </svg>
                 </div>
                 <Transition name="mega-menu">
-                  <div v-if="isStartOpen" :class="['custom-list custom-scroll', isDark ? 'bg-slate-900 shadow-[0_20px_50px_rgba(79,70,229,0.3)]' : 'bg-white shadow-2xl']">
+                  <div v-if="isStartOpen" ref="startListRef" @scroll="handleScrollStart" 
+                       :class="['custom-list custom-scroll', isDark ? 'bg-slate-900 shadow-[0_20px_50px_rgba(79,70,229,0.3)]' : 'bg-white shadow-2xl']">
                     <div v-for="opt in mqOptions" :key="opt.id" @click="mqFromIdx = opt.id; isStartOpen = false"
                          :class="['list-item active:scale-95', mqFromIdx === opt.id ? 'active-item' : (isDark ? 'hover:bg-white/5 text-slate-300' : 'hover:bg-slate-50 text-slate-700')]">
                       {{ opt.label }}
@@ -172,9 +224,10 @@ const calculation = computed(() => {
                 </Transition>
               </div>
 
+              <!-- END AT -->
               <div class="relative group select-container">
                 <label class="label-text text-indigo-400">✦ End At</label>
-                <div @click.stop="isEndOpen = !isEndOpen; isStartOpen = false" 
+                <div @click.stop="isEndOpen ? isEndOpen = false : openEnd()" 
                      :class="['input-style flex items-center justify-between cursor-pointer active:scale-95', isDark ? 'dark-input' : 'light-input']">
                   <span class="truncate font-black text-sm">{{ mqOptions.find(o => o.id === mqUntilIdx)?.label }}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 transition-transform duration-500', isEndOpen ? 'rotate-180' : '']" viewBox="0 0 20 20" fill="currentColor">
@@ -182,7 +235,8 @@ const calculation = computed(() => {
                   </svg>
                 </div>
                 <Transition name="mega-menu">
-                  <div v-if="isEndOpen" :class="['custom-list custom-scroll', isDark ? 'bg-slate-900 shadow-[0_20px_50px_rgba(79,70,229,0.3)]' : 'bg-white shadow-2xl']">
+                  <div v-if="isEndOpen" ref="endListRef" @scroll="handleScrollEnd" 
+                       :class="['custom-list custom-scroll', isDark ? 'bg-slate-900 shadow-[0_20px_50px_rgba(79,70,229,0.3)]' : 'bg-white shadow-2xl']">
                     <div v-for="opt in mqOptions" :key="opt.id" @click="mqUntilIdx = opt.id; isEndOpen = false"
                          :class="['list-item active:scale-95', mqUntilIdx === opt.id ? 'active-item' : (isDark ? 'hover:bg-white/5 text-slate-300' : 'hover:bg-slate-50 text-slate-700')]">
                       {{ opt.label }}
@@ -227,22 +281,30 @@ const calculation = computed(() => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-white/5">
               <div class="relative group select-container">
                 <label class="label-text text-emerald-400">✦ Select Quest</label>
-                <div @click.stop="isSQOpen = !isSQOpen" 
-                     :class="['input-style flex items-center justify-between cursor-pointer active:scale-95', isDark ? 'dark-input' : 'light-input']">
-                  <span class="truncate font-black text-sm">{{ selectedSQ }}</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 transition-transform duration-500', isSQOpen ? 'rotate-180' : '']" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                  </svg>
-                </div>
-                <Transition name="mega-menu">
-                  <div v-if="isSQOpen" :class="['custom-list custom-scroll', isDark ? 'bg-slate-900 shadow-[0_20px_50px_rgba(16,185,129,0.3)]' : 'bg-white shadow-2xl']">
-                    <div v-for="(val, key) in quest_data" :key="key" @click="selectedSQ = key; isSQOpen = false"
-                         :class="['list-item active:scale-95', selectedSQ === key ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : (isDark ? 'hover:bg-white/5 text-slate-300' : 'hover:bg-slate-50 text-slate-700')]">
-                      {{ key }}
-                    </div>
-                  </div>
-                </Transition>
-              </div>
+                <div class="relative group select-container">
+  <!-- UBAH: Ganti @click untuk memanggil openSQ() -->
+  <div @click.stop="isSQOpen ? isSQOpen = false : openSQ()" 
+       :class="['input-style flex items-center justify-between cursor-pointer active:scale-95', isDark ? 'dark-input' : 'light-input']">
+    <span class="truncate font-black text-sm">{{ selectedSQ }}</span>
+    <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 transition-transform duration-500', isSQOpen ? 'rotate-180' : '']" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+    </svg>
+  </div>
+
+  <Transition name="mega-menu">
+    <!-- TAMBAH: ref="sqListRef" dan @scroll="handleScrollSQ" -->
+    <div v-if="isSQOpen" 
+         ref="sqListRef"
+         @scroll="handleScrollSQ"
+         :class="['custom-list custom-scroll', isDark ? 'bg-slate-900 shadow-[0_20px_50px_rgba(16,185,129,0.3)]' : 'bg-white shadow-2xl']">
+      <div v-for="(val, key) in quest_data" :key="key" @click="selectedSQ = key; isSQOpen = false"
+           :class="['list-item active:scale-95', selectedSQ === key ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : (isDark ? 'hover:bg-white/5 text-slate-300' : 'hover:bg-slate-50 text-slate-700')]">
+        {{ key }}
+      </div>
+    </div>
+  </Transition>
+</div>
+</div>
               <div>
                 <label class="label-text text-emerald-400">✦ Amount (Stack/Times)</label>
                 <input v-model.number="sqAmount" type="number" class="input-style active:scale-[0.98]" :class="isDark ? 'dark-input' : 'light-input'" />
@@ -475,6 +537,7 @@ const calculation = computed(() => {
 .custom-scroll::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #6366f1, #a855f7);
   border-radius: 999px;
+  min-height: 70px; 
   transition: all 0.3s ease;
 }
 
