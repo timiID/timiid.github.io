@@ -130,40 +130,44 @@
         </div>
       </div>
     </div>
-    <div v-if="totalPages > 1" class="flex justify-center items-center gap-3 mt-12 flex-wrap">
-  
+    <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-10 flex-wrap">
+
   <button 
     @click="currentPage--" 
     :disabled="currentPage === 1"
-    class="w-14 h-14 rounded-[1.2rem] flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg"
-    :class="isDark 
-      ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50 disabled:opacity-20' 
-      : 'border-indigo-100 text-indigo-300 bg-white disabled:opacity-30'"
+    class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg disabled:opacity-20"
+    :class="isDark ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50' : 'border-indigo-100 text-indigo-300 bg-white'"
   >
     «
   </button>
 
-  <button
-    v-for="page in totalPages"
-    :key="page"
-    @click="currentPage = page"
-    class="w-14 h-14 rounded-[1.2rem] flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg"
-    :class="currentPage === page 
-      ? 'bg-indigo-600 border-indigo-600 text-white scale-110 z-10' 
-      : (isDark 
-          ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50 hover:border-indigo-500/50' 
-          : 'border-indigo-100 text-indigo-500 bg-white hover:border-indigo-300')"
-  >
-    {{ page }}
-  </button>
+  <template v-for="page in displayedPages" :key="page">
+    <button
+      v-if="page !== '...'"
+      @click="currentPage = page"
+      class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-lg shadow-lg"
+      :class="currentPage === page 
+        ? 'bg-indigo-600 border-indigo-600 text-white scale-110 z-10 shadow-indigo-500/50' 
+        : (isDark 
+            ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50 hover:border-indigo-500/50' 
+            : 'border-indigo-100 text-indigo-500 bg-white hover:border-indigo-300')"
+    >
+      {{ page }}
+    </button>
+
+    <span 
+      v-else 
+      class="w-10 h-12 flex items-end justify-center font-black text-indigo-500 opacity-50 pb-2 text-xl"
+    >
+      {{ page }}
+    </span>
+  </template>
 
   <button 
     @click="currentPage++" 
     :disabled="currentPage === totalPages"
-    class="w-14 h-14 rounded-[1.2rem] flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg"
-    :class="isDark 
-      ? 'border-indigo-600 text-indigo-500 bg-slate-900/50 disabled:opacity-20' 
-      : 'border-indigo-600 text-indigo-600 bg-white disabled:opacity-30'"
+    class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg disabled:opacity-20"
+    :class="isDark ? 'border-indigo-600 text-indigo-500 bg-slate-900/50' : 'border-indigo-600 text-indigo-600 bg-white'"
   >
     »
   </button>
@@ -218,7 +222,29 @@ const filteredSpots = computed(() => {
   });
 });
 
+const displayedPages = computed(() => {
+  const total = totalPages.value;
+  const current = currentPage.value;
 
+  // Jika total halaman sedikit (misal <= 5), tampilkan semua saja
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  // Jika di halaman awal-awal (1, 2, atau 3)
+  if (current <= 3) {
+    return [1, 2, 3, '...', total];
+  }
+
+  // Jika di halaman akhir-akhir
+  if (current >= total - 2) {
+    return [1, '...', total - 2, total - 1, total];
+  }
+
+  // Jika di tengah-tengah
+  // Format: [1, '...', current, '...', total]
+  return [1, '...', current, '...', total];
+});
 const totalPages = computed(() => Math.ceil(filteredSpots.value.length / itemsPerPage));
 
 const paginatedSpots = computed(() => {
