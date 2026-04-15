@@ -78,7 +78,7 @@
         </p>
         
     <div v-if="filteredSpots.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
-      <div v-for="(spot, index) in filteredSpots" :key="index" 
+      <div v-for="(spot, index) in paginatedSpots":key="index" 
         class="group relative flex flex-col rounded-[2.5rem] border transition-all duration-500"
         :class="isDark ? 'bg-slate-900/60 border-white/10 hover:border-indigo-500/40' : 'bg-white border-slate-200 hover:border-indigo-400/40 hover:shadow-xl'">
         
@@ -130,6 +130,45 @@
         </div>
       </div>
     </div>
+    <div v-if="totalPages > 1" class="flex justify-center items-center gap-3 mt-12 flex-wrap">
+  
+  <button 
+    @click="currentPage--" 
+    :disabled="currentPage === 1"
+    class="w-14 h-14 rounded-[1.2rem] flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg"
+    :class="isDark 
+      ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50 disabled:opacity-20' 
+      : 'border-indigo-100 text-indigo-300 bg-white disabled:opacity-30'"
+  >
+    «
+  </button>
+
+  <button
+    v-for="page in totalPages"
+    :key="page"
+    @click="currentPage = page"
+    class="w-14 h-14 rounded-[1.2rem] flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg"
+    :class="currentPage === page 
+      ? 'bg-indigo-600 border-indigo-600 text-white scale-110 z-10' 
+      : (isDark 
+          ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50 hover:border-indigo-500/50' 
+          : 'border-indigo-100 text-indigo-500 bg-white hover:border-indigo-300')"
+  >
+    {{ page }}
+  </button>
+
+  <button 
+    @click="currentPage++" 
+    :disabled="currentPage === totalPages"
+    class="w-14 h-14 rounded-[1.2rem] flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg"
+    :class="isDark 
+      ? 'border-indigo-600 text-indigo-500 bg-slate-900/50 disabled:opacity-20' 
+      : 'border-indigo-600 text-indigo-600 bg-white disabled:opacity-30'"
+  >
+    »
+  </button>
+
+</div>
 
     <div v-else class="py-20 text-center space-y-6 animate-fade-in">
       <div class="text-6xl animate-bounce">🔍</div>
@@ -145,15 +184,52 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 defineProps(['isDark']);
 
-// Reactive States untuk Fitur Baru
+// 1. State Variables
 const searchQuery = ref('');
 const userLevel = ref(null);
 const activeTab = ref('All');
 const tabs = ['All', 'Boss', 'Mini Boss', 'Mob'];
+const currentPage = ref(1);
+const itemsPerPage = 9;
+
+const filteredSpots = computed(() => {
+  return levelingList.filter(spot => {
+    // Filter Search
+    const matchesSearch =
+      spot.main.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      spot.main.loc.toLowerCase().includes(searchQuery.value.toLowerCase());
+
+    // Filter Tab
+    const matchesTab =
+      activeTab.value === 'All' || spot.main.type === activeTab.value;
+
+    // Filter Level
+    let matchesLevel = true;
+    if (userLevel.value !== null && userLevel.value !== '') {
+      const [minRange, maxRange] = spot.range.split('-').map(Number);
+      matchesLevel = userLevel.value >= minRange && userLevel.value <= maxRange;
+    }
+
+    return matchesSearch && matchesTab && matchesLevel;
+  });
+});
+
+
+const totalPages = computed(() => Math.ceil(filteredSpots.value.length / itemsPerPage));
+
+const paginatedSpots = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return filteredSpots.value.slice(start, start + itemsPerPage);
+});
+
+// 4. Watchers & Helpers
+watch([searchQuery, userLevel, activeTab], () => { 
+  currentPage.value = 1; 
+});
 
 const tips = [
   { icon: '☀️', title: 'Daily Buffs', content: 'Always complete daily emblems that reward EXP Gain before starting.' },
@@ -436,29 +512,6 @@ const levelingList = [
     ]
   },
 ];
-
-// Computed Logic untuk Filtering
-const filteredSpots = computed(() => {
-  return levelingList.filter(spot => {
-    // 1. Logic Filter Nama & Lokasi
-    const matchesSearch = spot.main.name.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
-                          spot.main.loc.toLowerCase().includes(searchQuery.value.toLowerCase());
-    
-    // 2. Logic Filter Kategori (Tabs)
-    const matchesTab = activeTab.value === 'All' || spot.main.type === activeTab.value;
-
-    // 3. Logic Filter Level (+/- 9 Level Rule)
-    let matchesLevel = true;
-    if (userLevel.value) {
-      const [minRange, maxRange] = spot.range.split('-').map(Number);
-      // Jika level user masuk dalam range spot +/- 9 level margin
-      matchesLevel = userLevel.value >= (minRange - 0) && userLevel.value <= (maxRange + 0);
-    }
-
-    return matchesSearch && matchesTab && matchesLevel;
-  });
-});
-
 const resetFilters = () => {
   searchQuery.value = '';
   userLevel.value = null;

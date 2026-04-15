@@ -296,7 +296,7 @@ const stats = computed(() => [
 
                 <button @click="toggleShowAll" 
                     class="w-full md:w-auto h-14 px-12 rounded-2xl border-[3px] border-indigo-400 bg-indigo-600 text-white font-black uppercase italic tracking-tighter hover:scale-105 active:scale-95 transition-all shadow-xl">
-                    {{ itemsPerPage === 10 ? 'Show All Database' : 'Show 10 Rows' }}
+                    {{ itemsPerPage === 10 ? 'Show All' : 'Show 10 Rows' }}
                 </button>
             </div>
 

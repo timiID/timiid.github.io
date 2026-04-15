@@ -78,7 +78,16 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  // MASUKKAN VARIABEL ROUTES DI SINI
+  routes: routes, 
+  
+  // EFEK SCROLL KE ATAS
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0, behavior: 'smooth' }
+    }
+  }
 })
-
 export default router

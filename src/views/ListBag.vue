@@ -54,7 +54,7 @@ const translations = {
         slotLabel: "Jump to Slot",
         allClass: "All Class",
         allSlot: "All Slot",
-        exploreBtn: "Explore All",
+        exploreBtn: "Show All",
         collapseBtn: "Collapse to 10 Rows",
         stats: { all: 'ALL ITEM', res: 'RESULTS', boss: 'BOSS', slot: 'SLOTS' },
         table: { slot: 'Slot', name: 'Item Name', need: 'Total Need', cost: 'Spina Cost', src: 'Source', type: 'Type', loc: 'Location' },
