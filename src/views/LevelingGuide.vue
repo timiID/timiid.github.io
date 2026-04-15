@@ -74,105 +74,103 @@
       </div>
     </div>
 <p class="text-lg leading-relaxed opacity-90 font-bold italic">
-        ➡️ Result
-        </p>
-        
-    <div v-if="filteredSpots.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
-      <div v-for="(spot, index) in paginatedSpots":key="index" 
-        class="group relative flex flex-col rounded-[2.5rem] border transition-all duration-500"
-        :class="isDark ? 'bg-slate-900/60 border-white/10 hover:border-indigo-500/40' : 'bg-white border-slate-200 hover:border-indigo-400/40 hover:shadow-xl'">
-        
-        <div class="absolute -top-3 left-8 px-5 py-1.5 rounded-2xl bg-slate-800 text-white dark:bg-indigo-600 font-black italic text-xs shadow-lg z-10 transition-transform group-hover:scale-110">
-          LV {{ spot.range }}
-        </div>
+      ➡️ Result
+    </p>
 
-        <div class="p-8 pt-10 flex-1 flex flex-col space-y-6">
-          <div class="space-y-3">
-            <div class="flex justify-between items-start">
-            <div class="space-y-1">
-              <h3 class="text-lg font-black uppercase leading-tight tracking-tight group-hover:text-indigo-500 transition-colors">
-                {{ spot.main.name }}
-              </h3>
-              <!-- DIFF BADGE -->
-        <span v-if="spot.main.difficulty"
-          :class="['text-[11px] font-black px-2 py-0.5 rounded-lg', diffClass(spot.main.difficulty)]">
-          {{ spot.main.difficulty }}
-        </span>
-              <p v-if="spot.main.type" class="text-[11px] font-bold opacity-40 uppercase italic">{{ spot.main.type }}</p>
-            </div>
-                <span v-if="spot.main.lv" class="text-[10px] font-black px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-500">LV {{ spot.main.lv }}</span>
-            </div>
-            <div class="flex items-start gap-2 text-[11px] font-bold opacity-70">
-              <span class="mt-0.5">📍</span>
-              <span>{{ spot.main.loc }}</span>
-            </div>
+    <div v-if="filteredSpots.length > 0">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
+        <div v-for="(spot, index) in paginatedSpots" :key="index" 
+          class="group relative flex flex-col rounded-[2.5rem] border transition-all duration-500"
+          :class="isDark ? 'bg-slate-900/60 border-white/10 hover:border-indigo-500/40' : 'bg-white border-slate-200 hover:border-indigo-400/40 hover:shadow-xl'">
+          
+          <div class="absolute -top-3 left-8 px-5 py-1.5 rounded-2xl bg-slate-800 text-white dark:bg-indigo-600 font-black italic text-xs shadow-lg z-10 transition-transform group-hover:scale-110">
+            LV {{ spot.range }}
           </div>
 
-          <div v-if="spot.alts && spot.alts.length > 0" class="space-y-3 pt-5 border-t border-black/5 dark:border-white/5">
-            <span class="text-[9px] font-black opacity-40 uppercase tracking-widest block">Alternative Options</span>
-            <div v-for="(alt, ai) in spot.alts" :key="ai" 
-              class="p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-transparent hover:border-indigo-500/20 transition-all space-y-2">
+          <div class="p-8 pt-10 flex-1 flex flex-col space-y-6">
+            <div class="space-y-3">
               <div class="flex justify-between items-start">
-                <div>
-                  <p class="text-[12px] font-black uppercase leading-tight">{{ alt.name }}</p>
-                  <!-- DIFF ALT -->
-            <span v-if="alt.difficulty"
-              :class="['text-[10px] font-black px-2 py-0.5 rounded-lg', diffClass(alt.difficulty)]">
-              {{ alt.difficulty }}
-            </span>
-                  <p class="text-[11px] font-bold opacity-40 uppercase">{{ alt.type || 'Mini Boss' }}</p>
+                <div class="space-y-1">
+                  <h3 class="text-lg font-black uppercase leading-tight tracking-tight group-hover:text-indigo-500 transition-colors">
+                    {{ spot.main.name }}
+                  </h3>
+                  <span v-if="spot.main.difficulty"
+                    :class="['text-[11px] font-black px-2 py-0.5 rounded-lg', diffClass(spot.main.difficulty)]">
+                    {{ spot.main.difficulty }}
+                  </span>
+                  <p v-if="spot.main.type" class="text-[11px] font-bold opacity-40 uppercase italic">{{ spot.main.type }}</p>
                 </div>
-                <span v-if="alt.lv" class="text-[10px] font-black px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-500">LV {{ alt.lv }}</span>
+                <span v-if="spot.main.lv" class="text-[10px] font-black px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-500">LV {{ spot.main.lv }}</span>
               </div>
-              <p class="text-[10px] opacity-60 font-medium leading-snug">📍 {{ alt.loc }}</p>
+              <div class="flex items-start gap-2 text-[11px] font-bold opacity-70">
+                <span class="mt-0.5">📍</span>
+                <span>{{ spot.main.loc }}</span>
+              </div>
+            </div>
+
+            <div v-if="spot.alts && spot.alts.length > 0" class="space-y-3 pt-5 border-t border-black/5 dark:border-white/5">
+              <span class="text-[9px] font-black opacity-40 uppercase tracking-widest block">Alternative Options</span>
+              <div v-for="(alt, ai) in spot.alts" :key="ai" 
+                class="p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-transparent hover:border-indigo-500/20 transition-all space-y-2">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <p class="text-[12px] font-black uppercase leading-tight">{{ alt.name }}</p>
+                    <span v-if="alt.difficulty"
+                      :class="['text-[10px] font-black px-2 py-0.5 rounded-lg', diffClass(alt.difficulty)]">
+                      {{ alt.difficulty }}
+                    </span>
+                    <p class="text-[11px] font-bold opacity-40 uppercase">{{ alt.type || 'Mini Boss' }}</p>
+                  </div>
+                  <span v-if="alt.lv" class="text-[10px] font-black px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-500">LV {{ alt.lv }}</span>
+                </div>
+                <p class="text-[10px] opacity-60 font-medium leading-snug">📍 {{ alt.loc }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-10 flex-wrap">
+        <button 
+          @click="currentPage--" 
+          :disabled="currentPage === 1"
+          class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg disabled:opacity-20"
+          :class="isDark ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50' : 'border-indigo-100 text-indigo-300 bg-white'"
+        >
+          <
+        </button>
+
+        <template v-for="page in displayedPages" :key="page">
+          <button
+            v-if="page !== '...'"
+            @click="currentPage = page"
+            class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-lg shadow-lg"
+            :class="currentPage === page 
+              ? 'bg-indigo-600 border-indigo-600 text-white scale-110 z-10 shadow-indigo-500/50' 
+              : (isDark 
+                  ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50 hover:border-indigo-500/50' 
+                  : 'border-indigo-100 text-indigo-500 bg-white hover:border-indigo-300')"
+          >
+            {{ page }}
+          </button>
+          <span 
+            v-else 
+            class="w-10 h-12 flex items-end justify-center font-black text-indigo-500 opacity-50 pb-2 text-xl"
+          >
+            {{ page }}
+          </span>
+        </template>
+
+        <button 
+          @click="currentPage++" 
+          :disabled="currentPage === totalPages"
+          class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg disabled:opacity-20"
+          :class="isDark ? 'border-indigo-600 text-indigo-500 bg-slate-900/50' : 'border-indigo-600 text-indigo-600 bg-white'"
+        >
+          >
+        </button>
+      </div>
     </div>
-    <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-10 flex-wrap">
-
-  <button 
-    @click="currentPage--" 
-    :disabled="currentPage === 1"
-    class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg disabled:opacity-20"
-    :class="isDark ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50' : 'border-indigo-100 text-indigo-300 bg-white'"
-  >
-    «
-  </button>
-
-  <template v-for="page in displayedPages" :key="page">
-    <button
-      v-if="page !== '...'"
-      @click="currentPage = page"
-      class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-lg shadow-lg"
-      :class="currentPage === page 
-        ? 'bg-indigo-600 border-indigo-600 text-white scale-110 z-10 shadow-indigo-500/50' 
-        : (isDark 
-            ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50 hover:border-indigo-500/50' 
-            : 'border-indigo-100 text-indigo-500 bg-white hover:border-indigo-300')"
-    >
-      {{ page }}
-    </button>
-
-    <span 
-      v-else 
-      class="w-10 h-12 flex items-end justify-center font-black text-indigo-500 opacity-50 pb-2 text-xl"
-    >
-      {{ page }}
-    </span>
-  </template>
-
-  <button 
-    @click="currentPage++" 
-    :disabled="currentPage === totalPages"
-    class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg disabled:opacity-20"
-    :class="isDark ? 'border-indigo-600 text-indigo-500 bg-slate-900/50' : 'border-indigo-600 text-indigo-600 bg-white'"
-  >
-    »
-  </button>
-
-</div>
 
     <div v-else class="py-20 text-center space-y-6 animate-fade-in">
       <div class="text-6xl animate-bounce">🔍</div>

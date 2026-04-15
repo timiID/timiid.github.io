@@ -141,7 +141,7 @@
       <div class="flex items-center gap-2">
         <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" 
           class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 disabled:opacity-20 transition-all hover:bg-rose-500 hover:text-white font-black">
-          «
+          <
         </button>
 
         <template v-for="page in displayedPages" :key="page">
@@ -155,7 +155,7 @@
 
         <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages"
           class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 disabled:opacity-20 transition-all hover:bg-rose-500 hover:text-white font-black">
-          »
+          >
         </button>
       </div>
 

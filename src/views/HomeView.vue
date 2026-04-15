@@ -79,10 +79,10 @@ const router = useRouter();
     color: 'from-orange-500 to-red-500'
   },
   { 
-    name: 'XTALL', 
+    name: 'XTALL ID', 
     path: '/xtall', 
     icon: iconXtall, 
-    desc: 'Find the best crystals for your equipment.',
+    desc: 'Find the best crystals for your equipment. Xtall with Indonesia Language!',
     color: 'from-emerald-500 to-teal-500'
   }
 ];

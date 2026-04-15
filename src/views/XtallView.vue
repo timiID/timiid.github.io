@@ -129,13 +129,13 @@
 </main>
 
       <div v-if="totalPages > 1" class="flex justify-center gap-2 py-10">
-        <button @click="currentPage--" :disabled="currentPage === 1" class="w-12 h-12 rounded-xl border-2 disabled:opacity-20">«</button>
+        <button @click="currentPage--" :disabled="currentPage === 1" class="w-12 h-12 rounded-xl border-2 disabled:opacity-20"><</button>
         <button v-for="page in visiblePages" :key="page" @click="currentPage = page"
           :class="['w-12 h-12 rounded-xl border-2 font-black transition-all', 
           currentPage === page ? 'bg-blue-600 border-blue-600 text-white' : (isDark ? 'bg-slate-900 border-white/5 text-blue-400' : 'bg-white border-slate-200')]">
           {{ page }}
         </button>
-        <button @click="currentPage++" :disabled="currentPage === totalPages" class="w-12 h-12 rounded-xl border-2 disabled:opacity-20">»</button>
+        <button @click="currentPage++" :disabled="currentPage === totalPages" class="w-12 h-12 rounded-xl border-2 disabled:opacity-20">></button>
       </div>
 
     </div>

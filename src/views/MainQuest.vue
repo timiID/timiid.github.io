@@ -273,7 +273,7 @@ const stats = computed(() => [
                     <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" 
                         :class="['h-12 w-12 flex items-center justify-center rounded-xl border-[3px] font-black transition-all disabled:opacity-20',
                         props.isDark ? 'border-indigo-600 bg-black/40 text-indigo-400' : 'border-indigo-600 bg-white text-indigo-600']">
-                        «
+                        <
                     </button>
 
                     <template v-for="(page, index) in displayedPages" :key="index">
@@ -290,7 +290,7 @@ const stats = computed(() => [
                     <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" 
                         :class="['h-12 w-12 flex items-center justify-center rounded-xl border-[3px] font-black transition-all disabled:opacity-20',
                         props.isDark ? 'border-indigo-600 bg-black/40 text-indigo-400' : 'border-indigo-600 bg-white text-indigo-600']">
-                        »
+                        >
                     </button>
                 </div>
 

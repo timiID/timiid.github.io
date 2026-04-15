@@ -91,7 +91,7 @@
             :disabled="currentPage === 1"
             class="w-12 h-12 rounded-2xl border-2 border-white/10 bg-slate-900/40 flex items-center justify-center transition-all hover:border-white/30 disabled:opacity-10 disabled:cursor-not-allowed group"
           >
-            <span class="text-xl font-bold text-slate-400 group-hover:text-white">«</span>
+            <span class="text-xl font-bold text-slate-400 group-hover:text-white"><</span>
           </button>
 
           <div class="flex gap-2">
@@ -115,7 +115,7 @@
             :disabled="currentPage === totalPages"
             class="w-12 h-12 rounded-2xl border-2 border-white/20 bg-slate-900/20 flex items-center justify-center transition-all hover:border-white/40 disabled:opacity-10 disabled:cursor-not-allowed group"
           >
-            <span class="text-xl font-bold text-blue-400 group-hover:text-white">»</span>
+            <span class="text-xl font-bold text-blue-400 group-hover:text-white">></span>
           </button>
         </div>
       </div>

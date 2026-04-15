@@ -357,12 +357,12 @@ const getBadgeClass = (kelas) => {
 
       <div class="flex flex-col gap-4 justify-center items-center pb-10">
           <div v-if="totalPages > 1" class="flex flex-wrap justify-center items-center gap-1">
-              <button @click="currentPage--" :disabled="currentPage === 1" class="h-9 w-9 rounded-lg border-2 font-black border-blue-600 text-xs disabled:opacity-20 hover:bg-blue-600 hover:text-white transition-all">«</button>
+              <button @click="currentPage--" :disabled="currentPage === 1" class="h-9 w-9 rounded-lg border-2 font-black border-blue-600 text-xs disabled:opacity-20 hover:bg-blue-600 hover:text-white transition-all"><</button>
               <button v-for="p in displayedPages" :key="p" @click="typeof p === 'number' ? currentPage = p : null" 
                 :class="['h-9 w-9 rounded-lg border-2 font-black transition-all text-xs', p === currentPage ? 'bg-blue-600 text-white shadow-md' : 'text-blue-600 border-blue-100 hover:border-blue-600']">
                   {{ p }}
               </button>
-              <button @click="currentPage++" :disabled="currentPage === totalPages" class="h-9 w-9 rounded-lg border-2 font-black border-blue-600 text-xs disabled:opacity-20 hover:bg-blue-600 hover:text-white transition-all">»</button>
+              <button @click="currentPage++" :disabled="currentPage === totalPages" class="h-9 w-9 rounded-lg border-2 font-black border-blue-600 text-xs disabled:opacity-20 hover:bg-blue-600 hover:text-white transition-all">></button>
           </div>
           <button @click="toggleShowAll" class="group relative h-12 px-12 rounded-2xl border-b-4 border-indigo-800 bg-indigo-600 text-white font-black uppercase italic text-[11px] tracking-widest hover:brightness-110 active:border-b-0 active:translate-y-1 transition-all shadow-xl">
               <span class="relative z-10">{{ itemsPerPage === 10 ? t.exploreBtn : t.collapseBtn }}</span>
