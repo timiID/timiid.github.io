@@ -85,39 +85,61 @@
   </svg>
 </button>
 </div>
-        <div v-if="totalPages > 1" class="flex items-center justify-center gap-2 md:gap-3 mt-12 mb-10">
-          <button 
-            @click="setPage(currentPage - 1)" 
-            :disabled="currentPage === 1"
-            class="w-12 h-12 rounded-2xl border-2 border-white/10 bg-slate-900/40 flex items-center justify-center transition-all hover:border-white/30 disabled:opacity-10 disabled:cursor-not-allowed group"
-          >
-            <span class="text-xl font-bold text-slate-400 group-hover:text-white"><</span>
-          </button>
+      <div v-if="totalPages > 1" class="flex items-center justify-center gap-2 md:gap-3 mt-12 mb-10">
+    
+    <button 
+      @click="setPage(currentPage - 1)" 
+      :disabled="currentPage === 1"
+      class="w-12 h-12 rounded-2xl border-2 transition-all duration-300 flex items-center justify-center disabled:opacity-10 disabled:cursor-not-allowed group shadow-sm"
+      :class="isDark 
+        ? 'border-white/10 bg-slate-900/40 hover:border-blue-500/50' 
+        : 'border-slate-200 bg-white hover:border-blue-400 hover:shadow-md'"
+    >
+      <span 
+        class="text-xl font-black transition-colors"
+        :class="isDark ? 'text-slate-500 group-hover:text-blue-400' : 'text-slate-400 group-hover:text-blue-600'"
+      >
+        &lt;
+      </span>
+    </button>
 
-          <div class="flex gap-2">
-            <button 
-              v-for="page in visiblePages" 
-              :key="page"
-              @click="setPage(page)"
-              :class="[
-                'w-12 h-12 rounded-2xl font-black transition-all duration-300 flex items-center justify-center border-2 text-lg',
-                currentPage === page 
-                  ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-105 z-10' 
-                  : 'bg-slate-900/60 border-white/5 text-blue-400/60 hover:border-white/20 hover:text-blue-400'
-              ]"
-            >
-              {{ page }}
-            </button>
-          </div>
+    <div class="flex gap-2">
+      <button 
+        v-for="page in visiblePages" 
+        :key="page"
+        @click="setPage(page)"
+        class="w-12 h-12 rounded-2xl font-black transition-all duration-300 flex items-center justify-center border-2 text-lg shadow-sm"
+        :class="[
+          currentPage === page 
+            ? (isDark 
+                ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-110 z-10' 
+                : 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110 z-10')
+            : (isDark 
+                ? 'bg-slate-900/60 border-white/5 text-blue-400/60 hover:border-white/20 hover:text-blue-400' 
+                : 'bg-white border-slate-200 text-slate-400 hover:border-blue-400 hover:text-blue-600')
+        ]"
+      >
+        {{ page }}
+      </button>
+    </div>
 
-          <button 
-            @click="setPage(currentPage + 1)" 
-            :disabled="currentPage === totalPages"
-            class="w-12 h-12 rounded-2xl border-2 border-white/20 bg-slate-900/20 flex items-center justify-center transition-all hover:border-white/40 disabled:opacity-10 disabled:cursor-not-allowed group"
-          >
-            <span class="text-xl font-bold text-blue-400 group-hover:text-white">></span>
-          </button>
-        </div>
+    <button 
+      @click="setPage(currentPage + 1)" 
+      :disabled="currentPage === totalPages"
+      class="w-12 h-12 rounded-2xl border-2 transition-all duration-300 flex items-center justify-center disabled:opacity-10 disabled:cursor-not-allowed group shadow-sm"
+      :class="isDark 
+        ? 'border-white/10 bg-slate-900/40 hover:border-blue-500/50' 
+        : 'border-slate-200 bg-white hover:border-blue-400 hover:shadow-md'"
+    >
+      <span 
+        class="text-xl font-black transition-colors"
+        :class="isDark ? 'text-blue-400 group-hover:text-white' : 'text-blue-600 group-hover:text-blue-800'"
+      >
+        &gt;
+      </span>
+    </button>
+    
+  </div>
       </div>
 
       <div v-else class="py-40 text-center animate-fade-in">
