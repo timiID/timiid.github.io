@@ -17,6 +17,7 @@ import iconXtall from '@/assets/iconfromhome/xtall.png'
 import iconEvent from '@/assets/iconfromhome/event.png'
 import iconLeveling from '@/assets/iconfromhome/lvling.png'
 import iconFavorite from '@/assets/iconfromhome/favorite.png'
+import iconMats from '@/assets/iconfromhome/farmmats.png'
 
 import { ref, onMounted } from 'vue';
 import { crystalData } from '../data/store.js'; // Pastikan path store lo bener
@@ -107,6 +108,13 @@ const other = [
     path: '/favorite', 
     icon: iconFavorite, 
     desc: 'Favorite xtall from xtall page.',
+    color: 'from-red-500 to-orange-500'
+  },
+  { 
+    name: 'Material Farming Spot', 
+    path: '/spotmats', 
+    icon: iconMats, 
+    desc: 'Best all spots farm in Toram Online for farmer mats.',
     color: 'from-red-500 to-orange-500'
   }
   ];
