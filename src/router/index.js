@@ -12,6 +12,7 @@ import XtallAdvancedSearch from '../views/XtallAdvancedSearch.vue'
 import EventList from '../views/EventList.vue'
 import LevelingGuide from '../views/LevelingGuide.vue'
 import Favorite from '../views/FavoriteView.vue'
+import ErrorView from '../views/ErrorView.vue'
 
 
 const routes = [
@@ -74,6 +75,11 @@ const routes = [
       name: 'Favorite',
       component: Favorite
     },
+    {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: ErrorView
+  }
 ]
 
 const router = createRouter({
