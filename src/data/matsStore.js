@@ -132,6 +132,16 @@ export const matsData = [
     location: "Tunnel of Trials",
     drops: [{ name: "Burglar's Cloth", ptsstk: "1782-1980 pt" }],
   },
+  {
+    category: "Cloth",
+    materialName: "Kain",
+    level: 259,
+    mob: "Dark Lixi",
+    isGuaranteedParty: true,
+    element: "Dark",
+    location: "Lixaro Ghost Town Entrance",
+    drops: [{ name: "Slightly Dirty Hood", ptsstk: "1764-2178 pt" }],
+  },
 
   // --- BEAST (Yellow) ---
   {
@@ -233,6 +243,25 @@ export const matsData = [
       { name: "Big Black Claw", ptsstk: "2049-2277 pt" },
       { name: "Gorgeous Nose", ptsstk: "2277-2475 pt" },
     ],
+  },
+  {
+    category: "Beast",
+    materialName: "Fauna",
+    level: 259,
+    mob: "Alpoca",
+    element: "Dark",
+    location: "Vicus Mutans Area 3 ",
+    drops: [{ name: "Fluffy Black Tail", ptsstk: "2004-2475 pt" }],
+  },
+
+  {
+    category: "Beast",
+    materialName: "Fauna",
+    level: 259,
+    mob: "Dark Lixi",
+    element: "Dark",
+    location: "Lixaro Ghost Town Entrance ",
+    drops: [{ name: "Dark Red Horn", ptsstk: "2004-2475 pt" }],
   },
 
   // --- WOOD (Brown) ---
@@ -372,6 +401,16 @@ export const matsData = [
       { name: "Flower Nectar", ptsstk: "267-297 pt" },
     ],
   },
+  {
+    category: "Medicine",
+    materialName: "Obat",
+    level: 255,
+    mob: "Alpoca",
+    isGuaranteedParty: true,
+    element: "Dark",
+    location: "Vicus Mutant Area 3",
+    drops: [{ name: "Bitter Wild Grass", ptsstk: "1764-2178 pt" }],
+  },
 
   // --- MANA (Purple) ---
   {
@@ -488,5 +527,16 @@ export const matsData = [
     element: "Water",
     location: "Marinatown: Area 3",
     drops: [{ name: "Summer Shell II", ptsstk: "1336-1485 pt" }],
+  },
+
+  {
+    category: "Mana",
+    materialName: "Mana",
+    level: 259,
+    mob: "Dark Lixi",
+    isGuaranteedParty: true,
+    element: "Dark",
+    location: "Lixaro Ghost Town Entrance",
+    drops: [{ name: "Unamused Gaze", ptsstk: "400-495 pt" }],
   },
 ];

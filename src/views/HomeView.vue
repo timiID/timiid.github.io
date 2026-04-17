@@ -94,14 +94,14 @@ const other = [
     path: '/event', 
     icon: iconEvent, 
     desc: 'Annual events & calendar overview.',
-    color: 'from-blue-500 to-cyan-400'
+    color: 'from-yellow-500 to-orange-400'
   },
   { 
     name: 'LEVELING GUIDE', 
     path: '/lvling', 
     icon: iconLeveling, 
     desc: 'Fast leveling strategies, best EXP spots, and efficient progression tips.',
-    color: 'from-purple-500 to-indigo-500'
+    color: 'from-blue-500 to-cyan-400'
   },
   { 
     name: 'Favorite Xtall', 
@@ -115,7 +115,7 @@ const other = [
     path: '/spotmats', 
     icon: iconMats, 
     desc: 'Best all spots farm in Toram Online for farmer mats.',
-    color: 'from-red-500 to-orange-500'
+    color: 'from-purple-500 to-indigo-500'
   }
   ];
 
