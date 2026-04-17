@@ -85,59 +85,51 @@
   </svg>
 </button>
 </div>
-      <div v-if="totalPages > 1" class="flex items-center justify-center gap-2 md:gap-3 mt-12 mb-10">
-    
-    <button 
-      @click="setPage(currentPage - 1)" 
-      :disabled="currentPage === 1"
-      class="w-12 h-12 rounded-2xl border-2 transition-all duration-300 flex items-center justify-center disabled:opacity-10 disabled:cursor-not-allowed group shadow-sm"
-      :class="isDark 
-        ? 'border-white/10 bg-slate-900/40 hover:border-blue-500/50' 
-        : 'border-slate-200 bg-white hover:border-blue-400 hover:shadow-md'"
-    >
-      <span 
-        class="text-xl font-black transition-colors"
-        :class="isDark ? 'text-slate-500 group-hover:text-blue-400' : 'text-slate-400 group-hover:text-blue-600'"
-      >
-        &lt;
-      </span>
-    </button>
+      <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 md:gap-3 py-10 flex-wrap">
+  <button 
+    @click="currentPage--" 
+    :disabled="currentPage === 1"
+    :class="['w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border-2 transition-all disabled:opacity-20 shadow-lg',
+      isDark ? 'border-white/10 bg-slate-900/50 text-indigo-400' : 'border-slate-100 bg-white text-indigo-500']"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15 19l-7-7 7-7" /></svg>
+  </button>
 
-    <div class="flex gap-2">
-      <button 
-        v-for="page in visiblePages" 
-        :key="page"
-        @click="setPage(page)"
-        class="w-12 h-12 rounded-2xl font-black transition-all duration-300 flex items-center justify-center border-2 text-lg shadow-sm"
-        :class="[
+  <div class="flex items-center gap-1.5 md:gap-2">
+    <template v-for="(page, index) in displayedPages" :key="index">
+      
+      <button
+        v-if="page !== '...'"
+        @click="currentPage = page"
+        :class="['w-10 h-10 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border-2 transition-all duration-300 font-black text-sm md:text-lg relative',
           currentPage === page 
-            ? (isDark 
-                ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-110 z-10' 
-                : 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110 z-10')
+            ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_0_25px_rgba(79,70,229,0.6)] scale-110 z-10' 
             : (isDark 
-                ? 'bg-slate-900/60 border-white/5 text-blue-400/60 hover:border-white/20 hover:text-blue-400' 
-                : 'bg-white border-slate-200 text-slate-400 hover:border-blue-400 hover:text-blue-600')
-        ]"
+                ? 'bg-slate-900/40 border-white/5 text-slate-400 hover:border-indigo-500/50' 
+                : 'bg-white border-slate-100 text-slate-600 shadow-sm hover:border-indigo-400')]"
       >
         {{ page }}
+        <div v-if="currentPage === page" class="absolute inset-0 bg-indigo-400/20 blur-xl rounded-full"></div>
       </button>
-    </div>
 
-    <button 
-      @click="setPage(currentPage + 1)" 
-      :disabled="currentPage === totalPages"
-      class="w-12 h-12 rounded-2xl border-2 transition-all duration-300 flex items-center justify-center disabled:opacity-10 disabled:cursor-not-allowed group shadow-sm"
-      :class="isDark 
-        ? 'border-white/10 bg-slate-900/40 hover:border-blue-500/50' 
-        : 'border-slate-200 bg-white hover:border-blue-400 hover:shadow-md'"
-    >
       <span 
-        class="text-xl font-black transition-colors"
-        :class="isDark ? 'text-blue-400 group-hover:text-white' : 'text-blue-600 group-hover:text-blue-800'"
+        v-else 
+        :class="['w-6 md:w-8 text-center font-black tracking-widest opacity-40', isDark ? 'text-slate-500' : 'text-slate-400']"
       >
-        &gt;
+        ...
       </span>
-    </button>
+    </template>
+  </div>
+
+  <button 
+    @click="currentPage++" 
+    :disabled="currentPage === totalPages"
+    :class="['w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border-2 transition-all disabled:opacity-20 shadow-lg',
+      isDark ? 'border-white/10 bg-slate-900/50 text-indigo-400' : 'border-slate-100 bg-white text-indigo-500']"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7" /></svg>
+  </button>
+
     
   </div>
       </div>
@@ -302,14 +294,59 @@ const paginatedXtalls = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   return filteredFavs.value.slice(start, start + itemsPerPage);
 });
+const displayedPages = computed(() => {
+  const total = totalPages.value;
+  const current = currentPage.value;
+  const delta = 2; // Menampilkan 2 angka di kiri & 2 di kanan (Total 5 angka di tengah)
+  const range = [];
+  const rangeWithDots = [];
+  let l;
+
+  // 1. Selalu sertakan halaman pertama
+  range.push(1);
+
+  // 2. Hitung range di sekitar halaman aktif
+  for (let i = current - delta; i <= current + delta; i++) {
+    if (i > 1 && i < total) {
+      range.push(i);
+    }
+  }
+
+  // 3. Selalu sertakan halaman terakhir
+  if (total > 1) {
+    range.push(total);
+  }
+
+  // 4. Masukkan Ellipsis (...) jika ada gap
+  for (let i of range) {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithDots.push(l + 1);
+      } else if (i - l !== 1) {
+        rangeWithDots.push('...');
+      }
+    }
+    rangeWithDots.push(i);
+    l = i;
+  }
+
+  return rangeWithDots;
+});
 
 const visiblePages = computed(() => {
-  const range = [];
-  const delta = 2;
-  for (let i = Math.max(1, currentPage.value - delta); i <= Math.min(totalPages.value, currentPage.value + delta); i++) {
-    range.push(i);
+  const maxVisible = 3; // Kurangi jumlah yang tampil di mobile
+  let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2));
+  let end = Math.min(totalPages.value, start + maxVisible - 1);
+
+  if (end - start < maxVisible - 1) {
+    start = Math.max(1, end - maxVisible + 1);
   }
-  return range;
+
+  const pages = [];
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
+  }
+  return pages;
 });
 
 // --- ACTIONS ---

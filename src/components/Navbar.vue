@@ -21,9 +21,19 @@ const navLinks = {
   '/': 'HOME',
   '/bag-list': 'BAG LIST',
   '/mq-list': 'MQ LIST',
-  '/mq-calc': 'MQ-CALC',
-  '/bs-calc': 'BS-CALC',
-  '/xtall': 'XTALL ID'
+  '/bs-calc': 'BS CALC',
+  '/mq-calc': 'MQ CALC',
+  '/xtall': 'XTALL ID',
+};
+
+const navLinks2 = {
+  '/': 'HOME',
+  '/bag-list': 'BAG EXPANSION LIST',
+  '/mq-list': 'MATERIAL MQ LIST',
+  '/bs-calc': 'BS CALCULATOR',
+  '/mq-calc': 'MQ CALCULATOR',
+  '/xtall': 'XTALL ID',
+  '/favorite': 'MY FAVORITES',
 };
 
 const setItemRef = (el, path) => {
@@ -33,15 +43,27 @@ const setItemRef = (el, path) => {
 const updateIndicator = async () => {
   await nextTick();
   const activeLink = itemRefs.value[route.path];
+  
   if (activeLink) {
+    // Definisi warna gradasi berdasarkan rute
+    const gradients = {
+      '/': 'linear-gradient(to bottom, #3b82f6, #2dd4bf)',        // Home: Blue to Cyan
+      '/bag-list': 'linear-gradient(to bottom, #5b2e03ef, #f6bb3bf4)', // Bag: Emerald to Blue
+      '/mq-list': 'linear-gradient(to bottom, #ff002b, #ffb9b9)',  // MQ List: Rose to Orange
+      '/mq-calc': 'linear-gradient(to right, #8b5cf6, #ec4899)',  // MQ Calc: Violet to Pink
+      '/bs-calc': 'linear-gradient(to right, #f59e0b, #ef4444)',  // BS Calc: Amber to Red
+      '/xtall': 'linear-gradient(to right, #06b6d4, #8b5cf6)',    // Xtall: Cyan to Violet
+    };
+
+    // Ambil gradasi berdasarkan path saat ini, gunakan default jika tidak ada di list
+    const selectedGradient = gradients[route.path] || 'linear-gradient(to right, #ef4444, #a855f7)';
+
     indicatorStyle.value = {
       ...indicatorStyle.value,
       left: `${activeLink.offsetLeft}px`,
       width: `${activeLink.offsetWidth}px`,
       opacity: 1,
-      background: route.path === '/bs-calc' 
-        ? 'linear-gradient(to right, #f59e0b, #ef4444)' 
-        : 'linear-gradient(to right, #ef4444, #a855f7)',
+      background: selectedGradient,
     };
   }
 };
@@ -84,7 +106,7 @@ watch(() => route.path, () => {
 
     <div class="flex-1 overflow-y-auto px-5 custom-scrollbar">
       <div class="space-y-2 pb-4"> 
-        <router-link v-for="(name, path) in navLinks" :key="path" :to="path"
+        <router-link v-for="(name, path) in navLinks2" :key="path" :to="path"
           class="py-4 px-6 rounded-2xl font-black italic tracking-widest text-[12px] transition-all flex items-center gap-4"
           :class="route.path === path 
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' 
@@ -98,8 +120,8 @@ watch(() => route.path, () => {
             <img v-else-if="path === '/mq-calc'" src="/src/assets/iconfromhome/mq_calc.png" class="w-full h-full object-contain" />
             <img v-else-if="path === '/bs-calc'" src="/src/assets/iconfromhome/bs_calc.png" class="w-full h-full object-contain" />
             <img v-else-if="path === '/xtall'" src="/src/assets/iconfromhome/xtall.png" class="w-full h-full object-contain" />
+            <img v-else-if="path === '/favorite'" src="/src/assets/iconfromhome/favorite.png" class="w-full h-full object-contain" />
           </div>
-
           {{ name }}
         </router-link>
       </div>
@@ -145,6 +167,22 @@ watch(() => route.path, () => {
       <div class="flex-none flex items-center pr-2 md:pr-6 gap-2 md:gap-4">
         <div class="hidden lg:flex items-center gap-2 mr-2">
 </div>
+<router-link to="/favorite" 
+  :class="['relative p-2 md:p-2.5 rounded-full transition-all duration-300 border flex items-center justify-center group active:scale-95',
+    route.path === '/favorite' 
+      ? 'bg-red-500 border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]' 
+      : (isDark ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-black/5 border-slate-200 hover:bg-black/10')]">
+  
+  <span class="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 text-[10px] font-black italic tracking-widest uppercase opacity-0 group-hover:opacity-100 group-active:scale-110 pointer-events-none transition-all duration-300 shadow-xl whitespace-nowrap z-[210]">
+    Favorite
+    <span class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-inherit rotate-45"></span>
+  </span>
+
+  <img src="@/assets/iconfromhome/favorite.png" 
+    :class="['w-5 h-5 md:w-6 md:h-6 object-contain transition-transform group-hover:scale-110', 
+      route.path === '/favorite' ? 'brightness-0 invert' : '']" 
+    alt="Favorite" />
+</router-link>
 
         <div class="flex items-center gap-3">
   <div class="flex flex-col items-end leading-none select-none">

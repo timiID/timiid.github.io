@@ -45,6 +45,7 @@ defineProps({
           <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
           <li><router-link to="/event" class="hover:text-indigo-400 transition-colors">Event Guide</router-link></li>  
             <li><router-link to="/lvling" class="hover:text-indigo-400 transition-colors">Leveling Guide</router-link></li>                    
+            <li><router-link to="/spotmats" class="hover:text-indigo-400 transition-colors">Material Farming Spot</router-link></li>                    
             <li><router-link to="/favorite" class="hover:text-indigo-400 transition-colors">Favorite Xtall</router-link></li>                    
           </ul>
         </div>
@@ -94,7 +95,7 @@ footer::before {
   background-image: url('/images/logomy.png');
   background-repeat: no-repeat; 
   background-position: center;  
-  background-size: contain;      
+  background-size: cover;      
   opacity: 0.18;        
   z-index: 1;
   pointer-events: none;

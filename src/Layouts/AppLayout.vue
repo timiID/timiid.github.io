@@ -60,9 +60,12 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
   content: "";
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
-  background-image: url('/images/linearperfect.png');
-  background-repeat: repeat;
-  opacity: 0.06; 
+  background-image: url('/images/waifu.png');
+  background-repeat: no-repeat; 
+  background-position: top;  
+  background-attachment: fixed; 
+  background-size: cover; 
+  opacity: 0.16; 
   z-index: -1;
   pointer-events: none;
 }

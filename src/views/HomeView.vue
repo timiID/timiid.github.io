@@ -59,7 +59,7 @@ const router = useRouter();
     color: 'from-blue-600 to-cyan-800'
   },
   { 
-    name: 'LIST MQ', 
+    name: 'MQ LIST', 
     path: '/mq-list', 
     icon: iconMq, 
     desc: 'Complete list of Toram Online Main Quests.',
