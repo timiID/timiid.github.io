@@ -93,9 +93,9 @@ footer::before {
   width: 100%;
   height: 100%;
   background-image: url('/images/what chara.gif');
-  backgroundRepeat: 'no-repeat';
-  backgroundPosition: 'right top';
-  backgroundAttachment: 'scroll';
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-attachment: scroll;
   background-size: auto 100%;      
   opacity: 0.12;        
   z-index: 1;
