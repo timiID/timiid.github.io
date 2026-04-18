@@ -1,13 +1,32 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue'; 
+import { useRoute } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 
-// State Dark Mode
+const route = useRoute();
+const isHome = computed(() => route.path === '/');
+// State & Props
 const props = defineProps(['isDark']);
 const emit = defineEmits(['toggleDark']);
 
-// DATA GELEMBUNG (Bubbles) tetap di sini agar mengisi seluruh layar background
+// 1. DATA SLIDESHOW BACKGROUND
+const backgrounds = [
+  '/images/logomy.png',
+  '/images/waifu.png',
+  '/images/yuyuko1.jpg',
+  '/images/yuyuko2.jpg'
+];
+const currentBgIndex = ref(0);
+
+// 2. LOGIKA TIMING SLIDESHOW
+onMounted(() => {
+  setInterval(() => {
+    currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length;
+  }, 5000); // Berganti setiap 5 detik
+});
+
+// 3. DATA GELEMBUNG (Bubbles)
 const bubbles = Array.from({ length: 30 }, (_, i) => ({ 
   id: i, 
   size: Math.random() * 60 + 20 + 'px', 
@@ -21,7 +40,34 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
 <template>
   <div :class="['min-h-screen flex flex-col transition-all duration-[1000ms] relative overflow-x-hidden', isDark ? 'bg-mesh-dark text-white' : 'bg-mesh-light text-slate-900']">
     
-    <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+    <div 
+      class="absolute inset-0 pointer-events-none z-0 transition-all duration-[1500ms] ease-in-out"
+      :style="{ 
+        backgroundImage: `url(${backgrounds[currentBgIndex]})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center top', 
+        backgroundAttachment: isHome ? 'scroll': 'fixed', 
+        backgroundSize: isHome ? 'cover': '100% 100%',
+        height: isHome ? '1000px' : '100%', 
+        opacity: isHome ?'0.26' : '0.12'
+      }"
+    ></div>
+
+    <div 
+      v-if="isHome"
+      class="absolute inset-0 pointer-events-none z-0"
+      :style="{ 
+        backgroundImage: `url('/images/linearperfect.png')`,
+        backgroundRepeat: 'repeat',
+        backgroundPosition: 'right top',
+        backgroundAttachment: 'scroll', 
+        backgroundSize: 'auto',
+        top: '1000px',
+        height: 'calc(100% - 1000px)', 
+        opacity: '0.08'
+      }"
+    ></div>
+    <div class="absolute inset-0 pointer-events-none z-[1] overflow-hidden">
       <div v-for="bubble in bubbles" :key="'bubble-'+bubble.id" 
         class="absolute rounded-full border border-white/20 backdrop-blur-[1px] animate-float opacity-30 bubble-glow" 
         :style="{ 
@@ -39,36 +85,23 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
       </div>
     </div>
 
-    <Navbar :isDark="isDark" @toggleDark="$emit('toggleDark')" />
+    <Navbar :isDark="isDark" @toggleDark="$emit('toggleDark')" class="relative z-20" />
 
     <main class="flex-1 max-w-7xl mx-auto pt-24 md:pt-36 px-4 pb-20 relative z-10 animate-fade-in w-full">
       <slot />
     </main>
 
-    <Footer :isDark="isDark" class="w-full" />
+    <Footer :isDark="isDark" class="w-full relative z-20" />
   </div>
 </template>
 
 <style scoped>
+/* Reset dasar untuk pembungkus */
 .min-h-screen {
   position: relative;
-  z-index: 1;
 }
 
-/* Background Pattern Overlay */
-.min-h-screen::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background-image: url('/images/waifu.png');
-  background-repeat: no-repeat; 
-  background-position: top;  
-  background-attachment: fixed; 
-  background-size: cover; 
-  opacity: 0.16; 
-  z-index: -1;
-  pointer-events: none;
-}
+/* KODE LAMA ::before DIHAPUS agar tidak bentrok dengan slideshow */
 
 /* Animasi Float untuk Gelembung */
 @keyframes float {
@@ -115,7 +148,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Scrollbar */
+/* Scrollbar Styling */
 :global(::-webkit-scrollbar) { width: 4px; }
 :global(::-webkit-scrollbar-track) { background: transparent; }
 :global(::-webkit-scrollbar-thumb) {
