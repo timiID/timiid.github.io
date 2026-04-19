@@ -2545,8 +2545,8 @@ export const crystalData = [
           code: 365,
           link: null,
           type: "ARMOR",
-          name: "",
-          view: `\n`,
+          name: "Oni Api Gaib",
+          view: `\nDaya Jarak Dekat +10%\nAkurasi +100\nMaxHP -10%\nMaxMP -100\nDengan Zirah Berat:\nMotion Speed +1%`,
         },
         {
           code: 366,

@@ -49,9 +49,10 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         backgroundPosition: 'center top', 
         backgroundAttachment: isHome ? 'scroll': 'fixed', 
         backgroundSize: isHome ? 'cover': '100% 100%',
-        height: isHome ? '1000px' : '100%', 
-        opacity: isHome ?'0.33' : '0.12'
-      }"
+        height: isHome ? '1100px' : '100%', 
+        opacity: isHome ?'0.33' : '0.12', maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
+    webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
+  }"
     ></div>
 
     <div 
