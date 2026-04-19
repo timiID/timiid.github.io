@@ -12,8 +12,9 @@ const emit = defineEmits(['toggleDark']);
 
 // 1. DATA SLIDESHOW BACKGROUND
 const backgrounds = [
-  '/images/logomy.png',
-  '/images/waifu.png',
+  '/images/hanami11.png',
+  '/images/timi.png',
+  '/images/pelulu.png',
   '/images/yuyuko1.jpg',
   '/images/yuyuko2.jpg'
 ];
@@ -49,7 +50,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         backgroundAttachment: isHome ? 'scroll': 'fixed', 
         backgroundSize: isHome ? 'cover': '100% 100%',
         height: isHome ? '1000px' : '100%', 
-        opacity: isHome ?'0.26' : '0.12'
+        opacity: isHome ?'0.33' : '0.12'
       }"
     ></div>
 

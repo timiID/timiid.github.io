@@ -63,7 +63,8 @@ function applyFilter() {
 </script>
 
 <template>
-  <div :class="['p-4 md:p-8 font-sans transition-all duration-700 min-h-screen', isDark ? 'bg-[#050505] text-white' : 'bg-slate-50 text-slate-900']">
+  <div :class="['p-4 md:p-8 font-sans transition-all duration-700 min-h-screen', 
+     isDark ? 'bg-black/20 backdrop-blur-sm text-white' : 'bg-white/20 backdrop-blur-sm text-slate-900']">
     
     <div class="max-w-[1600px] mx-auto mb-6 flex items-center justify-between">
       <button @click="goBack" class="group flex items-center gap-3 px-4 py-2 rounded-xl transition-all hover:bg-white/5 active:scale-95">

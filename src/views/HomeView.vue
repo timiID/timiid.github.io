@@ -226,7 +226,7 @@ const navigateTo = (path) => router.push(path);
     </button>
   </div>
 
-  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+  <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
     <div v-for="fav in favoriteXtalls" :key="fav.code"
          @click="navigateTo(`/xtall/${fav.code}`)"
          class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
