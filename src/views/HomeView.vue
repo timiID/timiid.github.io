@@ -23,13 +23,21 @@ import { ref, onMounted } from 'vue';
 import { crystalData } from '../data/store.js'; // Pastikan path store lo bener
 
 const favoriteXtalls = ref([]);
+const backgrounds = [
+  '/images/hanami11.png',
+  '/images/timi.png',
+  '/images/pelulu.png',
+  '/images/yuyuko1.jpg',
+  '/images/yuyuko2.jpg'
+];
+const currentBgIndex = ref(0);
 
+// 2. LOGIKA TIMING SLIDESHOW
 onMounted(() => {
-  const favIds = JSON.parse(localStorage.getItem('xtall_favs') || '[]');
-  // Ambil data crystal yang ID-nya ada di favorit, limit 5 aja biar gak kepenuhan
-  favoriteXtalls.value = crystalData.filter(c => favIds.includes(String(c.code))).slice(0, 5);
+  setInterval(() => {
+    currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length;
+  }, 5000); // Berganti setiap 5 detik
 });
-
 // --- TAMBAHKAN PROPS ISDARK ---
 const props = defineProps({
   isDark: Boolean
@@ -121,183 +129,181 @@ const other = [
 
 onMounted(() => {
   const favIds = JSON.parse(localStorage.getItem('xtall_favs') || '[]');
-  // Ambil maksimal 5 saja untuk di Home
-  favoriteXtalls.value = crystalData.filter(c => favIds.includes(String(c.code))).slice(0, 5);
+  favoriteXtalls.value = crystalData
+    .filter(c => favIds.includes(String(c.code)))
+    .slice(0, 5);
+
+  setInterval(() => {
+    currentBgIndex.value =
+      (currentBgIndex.value + 1) % backgrounds.length;
+  }, 5000);
 });
 
 const navigateTo = (path) => router.push(path);
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-    <div class="relative mb-12 animate-fade-in">
-      <div class="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full"></div>
-      <div class="relative z-10 flex flex-col items-center">
-        <img src="/images/logo.png" alt="Timi DB Logo" 
-             class="w-32 h-32 md:w-48 md:h-48 object-cover drop-shadow-[0_0_30px_rgba(99,102,241,0.5)] animate-float-slow mb-6" />
+  <div class="w-full flex flex-col items-center">
+    
+    <div class="relative w-full flex flex-col items-center justify-center min-h-[650px] py-16 text-center px-4 overflow-hidden">
+      
+      <div 
+        class="absolute inset-0 pointer-events-none z-0"
+        :style="{ 
+          backgroundImage: `url(${backgrounds[currentBgIndex]})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center top', 
+          backgroundAttachment: 'scroll', 
+          backgroundSize: 'cover',
+          height: '100%', 
+          opacity: '0.35', 
+          maskImage: 'linear-gradient(to bottom, black 0%, black 60%, rgba(0,0,0,0.5) 85%, transparent 100%)',
+          webkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, rgba(0,0,0,0.5) 85%, transparent 100%)'
+        }"
+      ></div>
+
+      <div class="relative z-10 flex flex-col items-center animate-fade-in">
+        <div class="absolute inset-0 bg-indigo-500/10 blur-[120px] rounded-full"></div>
         
-        <h1 class="text-4xl md:text-6xl font-[800] italic uppercase tracking-tighter leading-none transition-all">
-  <span :class="isDark ? 'text-white' : 'text-slate-900'">TIMI </span>
-  <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB㋡</span>
-</h1>
+        <img src="/images/logo.png" class="relative w-32 md:w-44 mb-6 drop-shadow-2xl animate-float-slow" /> 
         
-        <p class="max-w-xl text-sm md:text-lg opacity-70 font-medium leading-relaxed italic uppercase tracking-widest">
+        <h1 class="relative text-4xl md:text-6xl font-[800] italic uppercase tracking-tighter leading-none transition-all">
+          <span :class="isDark ? 'text-white' : 'text-slate-900'">TIMI </span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB㋡</span>
+        </h1>
+        
+        <p class="relative max-w-xl text-sm md:text-lg opacity-70 font-medium leading-relaxed italic uppercase tracking-widest mt-4">
           "Your ultimate companion for Toram Online adventures."
         </p>
-        <p class="max-w-xl text-sm md:text-sm opacity-70 font-lower leading-relaxed italic uppercase tracking-widest">
-  © 2026 
-  <a href="https://timiid.github.io/" 
-     target="_blank" 
-     class="font-black text-blue-500 hover:text-cyan-400 underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all">
-    TIMI DB㋡
-  </a> 
-  • Toram Online Digital Database Project
-</p>
-        <div class="space-y-1 mt-11">
-  <div class="flex flex-col items-center text-center space-y-6 mt-2 pb-10">
-  
-  <!-- Section: Contribution -->
-  <div class="space-y-1">
-    <p class="text-[14px] font-black uppercase tracking-[0.3em] 
-          text-transparent bg-clip-text bg-gradient-to-b
-          from-amber-400 to-orange-600 to-red-800
-          dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400">
-  Contribution
-</p>
-    <a href="https://www.facebook.com/J7Timi" 
-       target="_blank" 
-       class="block font-black italic uppercase transition-all duration-300
-              text-blue-600 dark:text-blue-400 
-              hover:text-cyan-500 dark:hover:text-cyan-300
-              underline decoration-blue-600/30 dark:decoration-blue-400/30">
-      TIMI
-    </a>
-  </div>
 
-  <!-- Section: Reference -->
-  <div class="space-y-1">
-    <p class="text-[14px] font-black uppercase tracking-[0.3em] 
-          text-transparent bg-clip-text bg-gradient-to-b
-          from-amber-400 to-orange-600 to-red-800
-          dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400">
-  Reference
-</p>
-    <div class="flex flex-col items-center">
-      <a href="https://en.toram.jp/information/?type_code=update" 
-         target="_blank" 
-         class="font-black italic uppercase transition-all duration-300
-                text-blue-600 dark:text-blue-400 
-                hover:text-cyan-500 dark:hover:text-cyan-300
-                underline decoration-blue-600/30 dark:decoration-blue-400/30">
-        Toram Online Official Website
-      </a>
-      <p class="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 dark:opacity-50 mt-1">
-        and Other Database Websites
-      </p>
-    </div>
-  </div>
+        <p class="relative max-w-xl text-sm md:text-sm opacity-70 font-lower leading-relaxed italic uppercase tracking-widest mt-2">
+          © 2026 
+          <a href="https://timiid.github.io/" target="_blank" 
+             class="font-black text-blue-500 hover:text-cyan-400 underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all">
+            TIMI DB㋡
+          </a> 
+          • Toram Online Digital Database Project
+        </p>
 
-</div>
-</div>
-      </div>
-    </div>
+        <div class="relative space-y-1 mt-11">
+          <div class="flex flex-col items-center text-center space-y-6 mt-2 pb-10">
+            <div class="space-y-1">
+              <p class="text-[14px] font-black uppercase tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-amber-400 to-orange-600 to-red-800 dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400">
+                Contribution
+              </p>
+              <a href="https://www.facebook.com/J7Timi" target="_blank" 
+                 class="block font-black italic uppercase transition-all duration-300 text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-blue-600/30">
+                TIMI
+              </a>
+            </div>
 
-    <div v-if="favoriteXtalls && favoriteXtalls.length > 0" class="w-full max-w-6xl mb-12 animate-slide-up">
-  
-  <div class="flex items-center justify-between mb-8 px-2">
-    <div class="flex items-center gap-4">
-      <h2 class="font-black italic text-xl tracking-tighter uppercase text-rose-500">
-        Your Favorites
-      </h2>
-      <div class="h-[2px] w-24 bg-gradient-to-r from-rose-500 to-transparent opacity-30"></div>
-    </div>
-
-    <button @click="navigateTo('/favorite')" 
-            :class="[
-              'group flex items-center gap-2 px-5 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all duration-300 shadow-lg active:scale-95',
-              isDark 
-                ? 'bg-rose-600 border-b-4 border-rose-800 text-white hover:bg-rose-500 hover:-translate-y-0.5' 
-                : 'bg-rose-500 border-b-4 border-rose-700 text-white hover:bg-rose-400 hover:-translate-y-0.5'
-            ]">
-      <span>View All</span>
-      <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-      </svg>
-    </button>
-  </div>
-
-  <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
-    <div v-for="fav in favoriteXtalls" :key="fav.code"
-         @click="navigateTo(`/xtall/${fav.code}`)"
-         class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-          <img :src="getIconPath(fav.type)" class="w-7 h-7 object-contain drop-shadow-md" />
-        </div>
-        <div class="text-left overflow-hidden">
-          <h4 class="text-[11px] font-black uppercase tracking-tight truncate">{{ fav.name }}</h4>
-          <p class="text-[8px] opacity-40 font-bold uppercase tracking-widest">{{ fav.type }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-    <div class="w-full max-w-6xl flex items-center gap-6 my-16 opacity-50">
-      <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-blue-500 to-purple-500"></div>
-      <h2 class="font-black italic text-2xl tracking-tighter uppercase shrink-0">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">
-          MAIN GUIDES
-        </span>
-      </h2>
-      <div class="h-[1px] flex-1 bg-gradient-to-r from-purple-500 via-red-500 to-transparent"></div>
-    </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-7 w-full max-w-6xl animate-slide-up">
-      <div v-for="item in features" :key="item.path"
-           @click="navigateTo(item.path)"
-           class="group relative overflow-hidden rounded-[2rem] border border-black/80 bg-white/25 backdrop-blur-xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:shadow-2xl hover:shadow-indigo-500/10">
-        <div :class="['absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br', item.color]"></div>
-        <div class="relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left">
-          <div class="mb-4 h-16 flex items-center justify-center">
-            <img :src="item.icon" :alt="item.name" class="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-lg" />
-          </div>
-          <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
-          <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
-          <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-purple-400 group-hover:text-indigo-300 transition-colors uppercase">
-            Open Tools <span class="group-hover:translate-x-1 transition-transform">→</span>
+            <div class="space-y-1">
+              <p class="text-[14px] font-black uppercase tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-amber-400 to-orange-600 to-red-800 dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400">
+                Reference
+              </p>
+              <div class="flex flex-col items-center">
+                <a href="https://en.toram.jp/information/?type_code=update" target="_blank" 
+                   class="font-black italic uppercase transition-all duration-300 text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-blue-600/30">
+                  Toram Online Official Website
+                </a>
+                <p class="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 dark:opacity-50 mt-1">
+                  and Other Database Websites
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="w-full max-w-6xl flex items-center gap-6 my-16 opacity-50">
-      <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-black-500 to-purple-500"></div>
-      <h2 class="font-black italic text-2xl tracking-tighter uppercase shrink-0">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
-          OTHER GUIDES
-        </span>
-      </h2>
-      <div class="h-[1px] flex-1 bg-gradient-to-r from-purple-500 via-red-500 to-transparent"></div>
-    </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-7 w-full max-w-6xl animate-slide-up">
-      <div v-for="item in other" :key="item.path"
-           @click="navigateTo(item.path)"
-           class="group relative overflow-hidden rounded-[2rem] border border-black/50 bg-white/15 backdrop-blur-xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:shadow-2xl hover:shadow-indigo-500/10">
-        <div :class="['absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br', item.color]"></div>
-        <div class="relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left">
-          <div class="mb-4 h-16 flex items-center justify-center">
-            <img :src="item.icon" :alt="item.name" class="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-lg" />
+    <div class="w-full max-w-6xl px-4 flex flex-col items-center relative z-10">
+      
+      <div v-if="favoriteXtalls && favoriteXtalls.length > 0" class="w-full mb-12 animate-slide-up">
+        <div class="flex items-center justify-between mb-8 px-2">
+          <div class="flex items-center gap-4">
+            <h2 class="font-black italic text-xl tracking-tighter uppercase text-rose-500">Your Favorites</h2>
+            <div class="h-[2px] w-24 bg-gradient-to-r from-rose-500 to-transparent opacity-30"></div>
           </div>
-          <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
-          <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
-          <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-orange-400 group-hover:text-red-600 transition-colors uppercase">
-            Open Tools <span class="group-hover:translate-x-1 transition-transform">→</span>
+          <button @click="navigateTo('/favorite')" 
+                  :class="[
+                    'group flex items-center gap-2 px-5 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all duration-300 shadow-lg active:scale-95',
+                    isDark ? 'bg-rose-600 border-b-4 border-rose-800 text-white hover:bg-rose-500' : 'bg-rose-500 border-b-4 border-rose-700 text-white hover:bg-rose-400'
+                  ]">
+            <span>View All</span>
+            <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div v-for="fav in favoriteXtalls" :key="fav.code"
+               @click="navigateTo(`/xtall/${fav.code}`)"
+               class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <img :src="getIconPath(fav.type)" class="w-7 h-7 object-contain drop-shadow-md" />
+              </div>
+              <div class="text-left overflow-hidden">
+                <h4 class="text-[11px] font-black uppercase tracking-tight truncate">{{ fav.name }}</h4>
+                <p class="text-[8px] opacity-40 font-bold uppercase tracking-widest">{{ fav.type }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
+      <div class="w-full flex items-center gap-6 my-16 opacity-50">
+        <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-blue-500 to-purple-500"></div>
+        <h2 class="font-black italic text-2xl tracking-tighter uppercase shrink-0">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">MAIN GUIDES</span>
+        </h2>
+        <div class="h-[1px] flex-1 bg-gradient-to-r from-purple-500 via-red-500 to-transparent"></div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-7 w-full animate-slide-up">
+        <div v-for="item in features" :key="item.path" @click="navigateTo(item.path)"
+             class="group relative overflow-hidden rounded-[2rem] border border-black/80 bg-white/25 dark:bg-white/5 backdrop-blur-xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+          <div :class="['absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br', item.color]"></div>
+          <div class="relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left">
+            <div class="mb-4 h-16 flex items-center justify-center">
+              <img :src="item.icon" :alt="item.name" class="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-lg" />
+            </div>
+            <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
+            <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
+            <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-purple-400 uppercase">
+              Open Tools <span>→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full flex items-center gap-6 my-16 opacity-50">
+        <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-yellow-500 to-orange-500"></div>
+        <h2 class="font-black italic text-2xl tracking-tighter uppercase shrink-0">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">OTHER GUIDES</span>
+        </h2>
+        <div class="h-[1px] flex-1 bg-gradient-to-r from-orange-500 via-red-500 to-transparent"></div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-7 w-full animate-slide-up pb-20">
+        <div v-for="item in other" :key="item.path" @click="navigateTo(item.path)"
+             class="group relative overflow-hidden rounded-[2rem] border border-black/80 bg-white/25 dark:bg-white/5 backdrop-blur-xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+          <div :class="['absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br', item.color]"></div>
+          <div class="relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left">
+            <div class="mb-4 h-16 flex items-center justify-center">
+              <img :src="item.icon" :alt="item.name" class="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-lg" />
+            </div>
+            <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
+            <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
+            <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-orange-400 group-hover:text-orange-300 transition-colors uppercase">
+              Open Tools <span>→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </template>
 

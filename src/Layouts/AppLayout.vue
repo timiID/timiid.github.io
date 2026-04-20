@@ -50,7 +50,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         backgroundAttachment: isHome ? 'scroll': 'fixed', 
         backgroundSize: isHome ? 'cover': '100% 100%',
         height: isHome ? '1100px' : '100%', 
-        opacity: isHome ?'0.33' : '0.12', maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
+        opacity: isHome ?'0.00' : '0.12', maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
     webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
   }"
     ></div>
@@ -89,7 +89,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
 
     <Navbar :isDark="isDark" @toggleDark="$emit('toggleDark')" class="relative z-20" />
 
-    <main class="flex-1 max-w-7xl mx-auto pt-24 md:pt-36 px-4 pb-20 relative z-10 animate-fade-in w-full">
+    <main class="flex-1 max-w-9x1 mx-auto pt-20 md:pt-30 px-0 pb-20 relative z-10 animate-fade-in w-full">
       <slot />
     </main>
 
