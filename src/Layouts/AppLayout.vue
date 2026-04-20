@@ -64,9 +64,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         backgroundPosition: 'right top',
         backgroundAttachment: 'scroll', 
         backgroundSize: 'auto',
-        top: '1000px',
-        height: 'calc(100% - 1000px)', 
-        opacity: '0.08'
+        opacity: '0.04'
       }"
     ></div>
     <div class="absolute inset-0 pointer-events-none z-[1] overflow-hidden">
