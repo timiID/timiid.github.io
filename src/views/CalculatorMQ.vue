@@ -43,29 +43,29 @@ const getMQMaterialsInRange = computed(() => {
   
   const start = mqFromIdx.value;
   const end = mqUntilIdx.value;
-  const materialsMap = new Map(); // Gunakan Map untuk avoid duplikasi
+  const materialsMap = new Map();
   
-  // Cari chapter dari selected range
-  let startChapter = null;
-  let endChapter = null;
-  
+  // Kumpulkan semua quest names yang dipilih dalam range
+  // Format: "Chapter 1" entries akan diskip (value === "")
+  // Hanya quest dengan nilai XP yang diambil
+  const questNamesInRange = new Set();
   for (let i = start; i <= end; i++) {
     const key = mqKeys[i];
-    if (key && key.startsWith('Chapter')) {
-      const match = key.match(/\d+/);
-      if (match) {
-        const chapterNum = parseInt(match[0]);
-        if (!startChapter) startChapter = chapterNum;
-        endChapter = chapterNum;
-      }
+    const value = mq_data[key];
+    // Hanya ambil yang bukan chapter header (value !== "")
+    if (key && value !== "" && typeof value === 'number') {
+      questNamesInRange.add(key);
     }
   }
   
-  // Filter materials yang masuk range - TANPA DUPLIKASI
+  // Filter materials yang sesuai EXACT dengan quest names
   Object.entries(mqMaterials).forEach(([questKey, materials]) => {
-    const chapterNum = parseFloat(questKey.split('.')[0]);
+    // questKey format: "1.5 - The Dragon's Den"
+    // Ambil quest name setelah " - "
+    const questNameFromKey = questKey.split(' - ').slice(1).join(' - ');
     
-    if (startChapter && endChapter && chapterNum >= startChapter && chapterNum <= endChapter) {
+    // Check jika quest name ini ada dalam range yang dipilih
+    if (questNamesInRange.has(questNameFromKey)) {
       materials.forEach(material => {
         const uniqueKey = `${questKey}-${material.name}`;
         if (!materialsMap.has(uniqueKey)) {
@@ -541,14 +541,14 @@ const questMaterials = computed(() => {
   position: absolute;
   left: 0;
   right: 0;
-  top: 110%;
+  bottom: 110%;
   z-index: 9999;
   padding: 0.8rem;
   border-radius: 1.5rem;
   border: 1px solid rgba(99, 102, 241, 0.2);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  max-height: 240px;
+  max-height: 290px;
   overflow-y: auto;
 }
 
@@ -647,7 +647,7 @@ const questMaterials = computed(() => {
 .custom-scroll::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #6366f1, #a855f7);
   border-radius: 999px;
-  min-height: 70px; 
+  min-height: 40px; 
   transition: all 0.3s ease;
 }
 
