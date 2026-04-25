@@ -46,13 +46,13 @@
       </section>
 
       <RouterLink to="/xtall/advanced" class="my-6 block w-full rounded-2xl border-2 border-indigo-500 bg-gradient-to-t from-indigo-400 to-purple-500 px-6 py-5 text-center text-lg font-black text-white shadow-xl hover:scale-[1.02] transition">
-        🔎 Pencarian Xtall dengan Status
+        🔎 Pencarian Xtall Lanjutan
       </RouterLink>
 
-      <section :class="['grid grid-cols-1 md:grid-cols-6 gap-6 p-6 md:p-10 rounded-[3rem] border-2 backdrop-blur-3xl relative z-[100] transition-all duration-500 shadow-2xl mb-12', 
+      <section :class="['grid grid-cols-1 md:grid-cols-12 gap-6 p-6 md:p-10 rounded-[3rem] border-2 backdrop-blur-3xl relative z-[100] transition-all duration-500 shadow-2xl mb-12', 
   isDark ? 'bg-slate-950/60 border-white/10 shadow-black/40' : 'bg-white/80 border-slate-200 shadow-slate-300/50']">
   
-  <div class="space-y-3 col-span-1 md:col-span-2">
+  <div class="space-y-3 col-span-1 md:col-span-4">
     <label class="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 ml-4 flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-cyan-500/40"></span> CARI NAMA
     </label>
@@ -68,7 +68,7 @@
     </div>
   </div>
 
-  <div class="space-y-3 col-span-1">
+  <div class="space-y-3 col-span-1 md:col-span-2">
     <label class="text-[10px] font-black uppercase tracking-[0.2em] text-purple-500 ml-4">SKALA</label>
     <div class="relative">
       <select v-model="itemsPerPage" :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer appearance-none transition-all',
@@ -83,7 +83,38 @@
     </div>
   </div>
 
-  <div class="space-y-3 col-span-1 md:col-span-3">
+  <div class="space-y-3 col-span-1 md:col-span-2" ref="typeRef">
+    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-green-500 ml-4 flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-green-500/40"></span> JENIS XTALL
+    </label>
+    <div class="relative">
+      <button @click="toggleTypeDropdown" :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer transition-all text-left flex items-center justify-between',
+        isDark ? 'bg-[#0f172a] border-white/5 focus:border-green-500 text-slate-200 hover:border-green-500/50' : 'bg-white border-slate-200 focus:border-green-500 hover:border-green-400']">
+        <span v-if="selectedTypes.length === 0" class="opacity-100">Pilih Jenis...</span>
+        <span v-else class="text-xs">{{ selectedTypes.length }} Dipilih</span>
+        <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 transition-transform', isTypeOpen ? 'rotate-180' : '']" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      
+      <div v-if="isTypeOpen" :class="['absolute top-full left-0 right-0 mt-2 rounded-2xl border-2 backdrop-blur-xl z-50 shadow-2xl',
+        isDark ? 'bg-slate-900/95 border-white/10' : 'bg-white/95 border-slate-200']">
+        <div class="p-4 grid grid-cols-2 gap-2 max-w-md">
+          <button
+            v-for="type in displayTypes"
+            :key="type.value"
+            @click="toggleType(type.value)"
+            :class="['px-3 py-2 text-left rounded-lg border-2 transition-all font-semibold text-xs flex items-center gap-2',
+              selectedTypes.includes(type.value)
+                ? (isDark ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-green-100 border-green-500 text-green-700')
+                : (isDark ? 'bg-transparent border-white/5 text-slate-400 hover:border-green-500/30' : 'bg-transparent border-slate-200 text-slate-600 hover:border-green-400')]">
+            <input type="checkbox" :checked="selectedTypes.includes(type.value)" class="cursor-pointer" />
+            <span>{{ type.label }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-3 col-span-1 md:col-span-4">
     <label class="text-[10px] font-[1000] uppercase tracking-[0.2em] text-red-600 ml-4 flex items-center gap-2">
       <span class="w-1 h-3 bg-red-600 rounded-full"></span> URUTAN & RESET DATA
     </label>
