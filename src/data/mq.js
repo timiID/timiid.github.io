@@ -68,3 +68,58 @@ export function paginateMQ(dataList = mqData, page = 1, perPage = 10) {
         from: start + 1
     };
 }
+
+export const mqMaterials = {
+    "1.5 - The Dragon's Den": [
+        { name: "Colon Leaf", amount: 5, source: "Colon — Land under development" },
+        { name: "Hard Dragon Skin", amount: 2, source: "Piedra — Reug salt plains wanderers camp" },
+        { name: "Lamb Meat", amount: 1, source: "Wooly — Reug salt plains wanderers camp" }
+    ],
+    "1.8 - Purification Incense": [
+        { name: "Fairy Feather", amount: 3, source: "Roar — Ruined temple area 2/3" },
+        { name: "Thick Beak", amount: 3, source: "Beak — Ruined temple area 1" },
+        { name: "Vine", amount: 3, source: "Pain Leaf — Isthmus Of Kaus" }
+    ],
+    "2.13 - Trials in the Palace": [
+        { name: "Swordsman Stone Coin", amount: 20, source: "Sword marionette - New moon place" }
+    ],
+    "3.18 - The Invincible... Enemy??": [
+        { name: "Sand Mole Meat", amount: 1, source: "Sand mole - Centerio highlands" },
+        { name: "Beast Claw", amount: 3, source: "Foxiger - Centerio highlands" },
+        { name: "Sand Frog Skin", amount: 5, source: "Sand frosch - Centerio highlands" }
+    ],
+    "3.21 - Fate of the Fortress": [
+        { name: "Jagged Fang", amount: 10, source: "Gob roga - Saham underground cave area 2" },
+        { name: "Saham Crystal", amount: 5, source: "Rotta nemico - Saham underground cave area 1" },
+        { name: "Spiritual Gemstone", amount: 1, source: "Cassy - Ancient empress's tomb area 2/3" }
+    ],
+    "8.62 - The Ruins of the Gods": [
+        { name: "Rokoko Grape", amount: 5, source: "Kijimu - Rokoko plains" }
+    ],
+    "9.73 - Front Line Base Operation": [
+        { name: "Labilans Wood", amount: 10, source: "Toretta - Labilans Sector area 1/2" }
+    ],
+    "11.89 - The Strolling Forest": [
+        { name: "Broken Horn", amount: 20, source: "Rhinoceros - Fugitive Lake Swamp area 1/2/3" }
+    ],
+    "12.102 - Ark Repair": [
+        { name: "Growing Ore", amount: 5, source: "Petraceras - Kabla jabali | Orictoceras - Kabla jabali" },
+        { name: "Jabali Stone", amount: 5, source: "Gemare - Kabla jabali" }
+    ],
+    "14.119 - Fierce Battle with Mutant Lixis": [
+        { name: "Slimy Thick Skin", amount: 20, source: "Romyzon - Lahan Basah Latum" },
+        { name: "Tangled Roots", amount: 10, source: "Lileaf - Perdida Wasteland | Wiltileaf - Eumano Village Ruins area 2" },
+        { name: "Menabra Wood", amount: 10, source: "Delphi - Menabra Plains" }
+    ],
+    "15.124 - The Young Man and the Old Tree": [
+        { name: "Stagnant Fertilizer", amount: 10, source: "Solvay - Rode Zaag Range" }
+    ]
+};
+
+export const getAllMaterials = () => {
+    return Object.keys(mqMaterials).sort((a, b) => {
+        const chapterA = parseFloat(a.split(' ')[0]);
+        const chapterB = parseFloat(b.split(' ')[0]);
+        return chapterA - chapterB;
+    });
+};

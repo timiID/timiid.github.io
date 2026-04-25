@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'; // Tambah nextTick
 import { LV_CAP, mq_data, quest_data, getTotalXP, addXP } from '../data/toramData';
+import { mqData, getAllChapters, mqMaterials } from '@/data/mq.js';
 
 defineProps({
   isDark: Boolean
@@ -15,6 +16,7 @@ const currentP = ref(0);
 const targetLv = ref(LV_CAP);
 const skipVenena = ref(true);
 const useDiary = ref(false);
+const showMaterials = ref(false);  // ← SUDAH ADA DI SINI, JANGAN DUPLIK
 
 // --- MQ DATA LOGIC ---
 const mqKeys = Object.keys(mq_data);
@@ -36,7 +38,48 @@ const closeAllDropdowns = () => {
   isSQOpen.value = false;
 };
 
-// ... state lainnya ...
+const getMQMaterialsInRange = computed(() => {
+  if (activeTab.value !== 'mq') return [];
+  
+  const start = mqFromIdx.value;
+  const end = mqUntilIdx.value;
+  const materialsMap = new Map(); // Gunakan Map untuk avoid duplikasi
+  
+  // Cari chapter dari selected range
+  let startChapter = null;
+  let endChapter = null;
+  
+  for (let i = start; i <= end; i++) {
+    const key = mqKeys[i];
+    if (key && key.startsWith('Chapter')) {
+      const match = key.match(/\d+/);
+      if (match) {
+        const chapterNum = parseInt(match[0]);
+        if (!startChapter) startChapter = chapterNum;
+        endChapter = chapterNum;
+      }
+    }
+  }
+  
+  // Filter materials yang masuk range - TANPA DUPLIKASI
+  Object.entries(mqMaterials).forEach(([questKey, materials]) => {
+    const chapterNum = parseFloat(questKey.split('.')[0]);
+    
+    if (startChapter && endChapter && chapterNum >= startChapter && chapterNum <= endChapter) {
+      materials.forEach(material => {
+        const uniqueKey = `${questKey}-${material.name}`;
+        if (!materialsMap.has(uniqueKey)) {
+          materialsMap.set(uniqueKey, {
+            ...material,
+            questName: questKey
+          });
+        }
+      });
+    }
+  });
+  
+  return Array.from(materialsMap.values());
+});
 
 const scrollPosStart = ref(0); // Simpan posisi scroll list Start
 const scrollPosEnd = ref(0);   // Simpan posisi scroll list End
@@ -151,6 +194,14 @@ const calculation = computed(() => {
   return { 
     xpNeeded, totalMqXP, resLv, resP, diaryRuns, sqLv, sqPercent, sqXP 
   };
+});
+
+const questMaterials = computed(() => {
+    // Cari quest yang sesuai dengan selectedSQ
+    const questKey = Object.keys(mqMaterials).find(key => 
+        key.includes(selectedSQ.value.split(' - ')[1] || '')
+    );
+    return questKey ? mqMaterials[questKey] : [];
 });
 </script>
 
@@ -273,6 +324,15 @@ const calculation = computed(() => {
                   </div>
                 </div>
                 <span class="text-[12px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">Spam Diaries</span>
+              </label>
+              <label class="flex items-center gap-4 cursor-pointer group active:scale-90 transition-all">
+                <div class="relative flex items-center justify-center">
+                  <input type="checkbox" v-model="showMaterials" class="peer h-6 w-6 opacity-0 absolute">
+                  <div class="h-6 w-6 border-2 border-amber-500 rounded-lg transition-all peer-checked:bg-amber-500 peer-checked:shadow-[0_0_15px_rgba(217,119,6,0.6)] flex items-center justify-center">
+                    <svg v-if="showMaterials" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" /></svg>
+                  </div>
+                </div>
+                <span class="text-[12px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">Show MQ Materials</span>
               </label>
             </div>
           </div>
@@ -400,6 +460,56 @@ const calculation = computed(() => {
       </div>
 
     </div>
+
+    <!-- MATERIALS SECTION - HANYA SELECTED RANGE -->
+    <div v-if="calculation && showMaterials && activeTab === 'mq' && getMQMaterialsInRange.length > 0" 
+         class="p-10 rounded-[3.5rem] border backdrop-blur-3xl shadow-2xl transition-all duration-700 animate-in slide-in-from-bottom-4"
+         :class="isDark ? 'bg-slate-900/30 border-slate-700/50 shadow-slate-900/20' : 'bg-slate-50/60 border-slate-200 shadow-slate-100'">
+      
+      <div class="flex items-center gap-3 mb-8">
+        <div class="text-3xl">📦</div>
+        <div>
+          <h4 class="text-[12px] font-black uppercase tracking-[0.3em]" :class="isDark ? 'text-slate-300' : 'text-slate-700'">Materials Required</h4>
+          <p class="text-[10px] opacity-40 font-bold uppercase mt-1">
+            {{ mqOptions.find(o => o.id === mqFromIdx)?.label }} → {{ mqOptions.find(o => o.id === mqUntilIdx)?.label }}
+          </p>
+        </div>
+      </div>
+
+      <!-- GROUP BY QUEST -->
+      <div class="space-y-8">
+        <div v-for="questKey in [...new Set(getMQMaterialsInRange.map(m => m.questName))]" :key="questKey" class="space-y-4">
+          
+          <!-- QUEST HEADER -->
+          <div :class="['p-4 rounded-2xl border-l-[4px]', isDark ? 'bg-slate-800/50 border-l-slate-500' : 'bg-slate-100 border-l-slate-400']">
+            <h5 class="text-[11px] font-black uppercase tracking-widest" :class="isDark ? 'text-slate-300' : 'text-slate-700'">
+              📌 {{ questKey }}
+            </h5>
+          </div>
+
+          <!-- MATERIALS GRID -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 ml-4">
+            <div v-for="material in getMQMaterialsInRange.filter(m => m.questName === questKey)" 
+                 :key="`${questKey}-${material.name}`"
+                 class="p-5 rounded-2xl transition-all group hover:scale-105 active:scale-95 cursor-default"
+                 :class="isDark ? 'bg-slate-800/40 hover:bg-slate-700/40 border border-slate-700/50 hover:border-slate-600' : 'bg-white border border-slate-200 hover:shadow-lg hover:border-slate-300'">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-black uppercase text-sm tracking-tight" :class="isDark ? 'text-slate-200' : 'text-slate-800'">
+                  {{ material.name }}
+                </span>
+                <span class="px-3 py-1.5 rounded-lg bg-slate-600 text-white text-[10px] font-black shadow-lg" :class="isDark ? 'hover:bg-slate-500' : 'hover:bg-slate-700'">
+                  ×{{ material.amount }}
+                </span>
+              </div>
+              <span class="text-[10px] font-bold opacity-60 group-hover:opacity-100 block leading-tight" :class="isDark ? 'text-slate-400' : 'text-slate-600'">
+                📍 {{ material.source }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 

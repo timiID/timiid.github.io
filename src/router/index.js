@@ -85,7 +85,13 @@ const routes = [
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: ErrorView
-  }
+  },
+ // ...existing routes...
+{
+    path: '/materials-required',
+    name: 'MaterialsRequired',
+    component: () => import('@/views/MaterialsRequired.vue')
+}
 ]
 
 const router = createRouter({
