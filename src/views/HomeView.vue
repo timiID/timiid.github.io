@@ -272,7 +272,7 @@ const navigateTo = (path) => router.push(path);
             <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
             <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
             <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-purple-400 uppercase">
-              Open Tools <span>→</span>
+              Open <span>→</span>
             </div>
           </div>
         </div>
@@ -297,7 +297,7 @@ const navigateTo = (path) => router.push(path);
             <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
             <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
             <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-orange-400 group-hover:text-orange-300 transition-colors uppercase">
-              Open Tools <span>→</span>
+              Open <span>→</span>
             </div>
           </div>
         </div>

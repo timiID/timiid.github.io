@@ -2,112 +2,116 @@
 defineProps({
   isDark: Boolean
 });
-
 </script>
 
 <template>
   <footer 
-    class="relative mt-32 w-full transition-colors duration-500 overflow-hidden" 
-    :class="isDark ? 'bg-slate-900/90 text-slate-400' : 'bg-black text-slate-400'"
+    class="relative mt-20 w-full transition-colors duration-500 overflow-hidden" 
+    :class="isDark ? 'bg-slate-900/95 text-slate-400' : 'bg-slate-800 text-slate-400'"
   >
-    <div class="relative z-10 max-w-7xl mx-auto px-6 py-16">
-      <div class="grid grid-cols-1 md:grid-cols-6 gap-12">
-        
-        <div class="md:col-span-2 space-y-6">
-          <router-link to="/" class="flex items-center gap-3 group outline-none">
+    <!-- GIF BG -->
+    <div class="absolute inset-0 z-0 pointer-events-none footer-gif"></div>
+    <!-- Overlay gradient -->
+    <div class="absolute inset-0 z-[1] pointer-events-none"
+      :class="isDark 
+        ? 'bg-gradient-to-b from-slate-900/60 to-slate-900/90' 
+        : 'bg-gradient-to-b from-slate-800/60 to-slate-800/90'"
+    ></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 py-14">
+      
+      <!-- TOP ROW -->
+      <div class="flex flex-col md:flex-row gap-10 md:gap-16">
+
+        <!-- Brand -->
+        <div class="md:w-64 shrink-0 space-y-5">
+          <router-link to="/" class="flex items-center gap-3 group outline-none w-fit">
             <div class="relative">
               <div class="absolute inset-0 bg-indigo-500/50 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <img src="/images/logo.png" class="relative w-10 h-10 grayscale brightness-200 transition-all duration-500 group-hover:grayscale-0 group-hover:brightness-100" alt="Logo" />
+              <img src="/images/logo.png" class="relative w-10 h-10 transition-all duration-500 group-hover:brightness-110" alt="Logo" />
             </div>
-            <span class="text-2xl font-black italic tracking-tighter text-white">
-              TIMI <span class="text-indigo-500">DB</span>
+            <span class="text-2xl font-black italic tracking-tighter" :class="isDark ? 'text-white' : 'text-white'">
+              TIMI <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
             </span>
           </router-link>
-          <p class="text-xs leading-loose max-w-sm font-medium opacity-70 italic">
+          <p class="text-xs leading-loose font-medium opacity-60 italic">
             The most advanced digital database project for Toram Online. Built for adventurers, by adventurers.
           </p>
+          <p class="text-xs leading-loose font-medium opacity-60 italic">
+          Your all in one Toram Online companion featuring Bag List, Main Quest Guide & Calculator, Blacksmith Simulator, Xtall Database, Leveling Guide, Event Calendar, Material Farming Spots, and more. Crafted with love, for every adventurer.
+</p>
         </div>
 
-        <div class="space-y-4">
-          <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Main Resources</h4>
-          <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-            <li><router-link to="/" class="hover:text-indigo-400 transition-colors">Home</router-link></li>
-            <li><router-link to="/bag-list" class="hover:text-indigo-400 transition-colors">Bag Expansion List</router-link></li>
-            <li><router-link to="/mq-list" class="hover:text-indigo-400 transition-colors">Main Quest List</router-link></li>
-            <li><router-link to="/mq-calc" class="hover:text-indigo-400 transition-colors">Main Quest Calculator</router-link></li>
-            <li><router-link to="/bs-calc" class="hover:text-indigo-400 transition-colors">Blacksmith Calculator</router-link></li>
-            <li><router-link to="/xtall" class="hover:text-indigo-400 transition-colors">Xtall Database</router-link></li>
-          </ul>
-        </div>
+        <!-- Links: 2 kolom -->
+        <div class="flex-1 grid grid-cols-2 gap-x-8 gap-y-10">
 
-        <div class="space-y-4">
-          <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Others</h4>
-          <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-          <li><router-link to="/event" class="hover:text-indigo-400 transition-colors">Event Guide</router-link></li>  
-            <li><router-link to="/lvling" class="hover:text-indigo-400 transition-colors">Leveling Guide</router-link></li>                    
-            <li><router-link to="/spotmats" class="hover:text-indigo-400 transition-colors">Material Farming Spot</router-link></li>                    
-            <li><router-link to="/favorite" class="hover:text-indigo-400 transition-colors">Favorite Xtall</router-link></li>                    
-          </ul>
-        </div>
+          <!-- Kolom 1: Main Resources + Project -->
+          <div class="space-y-8">
+            <div>
+              <h4 class="font-black text-xs uppercase tracking-[0.2em] mb-3"  :class="isDark ? 'text-white bg-violet-950/40' : 'text-violet-200 bg-violet-200/10'">
+                Main Resources
+              </h4>
+              <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
+                <li><router-link to="/" class="hover:text-indigo-400 transition-colors">Home</router-link></li>
+                <li><router-link to="/bag-list" class="hover:text-indigo-400 transition-colors">Bag Expansion List</router-link></li>
+                <li><router-link to="/mq-list" class="hover:text-indigo-400 transition-colors">Main Quest List</router-link></li>
+                <li><router-link to="/mq-calc" class="hover:text-indigo-400 transition-colors">Main Quest Calculator</router-link></li>
+                <li><router-link to="/bs-calc" class="hover:text-indigo-400 transition-colors">Blacksmith Calculator</router-link></li>
+                <li><router-link to="/xtall" class="hover:text-indigo-400 transition-colors">Xtall Database</router-link></li>
+              </ul>
+            </div>
 
-        <div class="space-y-4">
-          <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Project</h4>
-          <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-            <li>
-              <router-link to="/" class="hover:text-indigo-400 transition-colors">About Timi DB</router-link>
-            </li>
-            <li>
-              <a href="https://www.facebook.com/J7Timi" target="_blank" class="hover:text-indigo-400 transition-colors">Contribution</a>
-            </li>
-            <li>
-              <a href="https://en.toram.jp/" target="_blank" class="hover:text-indigo-400 transition-colors">Reference</a>
-            </li>
-          </ul>
-        </div>
+            <div>
+              <h4 class="font-black text-xs uppercase tracking-[0.2em] mb-3" :class="isDark ? 'text-white bg-red-950/40' : 'text-red-200 bg-red-200/10'">
+                Project
+              </h4>
+              <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
+                <li><router-link to="/" class="hover:text-indigo-400 transition-colors">About Timi DB</router-link></li>
+                <li><a href="https://www.facebook.com/J7Timi" target="_blank" class="hover:text-indigo-400 transition-colors">Contribution</a></li>
+                <li><a href="https://en.toram.jp/" target="_blank" class="hover:text-indigo-400 transition-colors">Reference</a></li>
+              </ul>
+            </div>
+          </div>
 
+          <!-- Kolom 2: Others -->
+          <div>
+            <h4 class="font-black text-xs uppercase tracking-[0.2em] mb-3" :class="isDark ? 'text-white bg-yellow-950/40' : 'text-yellow-200 bg-yellow-400/10'">
+              Others
+            </h4>
+            <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
+              <li><router-link to="/event" class="hover:text-indigo-400 transition-colors">Event Guide</router-link></li>
+              <li><router-link to="/lvling" class="hover:text-indigo-400 transition-colors">Leveling Guide</router-link></li>
+              <li><router-link to="/spotmats" class="hover:text-indigo-400 transition-colors">Material Farming Spot</router-link></li>
+              <li><router-link to="/favorite" class="hover:text-indigo-400 transition-colors">Favorite Xtall</router-link></li>
+            </ul>
+          </div>
+
+        </div>
       </div>
 
-      <div class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-50">
+      <!-- BOTTOM ROW -->
+      <div class="mt-12 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3"
+        :class="isDark ? 'border-t border-white/5' : 'border-t border-slate-300/60'"
+      >
+        <p class="text-[9px] font-black tracking-[0.3em] uppercase opacity-40">
           © 2026 TIMI DB • Toram Online Digital Database Project
         </p>
-        <div class="flex gap-6 opacity-50">
-          <span class="text-[10px] font-black italic tracking-widest text-indigo-400">STAY VIGILANT</span>
-          <span class="text-[10px] font-black italic tracking-widest text-rose-500">KEEP GRINDING</span>
+        <div class="flex gap-6">
+          <span class="text-[10px] font-black italic tracking-widest text-indigo-400 opacity-70">STAY VIGILANT</span>
+          <span class="text-[10px] font-black italic tracking-widest text-rose-500 opacity-70">KEEP GRINDING</span>
         </div>
       </div>
+
     </div>
   </footer>
 </template>
 
 <style scoped>
-footer {
-  position: relative;
-}
-
-footer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.footer-gif {
   background-image: url('/images/what chara.gif');
   background-repeat: no-repeat;
   background-position: center;
-  background-attachment: scroll;
-  background-size: auto 100%;      
-  opacity: 0.12;        
-  z-index: 1;
-  pointer-events: none;
-}
-
-footer::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4));
-  z-index: 2;
-  pointer-events: none;
+  background-size: auto 100%;
+  opacity: 0.4;
 }
 </style>

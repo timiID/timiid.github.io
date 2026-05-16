@@ -12,7 +12,7 @@ const toggleDark = () => {
 
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme')
-  isDark.value = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  isDark.value = savedTheme === 'dark'
   document.documentElement.classList.toggle('dark', isDark.value)
 })
 </script>

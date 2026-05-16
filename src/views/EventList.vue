@@ -7,7 +7,7 @@
         class="group flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-rose-500 hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest border border-transparent hover:border-rose-400"
       >
         <span class="transform group-hover:-translate-x-1 transition-transform">←</span>
-        {{ lang === 'id' ? 'Kembali' : 'Back' }}
+        {{ lang === 'en' ? 'Back' : 'Kembali' }}
       </button>
     </div>
 
@@ -175,7 +175,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps(['isDark']);
-const lang = ref('id');
+const lang = ref('en');
 const searchQuery = ref('');
 const selectedMonth = ref('all');
 const isMonthOpen = ref(false); // State untuk dropdown

@@ -41,23 +41,26 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
 <template>
   <div :class="['min-h-screen flex flex-col transition-all duration-[1000ms] relative overflow-x-hidden', isDark ? 'bg-mesh-dark text-white' : 'bg-mesh-light text-slate-900']">
     
+    <!-- Slideshow hanya tampil di halaman home -->
     <div 
+      v-if="isHome"
       class="absolute inset-0 pointer-events-none z-0 transition-all duration-[1500ms] ease-in-out"
       :style="{ 
         backgroundImage: `url(${backgrounds[currentBgIndex]})`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center top', 
-        backgroundAttachment: isHome ? 'scroll': 'fixed', 
-        backgroundSize: isHome ? 'cover': '100% 100%',
-        height: isHome ? '1100px' : '100%', 
-        opacity: isHome ?'0.00' : '0.12', maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
-    webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
-  }"
+        backgroundAttachment: 'scroll', 
+        backgroundSize: 'cover',
+        height: '1100px', 
+        opacity: '0.00',
+        maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
+        webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
+      }"
     ></div>
 
+    <!-- Pattern overlay hanya di home -->
     <div 
-      v-if="isHome"
-      class="absolute inset-0 pointer-events-none z-0"
+  class="absolute inset-0 pointer-events-none z-0"
       :style="{ 
         backgroundImage: `url('/images/linearperfect.png')`,
         backgroundRepeat: 'repeat',
@@ -67,6 +70,8 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         opacity: '0.04'
       }"
     ></div>
+
+    <!-- Bubbles tampil di semua halaman -->
     <div class="absolute inset-0 pointer-events-none z-[1] overflow-hidden">
       <div v-for="bubble in bubbles" :key="'bubble-'+bubble.id" 
         class="absolute rounded-full border border-white/20 backdrop-blur-[1px] animate-float opacity-30 bubble-glow" 
@@ -100,8 +105,6 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
 .min-h-screen {
   position: relative;
 }
-
-/* KODE LAMA ::before DIHAPUS agar tidak bentrok dengan slideshow */
 
 /* Animasi Float untuk Gelembung */
 @keyframes float {
