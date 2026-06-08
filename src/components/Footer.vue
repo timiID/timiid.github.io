@@ -8,18 +8,22 @@ defineProps({
 
 const router = useRouter();
 
+const scrollTopNow = () => {
+  window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+};
+
 // Fungsi navigasi ke home dan memaksa scroll ke paling atas
 const goHomeAndScrollTop = async () => {
-  // 1. Pindah rute ke home terlebih dahulu
+  if (router.currentRoute.value?.path === '/') {
+    scrollTopNow();
+    return;
+  }
+
   await router.push('/');
-  
-  // 2. Tunggu DOM Vue selesai merender halaman home
   await nextTick();
-  
-  // 3. Paksa scroll pada level dokumen utama dan body (Multi-fallback)
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
-  document.body.scrollTo({ top: 0, behavior: 'smooth' });
+  scrollTopNow();
 };
 </script>
 
@@ -52,7 +56,7 @@ const goHomeAndScrollTop = async () => {
 
         <!-- Brand -->
         <div class="md:w-64 shrink-0 space-y-5">
-          <router-link to="/" class="flex items-center gap-3 group outline-none w-fit">
+          <router-link to="/" @click="scrollTopNow" class="flex items-center gap-3 group outline-none w-fit">
             <div class="relative">
               <div class="absolute inset-0 bg-indigo-500/50 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img src="/images/logo.png" width="40" height="40" class="relative w-10 h-10 transition-all duration-500 group-hover:brightness-110" alt="Logo" />
@@ -79,12 +83,12 @@ const goHomeAndScrollTop = async () => {
                 Main Resources
               </h4>
               <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-                <li><router-link to="/" class="hover:text-indigo-400 transition-colors">Home</router-link></li>
-                <li><router-link to="/bag-list" class="hover:text-indigo-400 transition-colors">Bag Expansion List</router-link></li>
-                <li><router-link to="/mq-list" class="hover:text-indigo-400 transition-colors">Main Quest List</router-link></li>
-                <li><router-link to="/mq-calc" class="hover:text-indigo-400 transition-colors">Main Quest Calculator</router-link></li>
-                <li><router-link to="/bs-calc" class="hover:text-indigo-400 transition-colors">Blacksmith Calculator</router-link></li>
-                <li><router-link to="/xtall" class="hover:text-indigo-400 transition-colors">Xtall Database</router-link></li>
+                <li><router-link to="/" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Home</router-link></li>
+                <li><router-link to="/bag-list" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Bag Expansion List</router-link></li>
+                <li><router-link to="/mq-list" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Main Quest List</router-link></li>
+                <li><router-link to="/mq-calc" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Main Quest Calculator</router-link></li>
+                <li><router-link to="/bs-calc" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Blacksmith Calculator</router-link></li>
+                <li><router-link to="/xtall" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Xtall Database</router-link></li>
               </ul>
             </div>
 
@@ -114,10 +118,10 @@ const goHomeAndScrollTop = async () => {
               Others
             </h4>
             <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-              <li><router-link to="/event" class="hover:text-indigo-400 transition-colors">Event Guide</router-link></li>
-              <li><router-link to="/lvling" class="hover:text-indigo-400 transition-colors">Leveling Guide</router-link></li>
-              <li><router-link to="/spotmats" class="hover:text-indigo-400 transition-colors">Material Farming Spot</router-link></li>
-              <li><router-link to="/favorite" class="hover:text-indigo-400 transition-colors">Favorite Xtall</router-link></li>
+              <li><router-link to="/event" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Event Guide</router-link></li>
+              <li><router-link to="/lvling" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Leveling Guide</router-link></li>
+              <li><router-link to="/spotmats" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Material Farming Spot</router-link></li>
+              <li><router-link to="/favorite" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Favorite Xtall</router-link></li>
             </ul>
           </div>
 

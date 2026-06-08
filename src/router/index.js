@@ -81,17 +81,17 @@ const routes = [
       name: 'Mats',
       component: Mats
     },
-    {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: ErrorView
-  },
  // ...existing routes...
 {
     path: '/materials-required',
     name: 'MaterialsRequired',
     component: () => import('@/views/MaterialsRequired.vue')
-}
+},
+{
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: ErrorView
+  }
 ]
 
 const router = createRouter({
@@ -104,8 +104,17 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition
     } else {
-      return { top: 0, behavior: 'smooth' }
+      return { left: 0, top: 0, behavior: 'smooth' }
     }
   }
 })
+
+router.afterEach(() => {
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ left: 0, top: 0, behavior: 'auto' })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+  })
+})
+
 export default router
