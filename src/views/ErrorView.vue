@@ -10,6 +10,10 @@
         <img 
           src="/images/what chara.gif" 
           alt="Timi DB Logo" 
+          loading="lazy"
+          decoding="async"
+          width="192"
+          height="192"
           class="w-32 h-32 md:w-48 md:h-48 object-contain drop-shadow-[0_0_30px_rgba(99,102,241,0.6)] animate-float-elegant"
         />
       </div>

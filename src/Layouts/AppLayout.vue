@@ -1,12 +1,12 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'; 
+import { ref, onMounted, onUnmounted, computed } from 'vue'; 
 import { useRoute } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 
 const route = useRoute();
 const isHome = computed(() => route.path === '/');
-// State & Props
+
 const props = defineProps(['isDark']);
 const emit = defineEmits(['toggleDark']);
 
@@ -21,10 +21,18 @@ const backgrounds = [
 const currentBgIndex = ref(0);
 
 // 2. LOGIKA TIMING SLIDESHOW
+let bgInterval = null;
 onMounted(() => {
-  setInterval(() => {
+  bgInterval = setInterval(() => {
     currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length;
-  }, 5000); // Berganti setiap 5 detik
+  }, 5000);
+});
+
+onUnmounted(() => {
+  if (bgInterval) {
+    clearInterval(bgInterval);
+    bgInterval = null;
+  }
 });
 
 // 3. DATA GELEMBUNG (Bubbles)
@@ -52,7 +60,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         backgroundAttachment: 'scroll', 
         backgroundSize: 'cover',
         height: '1100px', 
-        opacity: '0.00',
+        opacity: '0.04',
         maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
         webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
       }"
@@ -60,7 +68,8 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
 
     <!-- Pattern overlay hanya di home -->
     <div 
-  class="absolute inset-0 pointer-events-none z-0"
+      v-if="isHome"
+      class="absolute inset-0 pointer-events-none z-0"
       :style="{ 
         backgroundImage: `url('/images/linearperfect.png')`,
         backgroundRepeat: 'repeat',
@@ -90,23 +99,24 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
       </div>
     </div>
 
-    <Navbar :isDark="isDark" @toggleDark="$emit('toggleDark')" class="relative z-20" />
+    <!-- NAVBAR -->
+    <Navbar :isDark="isDark" @toggleDark="$emit('toggleDark')" />
 
-    <main class="flex-1 max-w-9x1 mx-auto pt-20 md:pt-30 px-0 pb-20 relative z-10 animate-fade-in w-full">
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 max-w-[1400px] mx-auto pt-24 md:pt-32 px-4 md:px-8 pb-20 relative z-10 animate-fade-in w-full">
       <slot />
     </main>
 
+    <!-- FOOTER -->
     <Footer :isDark="isDark" class="w-full relative z-20" />
   </div>
 </template>
 
 <style scoped>
-/* Reset dasar untuk pembungkus */
 .min-h-screen {
   position: relative;
 }
 
-/* Animasi Float untuk Gelembung */
 @keyframes float {
   0% { transform: translateY(0) translateX(0) rotate(0deg); }
   33% { transform: translateY(-80px) translateX(25px) rotate(15deg); }
@@ -125,7 +135,6 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
     0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* Mesh Backgrounds */
 .bg-mesh-dark {
   background-color: #020617;
   background-image: radial-gradient(at 0% 0%, #1e1b4b 0, transparent 50%), 
@@ -150,16 +159,4 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-/* Scrollbar Styling */
-:global(::-webkit-scrollbar) { width: 4px; }
-:global(::-webkit-scrollbar-track) { background: transparent; }
-:global(::-webkit-scrollbar-thumb) {
-  background: rgba(122, 7, 120, 0.5);
-  border-radius: 10px;
-}
-:global(::-webkit-scrollbar-thumb:hover) { background: #ef4444; }
-
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>

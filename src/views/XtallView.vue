@@ -13,12 +13,12 @@
         <div class="flex items-center gap-1">
           <div class="relative group">
             <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-            <img src="/images/logo.png" class="relative h-16 w-auto object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-110" alt="Logo" />
+            <img src="/images/logo.png" width="64" height="64" class="relative h-16 w-auto object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-110" alt="Logo" />
           </div>
           <div class="text-center md:text-left space-y-1">
             <div class="flex items-center gap-3">
               <h1 class="text-4xl md:text-6xl font-[800] italic uppercase tracking-tighter leading-none transition-all">
-                <span :class="text-white">TIMI </span>
+                <span :class="isDark ? 'text-white' : 'text-slate-900'">TIMI </span>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
               </h1>
               <div class="px-2 py-0.5 bg-blue-500/10 border border-blue-500/20 rounded text-[8px] font-black text-blue-500 tracking-widest uppercase">Bahasa Indonesia</div>
@@ -214,6 +214,7 @@ import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router' // TAMBAHKAN INI
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { crystalData, CrystalType } from '../data/store.js';
+
 // Crysta Biasa
 import normalCrystas from "@/assets/icons/crysta_normal.jpg";
 import weaponCrystas from "@/assets/icons/crysta_senjata.jpg";

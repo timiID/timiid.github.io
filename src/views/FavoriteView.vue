@@ -1,17 +1,13 @@
 <template>
   <div class="min-h-screen pt-24 pb-20 px-4">
-    <button @click="$router.push('/')" class="group flex items-center gap-3 mb-10 transition-all hover:-translate-x-2">
-      <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-        <svg class="w-5 h-5 text-cyan-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"/></svg>
-      </div>
-      <span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 group-hover:opacity-100 group-hover:text-cyan-500">Back</span>
-    </button>
-
-    <div class="max-w-4xl mx-auto mb-12 animate-fade-in">
-      <h1 class="text-4xl md:text-6xl font-[1000] italic uppercase tracking-tighter text-yellow">
-        MY <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-rose-500">FAVORITES</span>
-      </h1>
-      <p class="text-xs font-black uppercase tracking-[0.4em] opacity-40 mt-2">Saved Xtall Collection</p>
+    <!-- PERBAIKAN: Dibungkus max-w-4xl mx-auto agar sejajar lurus dengan judul dan card di bawahnya -->
+    <div class="max-w-4xl mx-auto mb-6 animate-fade-in">
+      <button @click="$router.push('/')" class="group inline-flex items-center gap-3 transition-all hover:-translate-x-2">
+        <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+          <svg class="w-5 h-5 text-cyan-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"/></svg>
+        </div>
+        <span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 group-hover:opacity-100 group-hover:text-cyan-500">Back</span>
+      </button>
     </div>
 
     <div v-if="favoriteXtalls.length > 0" class="max-w-4xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
@@ -67,7 +63,9 @@
     <div class="max-w-4xl mx-auto">
       <div v-if="paginatedXtalls.length > 0" class="flex flex-col gap-8 animate-slide-up">
         
+        <!-- PEMBUNGKUS DENGAN CLASS RELATIVE -->
         <div v-for="(xtall, index) in paginatedXtalls" :key="xtall.code" class="relative group">
+          
           <XtallCard 
             :xtall="xtall"
             :idx="index"
@@ -76,16 +74,23 @@
             :badgeColorClass="getBadgeColor(xtall.type)"
             :baseXtall="findBase(xtall)"
             :evoXtalls="findEvos(xtall.code)"
-          />
+          >
+            <!-- TOMBOL DIULUR MASUK KE DALAM SLOT XTALLCARD -->
+            <button 
+              @click.stop="removeFav(xtall.code)" 
+              class="absolute top-4 right-4 md:top-6 md:right-6 z-30 p-3 rounded-2xl bg-red-500 border border-red-500/50 text-white hover:bg-red-600 transition-all shadow-2xl active:scale-90"
+              title="Hapus dari Favorit"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 448 512">
+                <path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z" />
+              </svg>
+            </button>
+          </XtallCard>
 
-          <button @click.stop="removeFav(xtall.code)" 
-        class="absolute -top-1 -right-7 z-50 p-3 rounded-2xl bg-red-500 border border-red-500/50 text-white hover:bg-red-600 transition-all shadow-2xl active:scale-90">
-  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 448 512">
-    <path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z" />
-  </svg>
-</button>
-</div>
-      <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 md:gap-3 py-10 flex-wrap">
+        </div>
+
+        <!-- PAGINATION CONTROLS -->
+        <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 md:gap-3 py-10 flex-wrap">
   <button 
     @click="currentPage--" 
     :disabled="currentPage === 1"

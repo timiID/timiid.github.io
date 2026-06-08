@@ -18,14 +18,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="selection:bg-indigo-500 selection:text-white">
+  <div class="selection:bg-indigo-500 selection:text-white min-h-screen flex flex-col">
     
+    <!-- Efek Asap Bergerak (Hanya Aktif di Dark Mode) -->
     <div v-if="isDark" class="smoke-container">
       <div class="smoke smoke-1"></div>
       <div class="smoke smoke-2"></div>
       <div class="smoke smoke-3"></div>
     </div>
 
+    <!-- Layout Utama Aplikasi -->
     <AppLayout :isDark="isDark" @toggleDark="toggleDark">
       <router-view v-slot="{ Component }">
         <transition name="slide-page" mode="out-in">
@@ -41,18 +43,17 @@ onMounted(() => {
 html, body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden; 
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
   background-color: transparent;
 }
 
 /* --- 2. SCROLLBAR MODERN WITH BUTTONS --- */
-
-/* The main scrollbar bar */
 ::-webkit-scrollbar {
-  width: 14px; /* Slightly wider to accommodate buttons better */
+  width: 14px;
 }
 
-/* The background of the scrollbar */
 ::-webkit-scrollbar-track {
   background: #4a4a4a94;
 }
@@ -61,33 +62,28 @@ html, body {
   background: #dcdcdc67;
 }
 
-/* The draggable handle (Thumb) */
 ::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   background-clip: padding-box;
   border-radius: 10px;
-  /* Light Mode: Gradasi Kuning ke Oranye */
   background-image: linear-gradient(180deg, rgba(237, 202, 2, 0.98) 0%, #ff8c00 100%);
   transition: all 0.3s;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  /* Dark Mode: Gradasi Ungu ke Pink Neon */
   background-image: linear-gradient(180deg, rgba(128, 16, 126, 0.8) 0%, #ff007f 100%);
   box-shadow: inset 0 0 10px rgba(84, 1, 30, 0.2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  /* Hover Light Mode */
   background-image: linear-gradient(180deg, #ff6303 0%, #ff4500 100%);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  /* Hover Dark Mode */
   background-image: linear-gradient(180deg, rgb(55, 142, 255) 0%, #00fbff 100%);
 }
-/* --- THE BUTTONS (Arrows) --- */
 
+/* --- THE BUTTONS (Arrows) --- */
 ::-webkit-scrollbar-button:single-button {
   background-color: #e0e0e0;
   display: block;
@@ -101,7 +97,6 @@ html, body {
   background-color: #333;
 }
 
-/* Up Button Icon */
 ::-webkit-scrollbar-button:single-button:vertical:decrement {
   background-position: center 4px;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='black'><polygon points='50,00 0,100 100,100'/></svg>");
@@ -111,7 +106,6 @@ html, body {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='white'><polygon points='50,00 0,100 100,100'/></svg>");
 }
 
-/* Down Button Icon */
 ::-webkit-scrollbar-button:single-button:vertical:increment {
   background-position: center 2px;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='black'><polygon points='0,0 100,0 50,100'/></svg>");

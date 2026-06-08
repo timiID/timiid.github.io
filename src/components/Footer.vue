@@ -1,16 +1,43 @@
 <script setup>
+import { nextTick } from 'vue';
+import { useRouter } from 'vue-router';
+
 defineProps({
   isDark: Boolean
 });
+
+const router = useRouter();
+
+// Fungsi navigasi ke home dan memaksa scroll ke paling atas
+const goHomeAndScrollTop = async () => {
+  // 1. Pindah rute ke home terlebih dahulu
+  await router.push('/');
+  
+  // 2. Tunggu DOM Vue selesai merender halaman home
+  await nextTick();
+  
+  // 3. Paksa scroll pada level dokumen utama dan body (Multi-fallback)
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+  document.body.scrollTo({ top: 0, behavior: 'smooth' });
+};
 </script>
 
 <template>
   <footer 
     class="relative mt-20 w-full transition-colors duration-500 overflow-hidden" 
+    style="min-height:220px;"
     :class="isDark ? 'bg-slate-900/95 text-slate-400' : 'bg-slate-800 text-slate-400'"
   >
-    <!-- GIF BG -->
-    <div class="absolute inset-0 z-0 pointer-events-none footer-gif"></div>
+    <!-- GIF BG (lazy-loaded image to allow decoding & avoid heavy synchronous layout shifts) -->
+    <img
+      src="/images/what chara.gif"
+      alt=""
+      aria-hidden="true"
+      decoding="async"
+      loading="lazy"
+      class="absolute inset-0 z-0 pointer-events-none w-full h-full object-contain opacity-40 footer-gif-img"
+    />
     <!-- Overlay gradient -->
     <div class="absolute inset-0 z-[1] pointer-events-none"
       :class="isDark 
@@ -28,7 +55,7 @@ defineProps({
           <router-link to="/" class="flex items-center gap-3 group outline-none w-fit">
             <div class="relative">
               <div class="absolute inset-0 bg-indigo-500/50 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <img src="/images/logo.png" class="relative w-10 h-10 transition-all duration-500 group-hover:brightness-110" alt="Logo" />
+              <img src="/images/logo.png" width="40" height="40" class="relative w-10 h-10 transition-all duration-500 group-hover:brightness-110" alt="Logo" />
             </div>
             <span class="text-2xl font-black italic tracking-tighter" :class="isDark ? 'text-white' : 'text-white'">
               TIMI <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
@@ -38,8 +65,8 @@ defineProps({
             The most advanced digital database project for Toram Online. Built for adventurers, by adventurers.
           </p>
           <p class="text-xs leading-loose font-medium opacity-60 italic">
-          Your all in one Toram Online companion featuring Bag List, Main Quest Guide & Calculator, Blacksmith Simulator, Xtall Database, Leveling Guide, Event Calendar, Material Farming Spots, and more. Crafted with love, for every adventurer.
-</p>
+            Your all in one Toram Online companion featuring Bag List, Main Quest Guide & Calculator, Blacksmith Simulator, Xtall Database, Leveling Guide, Event Calendar, Material Farming Spots, and more. Crafted with love, for every adventurer.
+          </p>
         </div>
 
         <!-- Links: 2 kolom -->
@@ -48,7 +75,7 @@ defineProps({
           <!-- Kolom 1: Main Resources + Project -->
           <div class="space-y-8">
             <div>
-              <h4 class="font-black text-xs uppercase tracking-[0.2em] mb-3"  :class="isDark ? 'text-white bg-violet-950/40' : 'text-violet-200 bg-violet-200/10'">
+              <h4 class="font-black text-xs uppercase tracking-[0.2em] mb-3" :class="isDark ? 'text-white bg-violet-950/40' : 'text-violet-200 bg-violet-200/10'">
                 Main Resources
               </h4>
               <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
@@ -66,7 +93,15 @@ defineProps({
                 Project
               </h4>
               <ul class="space-y-2 text-[11px] font-bold uppercase tracking-wider">
-                <li><router-link to="/" class="hover:text-indigo-400 transition-colors">About Timi DB</router-link></li>
+                <li>
+                  <button 
+                    type="button"
+                    @click="goHomeAndScrollTop" 
+                    class="hover:text-indigo-400 transition-colors uppercase text-left outline-none font-bold text-[11px] tracking-wider block w-full"
+                  >
+                    About Timi DB
+                  </button>
+                </li>
                 <li><a href="https://www.facebook.com/J7Timi" target="_blank" class="hover:text-indigo-400 transition-colors">Contribution</a></li>
                 <li><a href="https://en.toram.jp/" target="_blank" class="hover:text-indigo-400 transition-colors">Reference</a></li>
               </ul>
@@ -107,11 +142,8 @@ defineProps({
 </template>
 
 <style scoped>
-.footer-gif {
-  background-image: url('/images/what chara.gif');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto 100%;
-  opacity: 0.4;
+.footer-gif-img {
+  pointer-events: none;
+  image-rendering: auto;
 }
 </style>

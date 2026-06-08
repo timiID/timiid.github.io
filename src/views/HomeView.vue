@@ -1,6 +1,5 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import Footer from '@/components/Footer.vue';
 
 import normalCrystas from "@/assets/icons/crysta_normal.jpg";
 import weaponCrystas from "@/assets/icons/crysta_senjata.jpg";
@@ -19,7 +18,7 @@ import iconLeveling from '@/assets/iconfromhome/lvling.png'
 import iconFavorite from '@/assets/iconfromhome/favorite.png'
 import iconMats from '@/assets/iconfromhome/farmmats.png'
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { crystalData } from '../data/store.js'; // Pastikan path store lo bener
 
 const favoriteXtalls = ref([]);
@@ -31,19 +30,12 @@ const backgrounds = [
   '/images/yuyuko2.jpg'
 ];
 const currentBgIndex = ref(0);
+let homeInterval = null;
 
-// 2. LOGIKA TIMING SLIDESHOW
-onMounted(() => {
-  setInterval(() => {
-    currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length;
-  }, 5000); // Berganti setiap 5 detik
-});
-// --- TAMBAHKAN PROPS ISDARK ---
 const props = defineProps({
   isDark: Boolean
 });
 
-// --- TAMBAHKAN FUNGSI INI ---
 const getIconPath = (type) => {
   if (type && type.includes('Upgrade')) return favoriteCrystaIcon;
   const icons = {
@@ -133,10 +125,16 @@ onMounted(() => {
     .filter(c => favIds.includes(String(c.code)))
     .slice(0, 5);
 
-  setInterval(() => {
-    currentBgIndex.value =
-      (currentBgIndex.value + 1) % backgrounds.length;
+  homeInterval = setInterval(() => {
+    currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length;
   }, 5000);
+});
+
+onUnmounted(() => {
+  if (homeInterval) {
+    clearInterval(homeInterval);
+    homeInterval = null;
+  }
 });
 
 const navigateTo = (path) => router.push(path);
@@ -165,7 +163,7 @@ const navigateTo = (path) => router.push(path);
       <div class="relative z-10 flex flex-col items-center animate-fade-in">
         <div class="absolute inset-0 bg-indigo-500/10 blur-[120px] rounded-full"></div>
         
-        <img src="/images/logo.png" class="relative w-32 md:w-44 mb-6 drop-shadow-2xl animate-float-slow" /> 
+        <img src="/images/logo.png" width="176" height="176" class="relative w-32 md:w-44 mb-6 drop-shadow-2xl animate-float-slow" /> 
         
         <h1 class="relative text-4xl md:text-6xl font-[800] italic uppercase tracking-tighter leading-none transition-all">
           <span :class="isDark ? 'text-white' : 'text-slate-900'">TIMI </span>

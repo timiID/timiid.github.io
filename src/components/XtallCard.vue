@@ -3,6 +3,7 @@
     class="flex flex-col lg:grid lg:grid-cols-12 gap-2 items-stretch animate-entry"
     :style="animationStyle"
   >
+    <!-- PREVIOUS UPGRADE SIDEBAR -->
     <div class="lg:col-span-3 flex flex-row lg:flex-col gap-3">
       <div
         v-if="baseXtall"
@@ -28,24 +29,29 @@
       </div>
     </div>
 
+    <!-- MAIN XTALL CARD MIDDLE CONTENT -->
     <div class="lg:col-span-6">
-  <div
-    :class="[
-      'h-full relative rounded-[2.5rem] overflow-hidden transition-all duration-500',
-      'ring-1 backdrop-blur-md shadow-2xl', /* backdrop-blur dikurangi dikit biar transparan bening */
-      isDark
-        ? 'bg-purple-900/10 ring-white/10 shadow-black/50'  /* Dark: Lebih transparan (40%) */
-        : 'bg-white/40 ring-slate-200 shadow-slate-300/50' /* Light: Lebih transparan (40%) */
-    ]"
-  >
-        <div class="p-6 md:p-10 flex flex-col md:flex-row gap-8 items-start">
+      <div
+        :class="[
+          'h-full relative rounded-[2.5rem] overflow-hidden transition-all duration-500',
+          'ring-1 backdrop-blur-md shadow-2xl',
+          isDark
+            ? 'bg-purple-900/10 ring-white/10 shadow-black/50'
+            : 'bg-white/40 ring-slate-200 shadow-slate-300/50'
+        ]"
+      >
+        <!-- KONTEN UTAMA (KARTU XTALL) -->
+        <div class="p-6 md:p-10 flex flex-col md:flex-row gap-8 items-start relative">
+          
+          <!-- TEMPATKAN SLOT DI SINI (Sebagai pintu masuk elemen dari luar) -->
+          <slot></slot>
+
+          <!-- ICON IMAGE CONTAINER -->
           <div class="shrink-0 mx-auto md:mx-0">
             <div
               :class="[
                 'w-24 h-24 md:w-32 md:h-32 rounded-[2.5rem] flex items-center justify-center ring-1',
-                isDark
-                  ? 'bg-white/[0.04] ring-white/10'
-                  : 'bg-white/80 ring-slate-200'
+                isDark ? 'bg-white/[0.04] ring-white/10' : 'bg-white/80 ring-slate-200'
               ]"
             >
               <img
@@ -56,25 +62,24 @@
             </div>
           </div>
 
+          <!-- STATS & TEXT CONTENT -->
           <div class="flex-1 space-y-5 w-full min-w-0"> 
-  <h3
-    :class="[
-      'text-2xl md:text-4xl font-[1000] uppercase italic tracking-tighter bg-clip-text text-transparent bg-gradient-to-r',
-      'break-words leading-none pb-2', /* TAMBAHKAN break-words DAN leading-none */
-      isDark 
-        ? 'from-white via-cyan-200 to-blue-300' 
-        : 'from-indigo-900 via-purple-800 to-blue-900'
-    ]"
-  >
-    {{ xtall.name }}
-  </h3>
+            <h3
+              :class="[
+                'text-2xl md:text-4xl font-[1000] uppercase italic tracking-tighter bg-clip-text text-transparent bg-gradient-to-r',
+                'break-words leading-none pb-2',
+                isDark 
+                  ? 'from-white via-cyan-200 to-blue-300' 
+                  : 'from-indigo-900 via-purple-800 to-blue-900'
+              ]"
+            >
+              {{ xtall.name }}
+            </h3>
 
             <div
               :class="[
                 'p-6 rounded-3xl ring-1',
-                isDark
-                  ? 'bg-white/[0.03] ring-white/10'
-                  : 'bg-white/70 ring-slate-200'
+                isDark ? 'bg-white/[0.03] ring-white/10' : 'bg-white/70 ring-slate-200'
               ]"
             >
               <div class="space-y-3">
@@ -107,15 +112,14 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </div> <!-- PENUTUP STATS & TEXT CONTENT -->
+        </div> <!-- PENUTUP KONTEN UTAMA -->
 
+        <!-- CARD FOOTER (BADGE & ROUTER LINK) -->
         <div
           :class="[
             'px-8 py-5 flex justify-between items-center border-t',
-            isDark
-              ? 'bg-white/[0.02] border-white/10'
-              : 'bg-white/60 border-slate-200'
+            isDark ? 'bg-white/[0.02] border-white/10' : 'bg-white/60 border-slate-200'
           ]"
         >
           <span
@@ -140,6 +144,7 @@
       </div>
     </div>
 
+    <!-- NEXT UPGRADE SIDEBAR -->
     <div class="lg:col-span-3 flex flex-row lg:flex-col gap-3">
       <div
         v-for="evo in evoXtalls"
@@ -171,7 +176,7 @@
 <script setup>
 import { computed } from 'vue'
 
-defineEmits(['set-search'])
+defineEmits(['set-search', 'delete-favorite'])
 
 const props = defineProps({
   xtall: Object,

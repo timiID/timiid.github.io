@@ -3716,6 +3716,41 @@ export const crystalData = [
           type: "UPGRADE",
           name: "Doy",
           view: `\n.ATK +12%\nSTR +8%\nCritical Rate +10%\n.DEF -33%`,
+        },
+        {
+          code: 532,
+          link: 169,
+          type: "UPGRADE",
+          name: "Blimas",
+          view: `\nMaxHP +5000\nReduksi DMG (Terjang) +10%\nReduksi DMG (Linear) +10%\nReduksi DMG (Sekitar Pemain) +10%\nReduksi DMG (Sekitar Musuh) +10%`,
+        },
+        {
+          code: 533,
+          link: 532,
+          type: "UPGRADE",
+          name: "Auporter",
+          view: `\nMaxHP +5000\nReduksi DMG (Terjang) +15%\nReduksi DMG (Linear) +15%\nReduksi DMG (Sekitar Pemain) +15%\nReduksi DMG (Sekitar Musuh) +15%\nReduksi Emisi +15%`,
+        },
+        {
+          code: 534,
+          link: null,
+          type: "ARMOR",
+          name: "Arnold",
+          view: `\n.ATK +5%\nMATK +5%\nDaya Jarak Dekat +5%\nCritical Rate +15\nCritical Rate +15%\nMaxHP +5000\nAntisipasi +10%\nMotion Speed +2%\nDengan Pedang 2 Tangan:\nAntisipasi +10%`,
+        },
+        {
+          code: 535,
+          link: 534,
+          type: "UPGRADE",
+          name: "Arnold II",
+          view: `\n.ATK +6%\nMATK +6%\nDaya Jarak Dekat +6%\nCritical Rate +15\nCritical Rate +15%\nMaxHP +6000\nAntisipasi +10%\nMotion Speed +2%\nDengan Pedang 2 Tangan:\nAntisipasi +10%`,
+        },
+        {
+          code: 536,
+          link: 535,
+          type: "UPGRADE",
+          name: "Petir Penghancur Raya",
+          view: `\n.ATK +7%\nMATK +7%\nDaya Jarak Dekat +7%\nCritical Rate +15\nCritical Rate +15%\nMaxHP +7000\nAntisipasi +10%\nMotion Speed +2%\nDengan Pedang 2 Tangan:\nAntisipasi +10%`,
         }
       ];
       

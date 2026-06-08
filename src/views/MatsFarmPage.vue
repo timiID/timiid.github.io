@@ -1,10 +1,13 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
+import { useRouter } from 'vue-router'; // 1. IMPORT USEROUTER
 import { matsData } from '@/data/matsStore.js';
 
 const props = defineProps({
   isDark: Boolean
 });
+
+const router = useRouter(); // 2. INISIALISASI ROUTER
 
 // --- Filter State ---
 const searchQuery = ref('');
@@ -108,13 +111,16 @@ const getIcon = (name) => new URL(`../assets/jenis-bahan-toram/${name}`, import.
 </script>
 
 <template>
-  <div class="w-full py-6 font-sans">
-  <button @click="$router.push('/')" class="group flex items-center gap-3 mb-10 transition-all hover:-translate-x-2">
+  <div class="max-w-7xl mx-auto px-4 md:px-8 w-full py-6 font-sans">
+    
+    <!-- FIX: Menggunakan router.push via script instance agar siklus route ter-reset sempurna -->
+    <button @click="router.push('/')" class="group flex items-center gap-3 mb-10 transition-all hover:-translate-x-2">
       <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
         <svg class="w-5 h-5 text-cyan-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"/></svg>
       </div>
       <span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 group-hover:opacity-100 group-hover:text-cyan-500">Back</span>
     </button>
+
     <div class="mb-12 space-y-8">
       <div class="flex items-center gap-4">
         <div class="w-2 h-8 bg-gradient-to-b from-indigo-400 to-indigo-600 rounded-full"></div>
@@ -146,31 +152,41 @@ const getIcon = (name) => new URL(`../assets/jenis-bahan-toram/${name}`, import.
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <input v-model="searchQuery" type="text" placeholder="Search mobs, maps, or drops..."
+          <!-- FIX: Menambahkan id dan name untuk menangani Accessibility & autofill warning -->
+          <input 
+            id="search-mobs-input"
+            name="search-mobs"
+            v-model="searchQuery" 
+            type="text" 
+            placeholder="Search mobs, maps, or drops..."
             :class="['w-full pl-12 pr-4 py-4 rounded-2xl border-2 outline-none transition-all font-bold text-sm',
               isDark ? 'bg-white/5 border-white/5 text-white focus:border-indigo-500' : 'bg-white border-slate-200 text-slate-900 focus:border-indigo-400 shadow-sm']" />
         </div>
 
         <div class="md:col-span-4 relative group">
-  <select v-model="selectedElement"
-    :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-black text-xs uppercase tracking-widest appearance-none cursor-pointer transition-all',
-      isDark 
-        ? 'bg-[#0f172a] border-white/5 text-white focus:border-indigo-500' 
-        : 'bg-white border-slate-200 text-slate-900 focus:border-indigo-400 shadow-sm']"
-  >
-    <option value="all" :class="isDark ? 'bg-[#1e293b] text-white' : 'bg-white text-slate-900'">Elements: All</option>
-    <option v-for="el in elements" :key="el" :value="el" 
-      :class="isDark ? 'bg-[#1e293b] text-white' : 'bg-white text-slate-900'">
-      {{ el }}
-    </option>
-  </select>
-  
-  <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" :class="isDark ? 'text-white' : 'text-slate-900'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
-    </svg>
-  </div>
-</div>
+          <!-- FIX: Menambahkan id dan name pada selector -->
+          <select 
+            id="element-filter-select"
+            name="element-filter"
+            v-model="selectedElement"
+            :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-black text-xs uppercase tracking-widest appearance-none cursor-pointer transition-all',
+              isDark 
+                ? 'bg-[#0f172a] border-white/5 text-white focus:border-indigo-500' 
+                : 'bg-white border-slate-200 text-slate-900 focus:border-indigo-400 shadow-sm']"
+          >
+            <option value="all" :class="isDark ? 'bg-[#1e293b] text-white' : 'bg-white text-slate-900'">Elements: All</option>
+            <option v-for="el in elements" :key="el" :value="el" 
+              :class="isDark ? 'bg-[#1e293b] text-white' : 'bg-white text-slate-900'">
+              {{ el }}
+            </option>
+          </select>
+          
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" :class="isDark ? 'text-white' : 'text-slate-900'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
 
         <div class="md:col-span-3 flex p-1 rounded-2xl border-2" :class="isDark ? 'border-white/5 bg-white/5' : 'border-slate-200 bg-slate-100'">
           <button v-for="opt in [{id:'all', n:'All'}, {id:'event', n:'Event SS'}, {id:'regular', n:'Non Event SS'}]" :key="opt.id"

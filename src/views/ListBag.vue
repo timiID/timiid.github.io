@@ -161,9 +161,10 @@ const getBadgeClass = (kelas) => {
 <template>
   <div :class="['bg-transparent py-0 px-2 md:px-4 font-sans relative z-10 transition-all duration-500', isDark ? 'text-white' : 'text-slate-900']">
     
-    <div class="max-w-9xl mx-auto flex justify-center md:justify-end mb-2 sticky top-0 z-50">
-      <div class="flex flex-col items-center gap-1 pt-2">
-        <span class="text-[10px] font-[1000] tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 uppercase text-center w-full opacity-90">
+    <!-- PERBAIKAN: max-w-9xl diubah ke max-w-7xl agar sejajar lurus dengan konten di bawahnya -->
+    <div class="max-w-7xl mx-auto flex justify-end mb-2 sticky top-0 z-50">
+      <div class="flex flex-col items-end gap-1 pt-2"> <!-- Diubah ke items-end biar teks selektor condong ke kanan -->
+        <span class="text-[10px] font-[1000] tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 uppercase text-right w-full opacity-90 pr-1">
           SELECT LANGUAGE
         </span>
         <div class="inline-flex p-1 rounded-xl bg-white/10 backdrop-blur-xl border-2 border-white/20 shadow-2xl">
@@ -178,25 +179,29 @@ const getBadgeClass = (kelas) => {
     </div>
 
     <div class="max-w-7xl mx-auto space-y-3 md:space-y-6">
-      <div :class="['relative p-5 md:p-10 rounded-[2rem] md:rounded-[3.5rem] border-[3px] overflow-hidden backdrop-blur-2xl transition-all duration-700 shadow-xl',
+      <!-- HERO BANNER WRAPPER -->
+      <div :class="['relative p-6 md:p-10 rounded-[2rem] md:rounded-[3.5rem] border-[3px] overflow-hidden backdrop-blur-2xl transition-all duration-700 shadow-xl flex flex-row items-center justify-between gap-4',
           isDark ? 'border-blue-500 bg-black/40' : 'border-blue-600 bg-white/60 shadow-blue-200']">
-        <div class="absolute top-0 right-0 h-full w-1/3 hidden lg:block pointer-events-none">
-          <img src="https://toram-online.com/information/images/item/bag_expansion_en.png" class="w-full h-full object-contain object-right scale-125 translate-x-10" />
-        </div>
-        <div class="relative z-10 text-center md:text-left">
+        
+        <!-- BAGIAN KIRI: TEKS JUDUL -->
+        <div class="relative z-10 text-left flex-1">
           <h2 :class="['text-2xl md:text-6xl font-black italic uppercase leading-none tracking-tighter', isDark ? 'text-white' : 'text-slate-900']">
             {{ t.title }}<br>
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600">{{ t.subtitle }}</span>
           </h2>
-          <div class="absolute top-0 right-0 h-full w-1/3 hidden lg:block pointer-events-none">
-                    <img src="/images/Bag-Toram.png" class="w-full h-full object-contain object-right opacity-30 scale-110" />
-                </div>
-          <div class="flex items-center justify-center md:justify-start gap-2 mt-2">
+          
+          <div class="flex items-center justify-start gap-2 mt-4">
               <div class="h-1 w-10 bg-blue-600 rounded-full"></div>
-              <img src="/images/logo.png" class="h-5 md:h-10 w-auto object-contain" />
+              <img src="/images/logo.png" width="40" height="40" class="h-5 md:h-10 w-auto object-contain" />
               <span class="font-[1000] italic uppercase text-lg md:text-3xl">TIMI <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span></span>
           </div> 
         </div>
+
+        <!-- BAGIAN KANAN: GAMBAR BAG (SUDAH MUNCUL DI HP & PC, GA BAKAL KEPOTONG) -->
+        <img src="/images/Bag-Toram.png" 
+             class="block h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40 object-contain z-10 flex-shrink-0" 
+             alt="Bag Toram" />
+
       </div>
 
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">

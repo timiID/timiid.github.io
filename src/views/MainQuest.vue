@@ -104,34 +104,29 @@ const stats = computed(() => [
     <div class="bg-transparent py-0 px-2 md:px-4 font-sans">
         
         <div class="max-w-9xl mx-auto space-y-6 md:space-y-10">
-            <div :class="['relative p-6 md:p-10 rounded-[2.5rem] md:rounded-[3.5rem] border-[4px] overflow-hidden backdrop-blur-2xl transition-all duration-700 shadow-2xl',
+            <!-- HERO BANNER WRAPPER (TATA LETAK PERSIS HALAMAN BAG, GA BAKAL NGEBLOKIR) -->
+            <div :class="['relative p-6 md:p-10 rounded-[2rem] md:rounded-[3.5rem] border-[3px] overflow-hidden backdrop-blur-2xl transition-all duration-700 shadow-xl flex flex-row items-center justify-between gap-4',
               isDark ? 'border-blue-500 bg-black/40' : 'border-blue-600 bg-white/60 shadow-blue-200']">
                 
-                <div class="absolute top-0 right-0 h-full w-1/3 hidden lg:block pointer-events-none">
-                    <img src="/images/mq.png" class="w-full h-full object-contain object-right opacity-30 scale-110" />
-                </div>
-
-                <div class="relative z-10 text-center md:text-left">
-                    <h2 :class="['text-3xl md:text-6xl font-black italic uppercase leading-none tracking-tighter', props.isDark ? 'text-white' : 'text-slate-900']">
-                        MAIN QUEST<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">LIST DB</span>
+                <!-- BAGIAN KIRI: TEKS JUDUL -->
+                <div class="relative z-10 text-left flex-1">
+                    <h2 :class="['text-2xl md:text-6xl font-black italic uppercase leading-none tracking-tighter', props.isDark ? 'text-white' : 'text-slate-900']">
+                        MAIN QUEST<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">LIST DB</span>
                     </h2>
 
-                    <div class="mt-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4">
-                        <div class="flex items-center gap-3">
-                            <div class="h-1.5 w-16 bg-blue-600 rounded-full"></div>
-                            <img src="/images/logo.png" class="h-8 md:h-12 w-auto object-contain" />
-                        </div>
-
-                        <div class="flex items-center gap-2 select-none whitespace-nowrap">
-                            <span :class="['font-[1000] tracking-tighter italic uppercase leading-none transition-all duration-700 text-4xl md:text-4xl', isDark ? 'text-white' : 'text-slate-900']">
-                                TIMI
-                            </span>
-                            <span class="text-3xl md:text-4xl font-[1000] tracking-tighter italic uppercase leading-none text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">
-                                DB
-                            </span>
-                        </div>
-                    </div>
+                    <div class="flex items-center justify-start gap-2 mt-4">
+                        <div class="h-1 w-10 bg-blue-600 rounded-full"></div>
+                        <img src="/images/logo.png" width="40" height="40" class="h-5 md:h-10 w-auto object-contain" />
+                        <span class="font-[1000] italic uppercase text-lg md:text-3xl">TIMI <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span></span>
+                    </div> 
                 </div>
+
+                <!-- BAGIAN KANAN: GAMBAR MQ2 (IKUT STRUKTUR HALAMAN BAG, PASTI NYALA UTUH) -->
+                <img src="/images/mq2.png" 
+                     class="block h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40 object-contain z-10 flex-shrink-0" 
+                     alt="MQ Banner Image" />
+
             </div>
 
             <div :class="['grid grid-cols-1 md:grid-cols-3 gap-6 p-6 md:p-10 border-[4px] rounded-[2rem] md:rounded-[3.5rem] shadow-2xl backdrop-blur-md',
