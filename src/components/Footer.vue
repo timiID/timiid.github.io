@@ -31,7 +31,7 @@ const goHomeAndScrollTop = async () => {
   >
     <!-- GIF BG (lazy-loaded image to allow decoding & avoid heavy synchronous layout shifts) -->
     <img
-      src="/images/what chara.gif"
+      src="/images/what chara.webp"
       alt=""
       aria-hidden="true"
       decoding="async"

@@ -8,7 +8,7 @@
       
       <div class="absolute inset-0 flex items-center justify-center">
         <img 
-          src="/images/what chara.gif" 
+          src="/images/what chara.webp" 
           alt="Timi DB Logo" 
           loading="lazy"
           decoding="async"

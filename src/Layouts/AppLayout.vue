@@ -12,11 +12,11 @@ const emit = defineEmits(['toggleDark']);
 
 // 1. DATA SLIDESHOW BACKGROUND
 const backgrounds = [
+  '/images/peluluchan.png',
   '/images/hanami11.png',
-  '/images/timi.png',
   '/images/pelulu.png',
-  '/images/yuyuko1.jpg',
-  '/images/yuyuko2.jpg'
+  '/images/my38.png',
+  '/images/my34.png',
 ];
 const currentBgIndex = ref(0);
 
