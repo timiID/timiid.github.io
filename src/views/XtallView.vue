@@ -49,10 +49,11 @@
         🔎 Pencarian Xtall Lanjutan
       </RouterLink>
 
-      <section :class="['grid grid-cols-1 md:grid-cols-12 gap-6 p-6 md:p-10 rounded-[3rem] border-2 backdrop-blur-3xl relative z-[100] transition-all duration-500 shadow-2xl mb-12', 
+      <section :class="['grid grid-cols-1 md:grid-cols-2 gap-6 p-6 md:p-10 rounded-[3rem] border-2 backdrop-blur-3xl relative z-[100] transition-all duration-500 shadow-2xl mb-12', 
   isDark ? 'bg-slate-950/60 border-white/10 shadow-black/40' : 'bg-white/80 border-slate-200 shadow-slate-300/50']">
   
-  <div class="space-y-3 col-span-1 md:col-span-4">
+  <!-- BARIS 1 KIRI: CARI NAMA -->
+  <div class="space-y-3">
     <label class="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 ml-4 flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-cyan-500/40"></span> CARI NAMA
     </label>
@@ -62,110 +63,117 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </span>
-      <input v-model="searchQuery" @keyup.enter="handleEnterSearch" @focus="openSearchHistory" @input="openSearchHistory" type="text" placeholder="Ketik nama xtall..." 
+      <input 
+  v-model="searchQuery" 
+  @keyup.enter="handleEnterSearch" 
+  @focus="isHistoryOpen = true" 
+  @input="isHistoryOpen = true" 
+  type="text" 
+  placeholder="Ketik nama xtall..." 
         :class="['w-full pl-14 pr-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm transition-all', 
         isDark ? 'bg-[#0f172a] border-white/5 focus:border-cyan-500 text-white placeholder-slate-600' : 'bg-white border-slate-200 focus:border-cyan-500']">
 
-      <div v-if="searchQuery.trim().length > 0 && displayedSearchLogs.length > 0 && isHistoryOpen" class="absolute left-0 right-0 z-20 mt-0 rounded-3xl border-2 bg-white/95 shadow-xl shadow-slate-200/40 backdrop-blur-xl overflow-hidden max-h-[200px] overflow-y-auto"
-        :class="isDark ? 'border-white/10 bg-slate-950/90 shadow-black/40' : 'border-slate-200'">
-        <div class="px-4 py-3">
-          <div class="flex items-center justify-between gap-3">
-            <div>
-              <p class="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500" :class="isDark ? 'text-slate-400' : ''">Riwayat Pencarian</p>
-              <p class="text-[11px] text-slate-400 mt-1" :class="isDark ? 'text-slate-500' : ''">6 terbaru dari pencarian Anda.</p>
-            </div>
-            <button @click.stop="clearSearchLogs" type="button"
-              class="text-[10px] font-black uppercase tracking-[0.2em] text-red-500 hover:text-red-700 transition-colors"
-              :class="isDark ? 'text-red-400 hover:text-red-200' : ''">
-              Hapus semua
-            </button>
-          </div>
-        </div>
-        <div class="divide-y divide-slate-200/60" :class="isDark ? 'divide-slate-700' : ''">
-          <div v-for="log in displayedSearchLogs" :key="log" class="flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-100 cursor-pointer"
-            :class="isDark ? 'hover:bg-slate-800' : ''" @click="applySearchLog(log)">
-            <span class="truncate text-sm font-medium" :class="isDark ? 'text-slate-100' : 'text-slate-700'">{{ log }}</span>
-            <button @click.stop="removeSearchLog(log)" type="button"
-              class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-red-500"
-              :class="isDark ? 'text-slate-400 hover:text-red-300' : ''">
-              X
-            </button>
-          </div>
-        </div>
+      <div 
+  v-if="displayedSearchLogs.length > 0 && isHistoryOpen" 
+  class="absolute left-0 right-0 z-20 mt-2 rounded-3xl border-2 shadow-2xl backdrop-blur-xl overflow-hidden"
+  :class="isDark ? 'bg-slate-900 border-white/10 shadow-black' : 'bg-white border-slate-200 shadow-slate-200'"
+>
+  <div class="px-4 py-3 border-b border-slate-200/20" :class="isDark ? 'border-white/5' : ''">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <p class="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500">Riwayat Pencarian</p>
+        <p class="text-[11px] text-slate-400 mt-1">
+          {{ historyLabel }}
+        </p>
       </div>
+      <button @click.stop="clearSearchLogs" type="button"
+        class="text-[10px] font-black uppercase tracking-[0.2em] transition-colors"
+        :class="isDark ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-700'">
+        Hapus semua
+      </button>
+    </div>
+  </div>
+  
+  <div class="divide-y divide-slate-200/20" :class="isDark ? 'divide-white/5' : 'divide-slate-100'">
+    <div v-for="log in displayedSearchLogs" :key="log" 
+      class="flex items-center justify-between gap-3 px-4 py-3 transition-colors cursor-pointer"
+      :class="isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50'" 
+      @click="applySearchLog(log)">
+      
+      <span class="truncate text-sm font-medium" :class="isDark ? 'text-slate-300' : 'text-slate-600'">{{ log }}</span>
+      
+      <button @click.stop="removeSearchLog(log)" type="button"
+        class="text-[10px] font-black uppercase tracking-[0.2em] transition-colors"
+        :class="isDark ? 'text-slate-500 hover:text-red-400' : 'text-slate-400 hover:text-red-500'">
+        X
+      </button>
+    </div>
+  </div>
+</div>
     </div>
   </div>
 
-  <div class="space-y-3 col-span-1 md:col-span-2">
-    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-purple-500 ml-4">SKALA</label>
-    <div class="relative">
-      <select v-model="itemsPerPage" :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer appearance-none transition-all',
-        isDark ? 'bg-[#0f172a] border-white/5 focus:border-purple-500 text-slate-200' : 'bg-white border-slate-200 focus:border-purple-500']">
-        <option :value="10">10 Unit</option>
-        <option :value="25">25 Unit</option>
-        <option :value="50">50 Unit</option>
-      </select>
-      <span class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
-      </span>
-    </div>
+ <!-- BARIS 1 KANAN: SKALA -->
+<div class="space-y-3">
+  <label class="text-[10px] font-black uppercase tracking-[0.2em] text-purple-500 ml-4">SKALA</label>
+  <div class="relative flex items-center">
+    <select v-model="itemsPerPage" :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer appearance-none transition-all',
+      isDark ? 'bg-[#0f172a] border-white/5 focus:border-purple-500 text-slate-200' : 'bg-white border-slate-200 focus:border-purple-500']">
+      <option :value="10">10 Unit</option>
+      <option :value="25">25 Unit</option>
+      <option :value="50">50 Unit</option>
+    </select>
+    <!-- Ikon Chevron -->
+    <svg xmlns="http://www.w3.org/2000/svg" 
+         class="absolute right-5 h-4 w-4 opacity-50 pointer-events-none transition-transform" 
+         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+    </svg>
   </div>
+</div>
 
-  <div class="space-y-3 col-span-1 md:col-span-2" ref="typeRef">
+  <!-- BARIS 2 KIRI: JENIS XTALL -->
+  <div class="space-y-3 relative md:col-span-2" ref="typeRef">
     <label class="text-[10px] font-black uppercase tracking-[0.2em] text-green-500 ml-4 flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-green-500/40"></span> JENIS XTALL
     </label>
-    <div class="relative">
-      <button @click="toggleTypeDropdown" :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer transition-all text-left flex items-center justify-between',
-        isDark ? 'bg-[#0f172a] border-white/5 focus:border-green-500 text-slate-200 hover:border-green-500/50' : 'bg-white border-slate-200 focus:border-green-500 hover:border-green-400']">
-        <span v-if="selectedTypes.length === 0" class="opacity-100">Pilih Jenis...</span>
-        <span v-else class="text-xs">{{ selectedTypes.length }} Dipilih</span>
-        <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 transition-transform', isTypeOpen ? 'rotate-180' : '']" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
-      </button>
-      
-      <div v-if="isTypeOpen" :class="['absolute top-full left-0 right-0 mt-2 rounded-2xl border-2 backdrop-blur-xl z-50 shadow-2xl',
-        isDark ? 'bg-slate-900/95 border-white/10' : 'bg-white/95 border-slate-200']">
-        <div class="p-4 grid grid-cols-2 gap-2 max-w-md">
-          <button
-            v-for="type in displayTypes"
-            :key="type.value"
-            @click="toggleType(type.value)"
-            :class="['px-3 py-2 text-left rounded-lg border-2 transition-all font-semibold text-xs flex items-center gap-2',
-              selectedTypes.includes(type.value)
-                ? (isDark ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-green-100 border-green-500 text-green-700')
-                : (isDark ? 'bg-transparent border-white/5 text-slate-400 hover:border-green-500/30' : 'bg-transparent border-slate-200 text-slate-600 hover:border-green-400')]">
-            <input type="checkbox" :checked="selectedTypes.includes(type.value)" class="cursor-pointer" />
-            <span>{{ type.label }}</span>
-          </button>
-        </div>
-      </div>
+    <button @click="toggleTypeDropdown" :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer transition-all text-left flex items-center justify-between',
+      isDark ? 'bg-[#0f172a] border-white/5 focus:border-green-500 text-slate-200' : 'bg-white border-slate-200 focus:border-green-500']">
+      <span class="truncate">{{ selectedTypes.length === 0 ? 'Pilih Jenis...' : selectedTypes.length + ' Dipilih' }}</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+    </button>
+    
+    <!-- Dropdown Jenis -->
+    <div v-if="isTypeOpen" :class="['absolute top-full left-0 mt-0 w-full rounded-3xl border-2 backdrop-blur-2xl z-[999] shadow-2xl p-4 grid grid-cols-1 md:grid-cols-2 gap-2',
+      isDark ? 'bg-slate-900/95 border-white/10' : 'bg-white/95 border-slate-200']">
+      <button v-for="type in displayTypes" :key="type.value" @click="toggleType(type.value)" 
+  :class="[
+    'px-3 py-2 text-left rounded-xl border-2 text-xs font-bold transition-all', 
+    selectedTypes.includes(type.value) 
+      ? 'border-green-500 bg-green-500/10 text-green-400' 
+      : isDark 
+        ? 'border-transparent bg-slate-800 text-slate-400 hover:bg-slate-700' 
+        : 'border-transparent bg-slate-100 text-slate-500 hover:bg-slate-200'
+  ]">
+  {{ type.label }}
+</button>
     </div>
   </div>
 
-  <div class="space-y-3 col-span-1 md:col-span-4">
-    <label class="text-[10px] font-[1000] uppercase tracking-[0.2em] text-red-600 ml-4 flex items-center gap-2">
-      <span class="w-1 h-3 bg-red-600 rounded-full"></span> URUTAN & RESET DATA
+  <!-- BARIS 3 KANAN: URUTAN & RESET -->
+  <div class="space-y-3">
+    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-red-600 ml-4 flex items-center gap-2">
+      <span class="w-1 h-3 bg-red-600 rounded-full"></span> URUTAN & RESET
     </label>
-    <div class="flex flex-col gap-4">
-      <div class="relative">
-        <select v-model="sortOrder" :class="['w-full h-[60px] px-6 rounded-2xl border-2 font-bold text-sm cursor-pointer appearance-none transition-all',
-          isDark ? 'bg-[#0f172a] border-white/5 focus:border-red-500 text-slate-200' : 'bg-white border-slate-200 focus:border-red-500']">
-          <option value="asc">Urut: A ke Z</option>
-          <option value="desc">Urut: Z ke A</option>
-        </select>
-        <span class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-red-500">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-          </svg>
-        </span>
-      </div>
-
+    <div class="flex gap-2">
+      <select v-model="sortOrder" :class="['flex-grow px-5 py-4 rounded-2xl border-2 font-bold text-sm cursor-pointer transition-all',
+        isDark ? 'bg-[#0f172a] border-white/5 focus:border-red-500 text-slate-200' : 'bg-white border-slate-200 focus:border-red-500']">
+        <option value="asc">A ke Z</option>
+        <option value="desc">Z ke A</option>
+      </select>
       <button @click="handleResetAll" 
-        class="h-[60px] w-full px-8 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black uppercase text-xs tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] active:scale-95 transition-all flex items-center justify-center gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-        </svg>
-        ATUR ULANG
+        class="px-6 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black uppercase text-xs tracking-widest active:scale-95 transition-all">
+        RESET
       </button>
     </div>
   </div>
@@ -264,7 +272,7 @@ const searchLogs = ref([]);
 const searchRef = ref(null);
 const isHistoryOpen = ref(false);
 const maxStoredLogs = 20;
-const maxVisibleLogs = 6;
+const maxVisibleLogs = 3;
 
 const handleEnterSearch = () => {
   const value = searchQuery.value?.trim();
@@ -273,6 +281,12 @@ const handleEnterSearch = () => {
   document.activeElement.blur();
   isHistoryOpen.value = false;
 };
+
+const historyLabel = computed(() => {
+  return searchQuery.value.trim() 
+    ? 'Hasil kecocokan' 
+    : '3 terbaru dari pencarian Anda.';
+});
 
 const openSearchHistory = () => {
   if (searchQuery.value?.trim().length > 0 && displayedSearchLogs.value.length > 0) {
@@ -291,7 +305,20 @@ const loadSearchLogs = () => {
   }
 };
 
-const displayedSearchLogs = computed(() => searchLogs.value.slice(0, maxVisibleLogs));
+const displayedSearchLogs = computed(() => {
+  const q = searchQuery.value.toLowerCase().trim();
+  
+  // 1. Jika kolom pencarian kosong, tampilkan 3 riwayat terbaru
+  if (!q) {
+    return searchLogs.value.slice(0, maxVisibleLogs);
+  }
+  
+  // 2. Jika sedang mengetik, filter riwayat yang mengandung kata tersebut
+  // Menampilkan hingga 3 hasil kecocokan teratas
+  return searchLogs.value
+    .filter(log => log.toLowerCase().includes(q))
+    .slice(0, maxVisibleLogs);
+});
 
 const saveSearchLog = (query) => {
   const trimmed = query?.trim();

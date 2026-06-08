@@ -60,7 +60,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         backgroundAttachment: 'scroll', 
         backgroundSize: 'cover',
         height: '1100px', 
-        opacity: '0.04',
+        opacity: '0.7',
         maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
         webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
       }"

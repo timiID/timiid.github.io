@@ -145,20 +145,7 @@ const navigateTo = (path) => router.push(path);
     
     <div class="relative w-full flex flex-col items-center justify-center min-h-[650px] py-16 text-center px-4 overflow-hidden">
       
-      <div 
-        class="absolute inset-0 pointer-events-none z-0"
-        :style="{ 
-          backgroundImage: `url(${backgrounds[currentBgIndex]})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center top', 
-          backgroundAttachment: 'scroll', 
-          backgroundSize: 'cover',
-          height: '100%', 
-          opacity: '0.35', 
-          maskImage: 'linear-gradient(to bottom, black 0%, black 60%, rgba(0,0,0,0.5) 85%, transparent 100%)',
-          webkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, rgba(0,0,0,0.5) 85%, transparent 100%)'
-        }"
-      ></div>
+     
 
       <div class="relative z-10 flex flex-col items-center animate-fade-in">
         <div class="absolute inset-0 bg-indigo-500/10 blur-[120px] rounded-full"></div>
