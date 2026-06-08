@@ -56,15 +56,43 @@
     <label class="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500 ml-4 flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-cyan-500/40"></span> CARI NAMA
     </label>
-    <div class="relative group">
+    <div ref="searchRef" class="relative group">
       <span class="absolute left-5 top-1/2 -translate-y-1/2 text-cyan-500/50 group-focus-within:text-cyan-500 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </span>
-      <input v-model="searchQuery" type="text" placeholder="Ketik nama xtall..." 
+      <input v-model="searchQuery" @keyup.enter="handleEnterSearch" @focus="openSearchHistory" @input="openSearchHistory" type="text" placeholder="Ketik nama xtall..." 
         :class="['w-full pl-14 pr-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm transition-all', 
         isDark ? 'bg-[#0f172a] border-white/5 focus:border-cyan-500 text-white placeholder-slate-600' : 'bg-white border-slate-200 focus:border-cyan-500']">
+
+      <div v-if="searchQuery.trim().length > 0 && displayedSearchLogs.length > 0 && isHistoryOpen" class="absolute left-0 right-0 z-20 mt-0 rounded-3xl border-2 bg-white/95 shadow-xl shadow-slate-200/40 backdrop-blur-xl overflow-hidden max-h-[200px] overflow-y-auto"
+        :class="isDark ? 'border-white/10 bg-slate-950/90 shadow-black/40' : 'border-slate-200'">
+        <div class="px-4 py-3">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500" :class="isDark ? 'text-slate-400' : ''">Riwayat Pencarian</p>
+              <p class="text-[11px] text-slate-400 mt-1" :class="isDark ? 'text-slate-500' : ''">6 terbaru dari pencarian Anda.</p>
+            </div>
+            <button @click.stop="clearSearchLogs" type="button"
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-red-500 hover:text-red-700 transition-colors"
+              :class="isDark ? 'text-red-400 hover:text-red-200' : ''">
+              Hapus semua
+            </button>
+          </div>
+        </div>
+        <div class="divide-y divide-slate-200/60" :class="isDark ? 'divide-slate-700' : ''">
+          <div v-for="log in displayedSearchLogs" :key="log" class="flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-100 cursor-pointer"
+            :class="isDark ? 'hover:bg-slate-800' : ''" @click="applySearchLog(log)">
+            <span class="truncate text-sm font-medium" :class="isDark ? 'text-slate-100' : 'text-slate-700'">{{ log }}</span>
+            <button @click.stop="removeSearchLog(log)" type="button"
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-red-500"
+              :class="isDark ? 'text-slate-400 hover:text-red-300' : ''">
+              X
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -118,8 +146,8 @@
     <label class="text-[10px] font-[1000] uppercase tracking-[0.2em] text-red-600 ml-4 flex items-center gap-2">
       <span class="w-1 h-3 bg-red-600 rounded-full"></span> URUTAN & RESET DATA
     </label>
-    <div class="flex gap-4">
-      <div class="relative flex-1">
+    <div class="flex flex-col gap-4">
+      <div class="relative">
         <select v-model="sortOrder" :class="['w-full h-[60px] px-6 rounded-2xl border-2 font-bold text-sm cursor-pointer appearance-none transition-all',
           isDark ? 'bg-[#0f172a] border-white/5 focus:border-red-500 text-slate-200' : 'bg-white border-slate-200 focus:border-red-500']">
           <option value="asc">Urut: A ke Z</option>
@@ -131,9 +159,9 @@
           </svg>
         </span>
       </div>
-      
+
       <button @click="handleResetAll" 
-        class="h-[60px] flex-1 px-8 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black uppercase text-xs tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] active:scale-95 transition-all flex items-center justify-center gap-3">
+        class="h-[60px] w-full px-8 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black uppercase text-xs tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] active:scale-95 transition-all flex items-center justify-center gap-3">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
         </svg>
@@ -231,6 +259,69 @@ import armorEnhancerCrystas from "@/assets/icons/enhance_armor_crysta.png";
 import additionalEnhancerCrystas from "@/assets/icons/enhance_additional_crysta.png";
 import specialEnhancerCrystas from "@/assets/icons/enhace_special_crysta.png";
  import { parseXtallStats } from '@/utils/parseXtallStats'
+
+const searchLogs = ref([]);
+const searchRef = ref(null);
+const isHistoryOpen = ref(false);
+const maxStoredLogs = 20;
+const maxVisibleLogs = 6;
+
+const handleEnterSearch = () => {
+  const value = searchQuery.value?.trim();
+  if (!value) return;
+  saveSearchLog(value);
+  document.activeElement.blur();
+  isHistoryOpen.value = false;
+};
+
+const openSearchHistory = () => {
+  if (searchQuery.value?.trim().length > 0 && displayedSearchLogs.value.length > 0) {
+    isHistoryOpen.value = true;
+  }
+};
+
+const loadSearchLogs = () => {
+  try {
+    const stored = JSON.parse(localStorage.getItem('xtallSearchLogs') || '[]');
+    if (Array.isArray(stored)) {
+      searchLogs.value = stored.filter(item => typeof item === 'string' && item.trim()).slice(0, maxStoredLogs);
+    }
+  } catch {
+    searchLogs.value = [];
+  }
+};
+
+const displayedSearchLogs = computed(() => searchLogs.value.slice(0, maxVisibleLogs));
+
+const saveSearchLog = (query) => {
+  const trimmed = query?.trim();
+  if (!trimmed) return;
+
+  const filtered = searchLogs.value.filter(log => log.toLowerCase() !== trimmed.toLowerCase());
+  filtered.unshift(trimmed);
+  searchLogs.value = filtered.slice(0, maxStoredLogs);
+  localStorage.setItem('xtallSearchLogs', JSON.stringify(searchLogs.value));
+};
+
+const applySearchLog = (value) => {
+  searchQuery.value = value;
+  saveSearchLog(value);
+};
+
+const removeSearchLog = (query) => {
+  searchLogs.value = searchLogs.value.filter(log => log.toLowerCase() !== query.toLowerCase());
+  localStorage.setItem('xtallSearchLogs', JSON.stringify(searchLogs.value));
+  if (searchLogs.value.length === 0) {
+    isHistoryOpen.value = false;
+  }
+};
+
+const clearSearchLogs = () => {
+  searchLogs.value = [];
+  localStorage.removeItem('xtallSearchLogs');
+  isHistoryOpen.value = false;
+};
+
 
 const parsedCache = new Map()
 
@@ -675,9 +766,11 @@ const visiblePages = computed(() => {
 const closeOnOutside = (e) => {
   if (statusRef.value && !statusRef.value.contains(e.target)) isStatusOpen.value = false;
   if (typeRef.value && !typeRef.value.contains(e.target)) isTypeOpen.value = false;
+  if (searchRef.value && !searchRef.value.contains(e.target)) isHistoryOpen.value = false;
 };
 
 onMounted(() => {
+  loadSearchLogs();
   window.addEventListener('click', closeOnOutside);
 });
 
