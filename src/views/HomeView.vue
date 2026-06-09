@@ -24,8 +24,6 @@ import { crystalData } from '../data/store.js'; // Pastikan path store lo bener
 const favoriteXtalls = ref([]);
 const backgrounds = [
   '/images/peluluchan.png',
-  '/images/hanami11.png',
-  '/images/pelulu.png',
   '/images/my38.png',
   '/images/my34.png',
 ];
@@ -127,7 +125,7 @@ onMounted(() => {
 
   homeInterval = setInterval(() => {
     currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length;
-  }, 5000);
+  }, 8000);
 });
 
 onUnmounted(() => {
