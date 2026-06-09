@@ -50,7 +50,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
   <div :class="['min-h-screen flex flex-col transition-all duration-[1000ms] relative overflow-x-hidden', isDark ? 'bg-mesh-dark text-white' : 'bg-mesh-light text-slate-900']">
     
     <!-- Slideshow hanya tampil di halaman home -->
-    <!-- Tambah class 'hidden md:block' supaya hanya tampil di PC -->
+    <!-- Tambah class 'hidden md:block' -->
 <div 
   v-if="isHome"
   class="absolute inset-0 pointer-events-none z-0 transition-all duration-[1500ms] ease-in-out hidden md:block"
@@ -62,14 +62,13 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         backgroundSize: 'cover',
         height: '1100px', 
         opacity: '0.7',
-        maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
-        webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
+        /* Gradasi: transparan atas (0%-15%), jelas di tengah (20%-60%), transparan di bawah (60%-100%) */
+        maskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 65%, transparent 95%)',
+        webkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 65%, transparent 95%)'
       }"
     ></div>
 
-    <!-- Pattern overlay hanya di home -->
     <div 
-      v-if="isHome"
       class="absolute inset-0 pointer-events-none z-0"
       :style="{ 
         backgroundImage: `url('/images/linearperfect.png')`,
@@ -77,12 +76,11 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
         backgroundPosition: 'right top',
         backgroundAttachment: 'scroll', 
         backgroundSize: 'auto',
-        opacity: '0.04'
+        opacity: '0.05'
       }"
     ></div>
 
-    <!-- Bubbles tampil di semua halaman -->
-    <div class="absolute inset-0 pointer-events-none z-[1] overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none z-[1] overflow-hidden hidden md:block">
       <div v-for="bubble in bubbles" :key="'bubble-'+bubble.id" 
         class="absolute rounded-full border border-white/20 backdrop-blur-[1px] animate-float opacity-30 bubble-glow" 
         :style="{ 

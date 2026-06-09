@@ -150,8 +150,8 @@ const navigateTo = (path) => router.push(path);
         backgroundSize: 'cover',
         height: '1100px',
         opacity: '0.7',
-        maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
-        webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
+        maskImage: 'linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 95%)',
+        webkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 95%)'
       }"
     ></div>
     
@@ -165,22 +165,33 @@ const navigateTo = (path) => router.push(path);
         <img src="/images/logo.png" width="176" height="176" class="relative w-32 md:w-44 mb-6 drop-shadow-2xl animate-float-slow" /> 
         
         <h1 class="relative text-4xl md:text-6xl font-[800] italic uppercase tracking-tighter leading-none transition-all">
-          <span :class="isDark ? 'text-white' : 'text-slate-900'">TIMI </span>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB㋡</span>
-        </h1>
-        
-        <p class="relative max-w-xl text-sm md:text-lg opacity-70 font-medium leading-relaxed italic uppercase tracking-widest mt-4">
-          "Your ultimate companion for Toram Online adventures."
-        </p>
+  <span :class="isDark ? 'text-white' : 'text-slate-900'">TIMI </span>
+  <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB㋡</span>
+</h1>
 
-        <p class="relative max-w-xl text-sm md:text-sm opacity-70 font-lower leading-relaxed italic uppercase tracking-widest mt-2">
-          © 2026 
-          <a href="https://timiid.github.io/" target="_blank" 
-             class="font-black text-blue-500 hover:text-cyan-400 underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all">
-            TIMI DB㋡
-          </a> 
-          • Toram Online Digital Database Project
-        </p>
+<p class="relative max-w-xl text-1xl md:text-2xl font-bold uppercase tracking-widest mt-4
+          text-slate-900 dark:text-white
+          [-webkit-text-stroke:_1px_white]
+          dark:[-webkit-text-stroke:_1px_black]">
+  "Your ultimate companion for Toram Online adventures."
+</p>
+
+<p class="relative max-w-xl text-sm font-medium leading-relaxed italic uppercase tracking-widest mt-2
+          text-slate-900 dark:text-white">
+  © 2026
+  <a href="https://timiid.github.io/" target="_blank"
+     class="font-black text-cyan-600 dark:text-cyan-400 hover:text-cyan-300
+            [-webkit-text-stroke:_0.2px_white]
+            underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all">
+    TIMI DB㋡
+  </a>
+  <a class="relative max-w-xl text-sm font-bold leading-relaxed italic uppercase tracking-widest mt-2
+          text-slate-900 dark:text-white
+          [-webkit-text-stroke:_0.2px_white]
+          dark:[-webkit-text-stroke:_0.2px_black]">
+    Toram Online Digital Database Project
+  </a>
+</p>
 
         <div class="relative space-y-1 mt-11">
           <div class="flex flex-col items-center text-center space-y-6 mt-2 pb-10">
@@ -216,28 +227,61 @@ const navigateTo = (path) => router.push(path);
     <div class="w-full max-w-6xl px-4 flex flex-col items-center relative z-10">
       
       <div v-if="favoriteXtalls && favoriteXtalls.length > 0" class="w-full mb-12 animate-slide-up">
-        <div class="flex items-center justify-between mb-8 px-2">
-          <div class="flex items-center gap-4">
-            <h2 class="font-black italic text-xl tracking-tighter uppercase text-rose-500">Your Favorites</h2>
-            <div class="h-[2px] w-24 bg-gradient-to-r from-rose-500 to-transparent opacity-30"></div>
-          </div>
-          <button @click="navigateTo('/favorite')" 
-                  :class="[
-                    'group flex items-center gap-2 px-5 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all duration-300 shadow-lg active:scale-95',
-                    isDark ? 'bg-rose-600 border-b-4 border-rose-800 text-white hover:bg-rose-500' : 'bg-rose-500 border-b-4 border-rose-700 text-white hover:bg-rose-400'
-                  ]">
-            <span>View All</span>
-            <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
-        </div>
+        <div class="grid grid-cols-2 md:grid-cols-2 gap-4 items-center mb-8 px-2">
+  
+  <div class="max-w-[200px] flex items-center gap-4 px-3 py-2 border-b-4 border-rose-500/50 
+            bg-gradient-to-r from-white/90 to-white/5
+            dark:from-slate-800/30 dark:to-slate-950/5 
+            [box-shadow:0_4px_15px_-4px_rgba(244,63,94,0.5)]">
+    <h2 
+      :class="[
+        'font-black italic text-xl tracking-tighter uppercase transition-all duration-300',
+        isDark 
+          ? 'text-transparent border-b-6 border-rose-200/50 bg-clip-text bg-gradient-to-l from-yellow-400 to-pink-300 to-pink-600 [text-shadow:0_0_15px_rgba(244,63,94,0.4)]' 
+          : 'text-transparent border-b-6 border-rose-700 bg-clip-text bg-gradient-to-l from-pink-900 to-pink-600 to-yellow-500 [text-shadow:0_0_10px_rgba(244,63,94,0.2)]'
+      ]"
+    >
+      Your Favorites
+    </h2>
+
+    <span 
+      :class="[
+        'font-black italic text-xl tracking-tighter uppercase transition-all duration-300',
+        isDark ? 'text-yellow-400/90' : 'text-orange-900/90'
+      ]"
+    >
+      >>
+    </span>
+    <div class="h-[2px] w-24 bg-gradient-to-r from-rose-500 to-transparent opacity-30"></div>
+  </div>
+
+  <div class="justify-self-end">
+    <button @click="navigateTo('/favorite')" 
+            :class="[
+              'group flex items-center gap-2 px-5 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all duration-300 shadow-lg active:scale-95',
+              isDark ? 'bg-rose-600 border-b-4 border-rose-800 text-white hover:bg-rose-500' : 'bg-rose-500 border-b-4 border-rose-700 text-white hover:bg-rose-400'
+            ]">
+      <span>View All</span>
+      <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      </svg>
+    </button>
+  </div>
+
+</div>
 
         <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
           <div v-for="fav in favoriteXtalls" :key="fav.code"
                @click="navigateTo(`/xtall/${fav.code}`)"
-               class="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
-            <div class="flex items-center gap-3">
+              :class="[
+    'group relative overflow-hidden rounded-2xl border backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1',
+    isDark 
+      ? 'border-white/10 bg-gradient-to-br from-blue-900/50 to-white/5 hover:from-blue-300/75 hover:to-white/10' 
+      : 'border-slate-200 bg-gradient-to-br from-orange-500/10 to-white/20 to-yellow-300/50 hover:from-white hover:to-yellow-500/80 hover:to-orange-900/40 shadow-sm hover:shadow-md'
+  ]"
+>
+
+               <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <img :src="getIconPath(fav.type)" class="w-7 h-7 object-contain drop-shadow-md" />
               </div>

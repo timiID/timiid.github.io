@@ -89,38 +89,34 @@
   </span>
   
   <div class="flex items-center gap-3">
-  <div class="relative group">
-    <div 
-      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 transition-all pointer-events-none whitespace-nowrap shadow-xl ring-1 z-50"
-      :class="isDark 
-        ? 'bg-white text-slate-900 ring-white/20' 
-        : 'bg-slate-900 text-white ring-slate-800'"
-    >
-      {{ isFavorite ? 'Hapus dari Favorite' : 'Tambah ke Favorite' }}
-    </div>
-
-    <button
-  @click.stop="$emit('toggle-favorite', xtall.code)"
-  :class="[
-    'w-9 h-9 rounded-xl flex items-center justify-center ring-1 transition-all hover:scale-110 active:scale-95 shadow-sm',
-    isFavorite
-      ? (isDark 
-          ? 'bg-gradient-to-br from-yellow-400 to-orange-600 ring-yellow-400 border-0' 
-          : 'bg-gradient-to-br from-yellow-300 to-yellow-500 ring-yellow-400 border-0')
-      : (isDark 
-          ? 'bg-slate-800 ring-slate-600 hover:ring-yellow-400 hover:bg-slate-700' 
-          : 'bg-white ring-slate-200 hover:ring-yellow-500 hover:bg-yellow-50')
-  ]"
->
-  <img
-    src="/src/assets/iconfromhome/favorite.png"
+  <div v-if="!props.hideFavorite" class="relative group">
+  <div 
+    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-lg opacity-0 group-hover:opacity-100 transition-all pointer-events-none whitespace-nowrap shadow-xl ring-1 z-50"
+    :class="isDark 
+      ? 'bg-white text-slate-900 ring-white/20' 
+      : 'bg-slate-900 text-white ring-slate-800'"
+  >
+    {{ isFavorite ? 'Hapus dari Favorite' : 'Tambah ke Favorite' }}
+  </div>
+  <button
+    @click.stop="$emit('toggle-favorite', xtall.code)"
     :class="[
-      'w-4 h-4 object-contain transition-all',
-      isFavorite ? 'scale-110' : 'opacity-70'
+      'w-9 h-9 rounded-xl flex items-center justify-center ring-1 transition-all hover:scale-110 active:scale-95 shadow-sm',
+      isFavorite
+        ? (isDark 
+            ? 'bg-gradient-to-br from-yellow-400 to-orange-600 ring-yellow-400 border-0' 
+            : 'bg-gradient-to-br from-yellow-300 to-yellow-500 ring-yellow-400 border-0')
+        : (isDark 
+            ? 'bg-slate-800 ring-slate-600 hover:ring-yellow-400 hover:bg-slate-700' 
+            : 'bg-white ring-slate-200 hover:ring-yellow-500 hover:bg-yellow-50')
     ]"
-    alt="Favorite"
-  />
-</button>
+  >
+    <img
+      src="/src/assets/iconfromhome/favorite.png"
+      :class="['w-4 h-4 object-contain transition-all', isFavorite ? 'scale-110' : 'opacity-70']"
+      alt="Favorite"
+    />
+  </button>
 </div>
 
   <router-link
