@@ -142,6 +142,21 @@ const navigateTo = (path) => router.push(path);
 
 <template>
   <div class="w-full flex flex-col items-center">
+
+    <!-- Slideshow mobile only -->
+    <div 
+      class="fixed inset-0 pointer-events-none z-0 transition-all duration-[1500ms] ease-in-out block md:hidden"
+      :style="{ 
+        backgroundImage: `url(${backgrounds[currentBgIndex]})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center top',
+        backgroundSize: 'cover',
+        height: '1100px',
+        opacity: '0.7',
+        maskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)',
+        webkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 98%)'
+      }"
+    ></div>
     
     <div class="relative w-full flex flex-col items-center justify-center min-h-[650px] py-16 text-center px-4 overflow-hidden">
       

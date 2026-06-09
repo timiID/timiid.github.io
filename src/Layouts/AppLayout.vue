@@ -50,10 +50,11 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
   <div :class="['min-h-screen flex flex-col transition-all duration-[1000ms] relative overflow-x-hidden', isDark ? 'bg-mesh-dark text-white' : 'bg-mesh-light text-slate-900']">
     
     <!-- Slideshow hanya tampil di halaman home -->
-    <div 
-      v-if="isHome"
-      class="absolute inset-0 pointer-events-none z-0 transition-all duration-[1500ms] ease-in-out"
-      :style="{ 
+    <!-- Tambah class 'hidden md:block' supaya hanya tampil di PC -->
+<div 
+  v-if="isHome"
+  class="absolute inset-0 pointer-events-none z-0 transition-all duration-[1500ms] ease-in-out hidden md:block"
+  :style="{
         backgroundImage: `url(${backgrounds[currentBgIndex]})`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center top', 

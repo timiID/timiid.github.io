@@ -46,7 +46,7 @@
       </section>
 
       <RouterLink to="/xtall/advanced" class="my-6 block w-full rounded-2xl border-2 border-indigo-500 bg-gradient-to-t from-indigo-400 to-purple-500 px-6 py-5 text-center text-lg font-black text-white shadow-xl hover:scale-[1.02] transition">
-        🔎 Pencarian Xtall Lanjutan
+        🔎 Advanced Search
       </RouterLink>
 
       <section :class="['grid grid-cols-1 md:grid-cols-2 gap-6 p-6 md:p-10 rounded-[3rem] border-2 backdrop-blur-3xl relative z-[100] transition-all duration-500 shadow-2xl mb-12', 
@@ -73,11 +73,12 @@
         :class="['w-full pl-14 pr-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm transition-all', 
         isDark ? 'bg-[#0f172a] border-white/5 focus:border-cyan-500 text-white placeholder-slate-600' : 'bg-white border-slate-200 focus:border-cyan-500']">
 
-      <div 
-  v-if="displayedSearchLogs.length > 0 && isHistoryOpen" 
-  class="absolute left-0 right-0 z-20 mt-2 rounded-3xl border-2 shadow-2xl backdrop-blur-xl overflow-hidden"
-  :class="isDark ? 'bg-slate-900 border-white/10 shadow-black' : 'bg-white border-slate-200 shadow-slate-200'"
->
+    <div 
+      v-if="displayedSearchLogs.length > 0 && isHistoryOpen && !isMobile" 
+        class="absolute left-0 right-0 z-20 mt-2 rounded-3xl border-2 shadow-2xl backdrop-blur-xl overflow-hidden"
+       :class="isDark ? 'bg-slate-900 border-white/10 shadow-black' : 'bg-white border-slate-200 shadow-slate-200'"
+    >
+
   <div class="px-4 py-3 border-b border-slate-200/20" :class="isDark ? 'border-white/5' : ''">
     <div class="flex items-center justify-between gap-3">
       <div>
@@ -132,51 +133,86 @@
   </div>
 </div>
 
-  <!-- BARIS 2 KIRI: JENIS XTALL -->
+  <!-- BARIS 2 KIRI: KATEGORI XTALL -->
   <div class="space-y-3 relative md:col-span-2" ref="typeRef">
     <label class="text-[10px] font-black uppercase tracking-[0.2em] text-green-500 ml-4 flex items-center gap-2">
-      <span class="w-2 h-2 rounded-full bg-green-500/40"></span> JENIS XTALL
+      <span class="w-2 h-2 rounded-full bg-green-500/40"></span> KATEGORI XTALL
     </label>
     <button @click="toggleTypeDropdown" :class="['w-full px-5 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer transition-all text-left flex items-center justify-between',
       isDark ? 'bg-[#0f172a] border-white/5 focus:border-green-500 text-slate-200' : 'bg-white border-slate-200 focus:border-green-500']">
-      <span class="truncate">{{ selectedTypes.length === 0 ? 'Pilih Jenis...' : selectedTypes.length + ' Dipilih' }}</span>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
-    </button>
-    
-    <!-- Dropdown Jenis -->
-    <div v-if="isTypeOpen" :class="['absolute top-full left-0 mt-0 w-full rounded-3xl border-2 backdrop-blur-2xl z-[999] shadow-2xl p-4 grid grid-cols-1 md:grid-cols-2 gap-2',
-      isDark ? 'bg-slate-900/95 border-white/10' : 'bg-white/95 border-slate-200']">
-      <button v-for="type in displayTypes" :key="type.value" @click="toggleType(type.value)" 
-  :class="[
-    'px-3 py-2 text-left rounded-xl border-2 text-xs font-bold transition-all', 
-    selectedTypes.includes(type.value) 
-      ? 'border-green-500 bg-green-500/10 text-green-400' 
-      : isDark 
-        ? 'border-transparent bg-slate-800 text-slate-400 hover:bg-slate-700' 
-        : 'border-transparent bg-slate-100 text-slate-500 hover:bg-slate-200'
-  ]">
-  {{ type.label }}
+      
+      <span class="truncate">
+        <!-- Jika belum ada pilihan -->
+        <template v-if="selectedTypes.length === 0">
+          <span :class="isDark ? 'text-slate-200' : 'text-slate-900'">Pilih Kategori... </span>
+          <span :class="isDark ? 'text-red-200' : 'text-red-400'">(Multi-Select)</span>
+        </template>
+        
+        <!-- Jika sudah ada pilihan -->
+        <template v-else>
+          {{ selectedTypes.length }} Kategori dipilih
+        </template>
+      </span>
+
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+      </svg>
 </button>
-    </div>
+    <!-- Dropdown Kategori -->
+    <div v-if="isTypeOpen" 
+     :class="['absolute top-full left-0 mt-0 w-full rounded-3xl border-2 backdrop-blur-2xl z-[999] shadow-2xl p-4 grid grid-cols-1 md:grid-cols-2 gap-2 max-h-64 overflow-y-auto',
+      isDark ? 'bg-slate-900/95 border-white/10' : 'bg-slate-300 border-black-200']">
+      
+  <button 
+    v-for="type in displayTypes" 
+    :key="type.value" 
+    @click="toggleType(type.value)" 
+    :class="[
+      'px-3 py-2 text-left rounded-xl border-2 text-xs font-bold transition-all', 
+      
+      // LOGIKA WARNA BARU
+      // 1. KONDISI SAAT DIPILIH (CHECKLIST)
+    selectedTypes.includes(type.value) || (type.value === 'ALL' && selectedTypes.length === displayTypes.length - 1)
+      ? (type.value === 'ALL' 
+          ? 'border-red-600 bg-red-400/55 text-rose-150' 
+          : 'border-lime-600 bg-lime-300/50 text-white-400')
+      
+      // 2. KONDISI SAAT TIDAK DIPILIH (IDLE)
+      : (type.value === 'ALL'
+          ? (isDark ? 'border-transparent bg-slate-700 text-pink-300' : 'border-transparent bg-slate-100 text-red-700')
+          : (isDark ? 'border-transparent bg-slate-800 text-slate-400 hover:bg-slate-700' : 'border-transparent bg-slate-100 text-slate-500 hover:bg-slate-200'))
+  ]">
+    {{ type.label }}
+  </button>
+</div>
   </div>
 
-  <!-- BARIS 3 KANAN: URUTAN & RESET -->
-  <div class="space-y-3">
-    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-red-600 ml-4 flex items-center gap-2">
-      <span class="w-1 h-3 bg-red-600 rounded-full"></span> URUTAN & RESET
-    </label>
-    <div class="flex gap-2">
-      <select v-model="sortOrder" :class="['flex-grow px-5 py-4 rounded-2xl border-2 font-bold text-sm cursor-pointer transition-all',
+  <!-- BARIS 3 KANAN: URUTAN, APPLY, & RESET -->
+<div class="space-y-3 md:col-span-2">
+  <label class="text-[10px] font-black uppercase tracking-[0.2em] text-red-600 ml-4 flex items-center gap-2">
+    <span class="w-1 h-3 bg-red-600 rounded-full"></span> URUTAN & AKSI
+  </label>
+  
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+    <div class="col-span-2 md:col-span-2">
+      <select v-model="sortOrder" :class="['w-full px-5 py-4 rounded-2xl border-2 font-bold text-sm cursor-pointer transition-all',
         isDark ? 'bg-[#0f172a] border-white/5 focus:border-red-500 text-slate-200' : 'bg-white border-slate-200 focus:border-red-500']">
         <option value="asc">A ke Z</option>
         <option value="desc">Z ke A</option>
       </select>
-      <button @click="handleResetAll" 
-        class="px-6 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black uppercase text-xs tracking-widest active:scale-95 transition-all">
-        RESET
-      </button>
     </div>
+
+    <button @click="handleResetAll" 
+      class="col-span-1 h-[56px] rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black uppercase text-xs tracking-widest active:scale-95 transition-all">
+      RESET
+    </button>
+
+    <button @click="applyFilters" 
+      class="col-span-1 h-[56px] rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black uppercase text-xs tracking-widest active:scale-95 transition-all">
+      APPLY
+    </button>
   </div>
+</div>
 </section>
 
       <main class="space-y-6 relative z-10 pb-20 overflow-visible">
@@ -189,9 +225,11 @@
     :baseXtall="getBaseFor(xtall)"
     :evoXtalls="getEvoFor(xtall)"
     :iconPath="getIconPath(xtall)"
+    :isFavorite="favorites.includes(String(xtall.code))"
     :labelColor="getLabelColor(xtall)"
     :badgeColorClass="getBadgeColor(xtall.type)"
     @set-search="setSearch"
+    @toggle-favorite="handleToggleFavorite"
   />
 </main>
 
@@ -274,10 +312,34 @@ const isHistoryOpen = ref(false);
 const maxStoredLogs = 20;
 const maxVisibleLogs = 3;
 
+const isMobile = ref(false);
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+const appliedSearchQuery = ref('');
+const appliedSelectedTypes = ref([]);
+
+const favorites = ref(JSON.parse(localStorage.getItem('xtall_favs') || '[]'))
+
+function handleToggleFavorite(code) {
+  const idStr = String(code)
+  const idx = favorites.value.indexOf(idStr)
+  if (idx >= 0) favorites.value.splice(idx, 1)
+  else favorites.value.push(idStr)
+  localStorage.setItem('xtall_favs', JSON.stringify(favorites.value))
+}
+
+const applyFilters = () => {
+  appliedSearchQuery.value = searchQuery.value;
+  appliedSelectedTypes.value = [...selectedTypes.value];
+  currentPage.value = 1;
+};
+
 const handleEnterSearch = () => {
   const value = searchQuery.value?.trim();
-  if (!value) return;
   saveSearchLog(value);
+  applyFilters(); // Panggil fungsi apply
   document.activeElement.blur();
   isHistoryOpen.value = false;
 };
@@ -362,16 +424,13 @@ function getParsedStats(xtall) {
 const router = useRouter()
 
 function handleResetAll() {
-  // 1. Reset State Lokal (seperti yang Anda miliki)
-  searchQuery.value = ''
-  selectedTypes.value = []
-  selectedStats.value = []
-  sortOrder.value = 'asc'
-  itemsPerPage.value = 10
-
-  // 2. Reset Parameter URL (Advanced Search)
-  // Ini akan menghapus ?filter=... sehingga Advanced Search kembali kosong
-  router.push({ query: {} })
+  searchQuery.value = '';
+  selectedTypes.value = [];
+  appliedSearchQuery.value = ''; // Reset yang sudah di-apply
+  appliedSelectedTypes.value = [];
+  sortOrder.value = 'asc';
+  itemsPerPage.value = 10;
+  router.push({ query: {} });
 }
 /**
  * COMPONENT PROPS
@@ -470,11 +529,21 @@ const toggleStatusDropdown = () => {
 };
 
 const toggleType = (type) => {
-  const index = selectedTypes.value.indexOf(type);
-  if (index === -1) {
-    selectedTypes.value.push(type); // Masukkan jika belum ada
+  if (type === 'ALL') {
+    if (selectedTypes.value.length === displayTypes.length - 1) {
+      selectedTypes.value = [];
+    } else {
+      selectedTypes.value = displayTypes
+        .filter(t => t.value !== 'ALL')
+        .map(t => t.value);
+    }
   } else {
-    selectedTypes.value.splice(index, 1); // Hapus jika sudah ada
+    const index = selectedTypes.value.indexOf(type);
+    if (index === -1) {
+      selectedTypes.value.push(type);
+    } else {
+      selectedTypes.value.splice(index, 1);
+    }
   }
 };
 
@@ -530,6 +599,7 @@ const getEvoFor = (xtall) => {
   return crystalData.filter(c => String(c.link) === String(xtall.code));
 };
 const displayTypes = [
+  { label: 'Semua Kategori', value: 'ALL' },
   { label: 'Weapon Crystas', value: 'WEAPON' },
   { label: 'Weapon Enhancer Crystas', value: 'WEAPON_UPGRADE' },
 
@@ -657,7 +727,25 @@ const setSearch = (name) => {
  */
 const filteredResults = computed(() => {
   let res = crystalData.filter(c => c.name?.trim());
+
+  // 1. FILTER NAMA (Hanya gunakan yang sudah di-apply)
+  if (appliedSearchQuery.value) {
+    const q = appliedSearchQuery.value.toLowerCase();
+    res = res.filter(c => c.name.toLowerCase().includes(q));
+  }
   
+  if (appliedSelectedTypes.value.length > 0) {
+    res = res.filter(c => {
+      const rootType = findRootType(c);
+      const isUpgrade = c.type === 'UPGRADE';
+      return appliedSelectedTypes.value.some(sel => {
+        if (!sel.includes('_')) return !isUpgrade && rootType === sel;
+        const [base, kind] = sel.split('_');
+        return kind === 'UPGRADE' && isUpgrade && rootType === base;
+      });
+    });
+  }
+
   // 1. FILTER DARI URL (HASIL ADVANCED SEARCH)
   if (advancedFilter.value) {
     const { stats, types } = advancedFilter.value;
@@ -693,38 +781,8 @@ const filteredResults = computed(() => {
     }
   }
   
-  // 2. SEARCH BAR LOKAL
-  if (searchQuery.value) {
-    const q = searchQuery.value.toLowerCase();
-    res = res.filter(c => c.name.toLowerCase().includes(q));
-  }
-  
-  // 3. DROPDOWN TYPE LOKAL
-  if (selectedTypes.value.length > 0) {
-    res = res.filter(c => {
-      const rootType = findRootType(c);
-      const isUpgrade = c.type === 'UPGRADE';
-      return selectedTypes.value.some(sel => {
-        if (!sel.includes('_')) return !isUpgrade && rootType === sel;
-        const [base, kind] = sel.split('_');
-        return kind === 'UPGRADE' && isUpgrade && rootType === base;
-      });
-    });
-  }
+  return res.sort((a, b) => sortOrder.value === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
 
-  // 4. DROPDOWN STATS LOKAL
-  if (selectedStats.value.length > 0) {
-    res = res.filter(c => {
-      const vText = (c.view || "").toUpperCase();
-      return selectedStats.value.every(s => vText.includes(s.toUpperCase()));
-    });
-  }
-  
-  return res.sort((a, b) => {
-    return sortOrder.value === 'asc' 
-      ? a.name.localeCompare(b.name) 
-      : b.name.localeCompare(a.name);
-  });
 });
 
 const paginatedResults = computed(() => {
@@ -799,13 +857,18 @@ const closeOnOutside = (e) => {
 onMounted(() => {
   loadSearchLogs();
   window.addEventListener('click', closeOnOutside);
+
+checkMobile();
+  window.addEventListener('resize', checkMobile);
 });
 
 onUnmounted(() => {
   window.removeEventListener('click', closeOnOutside);
 });
 
-watch([searchQuery, selectedTypes, selectedStats, itemsPerPage, sortOrder], () => {
+window.removeEventListener('resize', checkMobile);
+
+watch([selectedTypes, selectedStats, itemsPerPage, sortOrder], () => {
   currentPage.value = 1;
 });
 </script>
@@ -813,21 +876,17 @@ watch([searchQuery, selectedTypes, selectedStats, itemsPerPage, sortOrder], () =
 <style scoped>
 /* PERBAIKAN TOTAL DOUBLE SCROLLBAR */
 
-/* 1. Matikan semua scrollbar internal di dalam view ini */
-:deep(*) {
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE/Edge */
+/* Sembunyikan scrollbar tapi tetap bisa di-scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
-
-:deep(*::-webkit-scrollbar) {
-  display: none !important; /* Chrome/Safari */
-  width: 0 !important;
-  height: 0 !important;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* 2. Pastikan elemen pembungkus TIDAK MEMILIKI overflow yang memicu scrollbar */
 div, section, main {
-  overflow: visible !important;
   height: auto !important;
 }
 

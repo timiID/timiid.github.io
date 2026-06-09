@@ -12,22 +12,18 @@
   :class="['absolute top-[60px] right-6 px-8 py-3.5 rounded-4xl flex items-center gap-3 transition-all duration-500 z-20 font-black uppercase italic text-[11px] tracking-[0.15em] border-2 shadow-lg group overflow-hidden', 
     isFavorite 
       ? (isDark 
-          ? 'bg-gradient-to-r from-slate-800 to-slate-900 border-white/10 text-slate-400 shadow-black/40' 
-          : 'bg-gradient-to-r from-slate-100 to-slate-200 border-slate-300 text-slate-500 shadow-slate-200')
+          ? 'bg-yellow-500/10 border-yellow-500/50 text-yellow-500' 
+          : 'bg-yellow-500/10 border-yellow-500 text-yellow-600')
       : (isDark 
-          ? 'bg-gradient-to-r from-red-600 to-rose-700 border-red-500/50 text-white shadow-red-900/20' 
-          : 'bg-gradient-to-r from-red-500 to-red-600 border-red-400 text-white shadow-red-200')
+          ? 'bg-gradient-to-r from-red-600 to-rose-700 border-red-500/50 text-white' 
+          : 'bg-gradient-to-r from-red-500 to-red-600 border-red-400 text-white')
   ]">
-
-  <svg :class="['w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-125', 
-               isFavorite ? (isDark ? 'text-yellow-500' : 'text-yellow-400') : 'text-white']" 
-       fill="currentColor" viewBox="0 0 24 24">
+  
+  <svg :class="['w-4 h-4 flex-shrink-0 transition-all duration-300', isFavorite ? 'fill-yellow-500' : 'fill-white']" viewBox="0 0 24 24">
     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
   </svg>
 
-  <span class="relative z-10">{{ isFavorite ? 'Saved' : 'Favorite' }}</span>
-  
-  <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+  <span class="relative z-10">{{ isFavorite ? 'Saved' : 'Add to Favorite' }}</span>
 </button>
 
       <button @click="$router.push('/xtall')" class="group flex items-center gap-3 mb-5 transition-all hover:-translate-x-2">
@@ -118,6 +114,27 @@
          <div class="absolute inset-0 border-4 border-t-cyan-500 rounded-full animate-spin"></div>
        </div>
     </div>
+    <Teleport to="body">
+  <transition
+    enter-active-class="transition ease-out duration-300"
+    enter-from-class="opacity-0 translate-y-4"
+    enter-to-class="opacity-100 translate-y-0"
+    leave-active-class="transition ease-in duration-200"
+    leave-from-class="opacity-100 translate-y-0"
+    leave-to-class="opacity-0 translate-y-4"
+  >
+    <div v-if="notification.show" 
+      :class="[
+        'fixed top-24 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:max-w-md z-[9999] px-6 py-3 rounded-2xl shadow-2xl border flex items-center gap-3',
+        notification.type === 'add' 
+          ? (isDark ? 'bg-green-700 text-slate-200' : 'bg-rose-400/20 text-slate-900')
+          : (isDark ? 'bg-red-700/80 text-slate-200' : 'bg-green-600/20 text-slate-900')
+      ]">
+      <div :class="['w-2 h-2 rounded-full flex-shrink-0', notification.type === 'add' ? 'bg-green-400' : 'bg-white']"></div>
+      <p class="font-bold text-sm tracking-wide text-center md:text-left">{{ notification.message }}</p>
+    </div>
+  </transition>
+</Teleport>
   </div>
 </template>
 
@@ -145,12 +162,25 @@ const favorites = ref(JSON.parse(localStorage.getItem('xtall_favs') || '[]'));
 // Cek apakah Xtall ini sudah difavoritkan
 const isFavorite = computed(() => favorites.value.includes(String(props.id)));
 
+const notification = ref({ show: false, message: '', type: 'add' });
+
+const showNotification = (msg, type = 'add') => {
+  notification.value = { show: true, message: msg, type: type };
+  setTimeout(() => {
+    notification.value.show = false;
+  }, 5000);
+};
+
 const toggleFavorite = () => {
   const idStr = String(props.id);
   if (isFavorite.value) {
     favorites.value = favorites.value.filter(favId => favId !== idStr);
+    // Kirim tipe 'remove'
+    showNotification('Berhasil dihapus dari favorit!', 'remove');
   } else {
     favorites.value.push(idStr);
+    // Kirim tipe 'add'
+    showNotification(`Selamat! ${xtall.value.name} telah disimpan ke favorit.`, 'add');
   }
   localStorage.setItem('xtall_favs', JSON.stringify(favorites.value));
 };

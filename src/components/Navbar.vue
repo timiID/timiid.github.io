@@ -229,25 +229,31 @@ watch(
 
           <!-- Favorite button -->
           <router-link
-            to="/favorite"
-            :class="[
-              'relative w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border transition-all duration-300 group active:scale-95',
-              route.path === '/favorite'
-                ? 'bg-red-500 border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]'
-                : isDark
-                  ? 'bg-white/5 border-white/10 hover:bg-white/10'
-                  : 'bg-black/5 border-slate-200 hover:bg-black/10',
-            ]"
-          >
-            <span class="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg text-[10px] font-black italic tracking-widest uppercase opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 shadow-xl whitespace-nowrap z-[210] bg-slate-800 text-white">
-              Favorite
-            </span>
-            <img
-              src="@/assets/iconfromhome/favorite.png"
-              :class="['w-5 h-5 object-contain transition-transform group-hover:scale-110', route.path === '/favorite' ? 'brightness-0 invert' : '']"
-              alt="Favorite"
-            />
-          </router-link>
+  to="/favorite"
+  :class="[
+    'relative w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border transition-all duration-300 group active:scale-95',
+    route.path === '/favorite'
+      ? 'bg-red-500 border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]'
+      : isDark
+        ? 'bg-white/5 border-white/10 hover:bg-white/10'
+        : 'bg-black/5 border-slate-200 hover:bg-black/10',
+  ]"
+>
+  <span 
+    class="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1 rounded-lg text-[10px] font-black italic tracking-widest uppercase opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 shadow-xl whitespace-nowrap z-[210] border"
+    :class="isDark 
+      ? 'bg-red-500/90 text-slate-300 border-slate-200' 
+      : 'bg-red-600 text-white border-yellow-800'"
+  >
+    Favorite
+  </span>
+
+  <img
+    src="@/assets/iconfromhome/favorite.png"
+    :class="['w-5 h-5 object-contain transition-transform group-hover:scale-110', route.path === '/favorite' ? 'brightness-0 invert' : '']"
+    alt="Favorite"
+  />
+</router-link>
 
           <!-- Spacer lebih lebar -->
           <div class="w-10"></div>
