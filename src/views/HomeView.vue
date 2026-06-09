@@ -24,8 +24,7 @@ import { crystalData } from '../data/store.js'; // Pastikan path store lo bener
 const favoriteXtalls = ref([]);
 const backgrounds = [
   '/images/peluluchan.png',
-  '/images/my38.png',
-  '/images/my34.png',
+  '/images/hanami11.png',
 ];
 const currentBgIndex = ref(0);
 let homeInterval = null;
