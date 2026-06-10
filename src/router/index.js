@@ -14,6 +14,7 @@ import LevelingGuide from '../views/LevelingGuide.vue'
 import Favorite from '../views/FavoriteView.vue'
 import ErrorView from '../views/ErrorView.vue'
 import Mats from '../views/MatsFarmPage.vue'
+import Cari from '../views/CariItem.vue'
 
 
 const routes = [
@@ -81,7 +82,12 @@ const routes = [
       name: 'Mats',
       component: Mats
     },
- // ...existing routes...
+    {
+      path: '/item-search',
+      name: 'CariItem',
+      component: Cari
+    },
+// ...existing routes...
 {
     path: '/materials-required',
     name: 'MaterialsRequired',
