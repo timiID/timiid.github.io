@@ -280,6 +280,34 @@
 </div>
 
     </div>
+    <Teleport to="body">
+  <transition
+    enter-active-class="transition ease-out duration-300"
+    enter-from-class="opacity-0 translate-y-4"
+    enter-to-class="opacity-100 translate-y-0"
+    leave-active-class="transition ease-in duration-200"
+    leave-from-class="opacity-100 translate-y-0"
+    leave-to-class="opacity-0 translate-y-4"
+  >
+    <div v-if="notification.show"
+      :class="[
+        'fixed top-24 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:max-w-md z-[9999] px-6 py-3 rounded-2xl shadow-2xl border flex items-center gap-3',
+        notification.type === 'add'
+          ? (isDark ? 'bg-green-700 border-green-500/50 text-slate-200' : 'bg-green-100 border-green-400 text-slate-900')
+          : (isDark ? 'bg-red-700/80 border-red-500/50 text-slate-200' : 'bg-red-100 border-red-400 text-slate-900')
+      ]">
+
+      <!-- Ikon gambar: sukses = my c20.png, gagal/hapus = my34.png -->
+      <img
+        :src="notification.type === 'add' ? '/images/my c20.png' : '/images/my34.png'"
+        :alt="notification.type === 'add' ? 'sukses' : 'hapus'"
+        class="w-8 h-8 object-contain flex-shrink-0"
+      />
+
+      <p class="font-bold text-sm tracking-wide">{{ notification.message }}</p>
+    </div>
+  </transition>
+</Teleport>
   </div>
 </template>
 
@@ -317,6 +345,13 @@ const checkMobile = () => {
   isMobile.value = window.innerWidth < 768;
 };
 
+const notification = ref({ show: false, message: '', type: 'add' })
+
+const showNotification = (msg, type = 'add') => {
+  notification.value = { show: true, message: msg, type }
+  setTimeout(() => { notification.value.show = false }, 5000)
+}
+
 const appliedSearchQuery = ref('');
 const appliedSelectedTypes = ref([]);
 
@@ -325,8 +360,18 @@ const favorites = ref(JSON.parse(localStorage.getItem('xtall_favs') || '[]'))
 function handleToggleFavorite(code) {
   const idStr = String(code)
   const idx = favorites.value.indexOf(idStr)
-  if (idx >= 0) favorites.value.splice(idx, 1)
-  else favorites.value.push(idStr)
+  
+  // Cari nama xtall untuk pesan notifikasi
+  const xtall = crystalData.find(c => String(c.code) === idStr)
+  const name = xtall?.name || 'Xtall'
+
+  if (idx >= 0) {
+    favorites.value.splice(idx, 1)
+    showNotification('Berhasil dihapus dari favorit!', 'remove')
+  } else {
+    favorites.value.push(idStr)
+    showNotification(`Selamat! ${name} telah disimpan ke favorit.`, 'add')
+  }
   localStorage.setItem('xtall_favs', JSON.stringify(favorites.value))
 }
 

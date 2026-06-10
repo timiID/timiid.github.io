@@ -169,10 +169,10 @@ const navigateTo = (path) => router.push(path);
   <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB㋡</span>
 </h1>
 
-<p class="relative max-w-xl text-1xl md:text-2xl font-bold uppercase tracking-widest mt-4
-          text-slate-900 dark:text-white
-          [-webkit-text-stroke:_1px_white]
-          dark:[-webkit-text-stroke:_1px_black]">
+<p v-if="false" class="relative max-w-xl text-1xl md:text-2xl font-bold uppercase tracking-widest mt-4
+          text-slate-300 dark:text-slate-900
+          [-webkit-text-stroke:_2px_black]
+          dark:[-webkit-text-stroke:_2px_white]">
   "Your ultimate companion for Toram Online adventures."
 </p>
 
@@ -194,24 +194,32 @@ const navigateTo = (path) => router.push(path);
 </p>
 
         <div class="relative space-y-1 mt-11">
-          <div class="flex flex-col items-center text-center space-y-6 mt-2 pb-10">
+          <div class="flex flex-col items-center text-center space-y-6 mt-1 pb-2">
             <div class="space-y-1">
-              <p class="text-[14px] font-black uppercase tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-amber-400 to-orange-600 to-red-800 dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400">
+              <p class="text-[14px] font-black uppercase tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-amber-400 to-orange-600 to-red-800 dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400
+              [-webkit-text-stroke:_0.2px_black]
+          dark:[-webkit-text-stroke:_0.2px_white]">
                 Contribution
               </p>
               <a href="https://www.facebook.com/J7Timi" target="_blank" 
-                 class="block font-black italic uppercase transition-all duration-300 text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-blue-600/30">
+                 class="block font-black italic uppercase transition-all duration-300 text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-blue-600/30
+                 [-webkit-text-stroke:_0.2px_black]
+          dark:[-webkit-text-stroke:_0.2px_white]">
                 TIMI
               </a>
             </div>
 
             <div class="space-y-1">
-              <p class="text-[14px] font-black uppercase tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-amber-400 to-orange-600 to-red-800 dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400">
+              <p class="text-[14px] font-black uppercase tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-amber-400 to-orange-600 to-red-800 dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400
+              [-webkit-text-stroke:_0.2px_black]
+          dark:[-webkit-text-stroke:_0.2px_white]">
                 Reference
               </p>
               <div class="flex flex-col items-center">
                 <a href="https://en.toram.jp/information/?type_code=update" target="_blank" 
-                   class="font-black italic uppercase transition-all duration-300 text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-blue-600/30">
+                   class="font-black italic uppercase transition-all duration-300 text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-blue-600/30
+                   [-webkit-text-stroke:_0.2px_black]
+          dark:[-webkit-text-stroke:_0.2px_white]">
                   Toram Online Official Website
                 </a>
                 <p class="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 dark:opacity-50 mt-1">
@@ -276,8 +284,8 @@ const navigateTo = (path) => router.push(path);
               :class="[
     'group relative overflow-hidden rounded-2xl border backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1',
     isDark 
-      ? 'border-white/10 bg-gradient-to-br from-blue-900/50 to-white/5 hover:from-blue-300/75 hover:to-white/10' 
-      : 'border-slate-200 bg-gradient-to-br from-orange-500/10 to-white/20 to-yellow-300/50 hover:from-white hover:to-yellow-500/80 hover:to-orange-900/40 shadow-sm hover:shadow-md'
+      ? 'border-white/90 bg-gradient-to-br from-blue-900/50 to-white/5 hover:from-blue-300/75 hover:to-white/10' 
+      : 'border-b border-red-900 bg-gradient-to-br from-orange-500/10 to-white/20 to-yellow-300/50 hover:from-white hover:to-yellow-500/80 hover:to-orange-900/40 shadow-sm hover:shadow-md'
   ]"
 >
 

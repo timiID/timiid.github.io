@@ -15,8 +15,6 @@ const backgrounds = [
   '/images/peluluchan.png',
   '/images/hanami11.png',
   '/images/pelulu.png',
-  '/images/my38.png',
-  '/images/my34.png',
 ];
 const currentBgIndex = ref(0);
 

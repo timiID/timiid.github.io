@@ -9,7 +9,7 @@
     <div v-if="xtall" class="relative z-10 max-w-5xl mx-auto p-6 md:p-20 animate-fade-in">
       
       <button @click="toggleFavorite" 
-  :class="['absolute top-[60px] right-6 px-8 py-3.5 rounded-4xl flex items-center gap-3 transition-all duration-500 z-20 font-black uppercase italic text-[11px] tracking-[0.15em] border-2 shadow-lg group overflow-hidden', 
+  :class="['absolute top-[60px] right-6 px-8 py-3.5 rounded-4xl flex items-center gap-3 transition-all duration-500 z-20 font-black uppercase italic text-[11px] tracking-[0.15em] border-2 shadow-lg group', 
     isFavorite 
       ? (isDark 
           ? 'bg-yellow-500/10 border-yellow-500/50 text-yellow-500' 
@@ -18,12 +18,23 @@
           ? 'bg-gradient-to-r from-red-600 to-rose-700 border-red-500/50 text-white' 
           : 'bg-gradient-to-r from-red-500 to-red-600 border-red-400 text-white')
   ]">
-  
+
   <svg :class="['w-4 h-4 flex-shrink-0 transition-all duration-300', isFavorite ? 'fill-yellow-500' : 'fill-white']" viewBox="0 0 24 24">
     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
   </svg>
 
   <span class="relative z-10">{{ isFavorite ? 'Saved' : 'Add to Favorite' }}</span>
+
+  <!-- Tooltip -->
+  <span :class="[
+    'pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-xl',
+    'opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300',
+    isDark 
+      ? 'bg-slate-800 border-white/10 text-slate-300' 
+      : 'bg-white border-slate-200 text-slate-600'
+  ]">
+    {{ isFavorite ? 'Hapus dari Favorit' : 'Tambahkan ke Favorit' }}
+  </span>
 </button>
 
       <button @click="$router.push('/xtall')" class="group flex items-center gap-3 mb-5 transition-all hover:-translate-x-2">
@@ -123,15 +134,22 @@
     leave-from-class="opacity-100 translate-y-0"
     leave-to-class="opacity-0 translate-y-4"
   >
-    <div v-if="notification.show" 
+    <div v-if="notification.show"
       :class="[
         'fixed top-24 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:max-w-md z-[9999] px-6 py-3 rounded-2xl shadow-2xl border flex items-center gap-3',
-        notification.type === 'add' 
-          ? (isDark ? 'bg-green-700 text-slate-200' : 'bg-rose-400/20 text-slate-900')
-          : (isDark ? 'bg-red-700/80 text-slate-200' : 'bg-green-600/20 text-slate-900')
+        notification.type === 'add'
+          ? (isDark ? 'bg-green-700 border-green-500/50 text-slate-200' : 'bg-green-100 border-green-400 text-slate-900')
+          : (isDark ? 'bg-red-700/80 border-red-500/50 text-slate-200' : 'bg-red-100 border-red-400 text-slate-900')
       ]">
-      <div :class="['w-2 h-2 rounded-full flex-shrink-0', notification.type === 'add' ? 'bg-green-400' : 'bg-white']"></div>
-      <p class="font-bold text-sm tracking-wide text-center md:text-left">{{ notification.message }}</p>
+
+      <!-- Ikon gambar: sukses = my c20.png, gagal/hapus = my34.png -->
+      <img
+        :src="notification.type === 'add' ? '/images/my c20.png' : '/images/my34.png'"
+        :alt="notification.type === 'add' ? 'sukses' : 'hapus'"
+        class="w-8 h-8 object-contain flex-shrink-0"
+      />
+
+      <p class="font-bold text-sm tracking-wide">{{ notification.message }}</p>
     </div>
   </transition>
 </Teleport>

@@ -3529,7 +3529,7 @@ export const crystalData = [
           view: `\n.ATK +11%\nMATK +11%\nASPD -300\nCSPD -300`,
         },
         {
-          code: 505,
+          code: 0,
           link : 239,
           type: "UPGRADE",
           name: "Wiltileaf",
