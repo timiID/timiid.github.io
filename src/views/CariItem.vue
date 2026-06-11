@@ -680,15 +680,14 @@ const dapatkanNamaMaterial = (id) => {
   return { 1:'Beast', 2:'Wood', 3:'Metal', 4:'Cloth', 5:'Medicine', 6:'Mana' }[id] || `Type ${id}`
 }
 
-const dapatkanLabelApplies = (id) => ({
-  1:'Shield Only', 2:'Knuckle Only', 4:'Magic Device Only', 8:'Staff Only',
-  16:'Bowgun Only', 32:'Bow Only', 48:'Bowgun, Bow Only', 64:'2-Handed Sword Only',
-  128:'1-Handed Sword Only', 2048:'Halberd Only', 4096:'Other',
-  8192:'Katana Only', 16384:'Heavy Armor Only', 32768:'Light Armor Only',
-  65536:'Dagger Only', 131072:'Dual Swords Only',
-  262144:'Arrow Only', 524288:'Ninjutsu Scroll Only'
-})[id] || null
+// Fungsi kamus untuk menerjemahkan angka applies_to 
 
+const dapatkanLabelApplies = (appliesId) => { 
+const daftarApplies = { 
+1: '(Shield Only: )', 
+2: '(Knuckle Only: )', 4: '(Magic Device Only: )', 8: '(Staff Only: )', 16: '(Bowgun Only: )', 32: '(Bow Only: )', 48: '(Bowgun, Bow Only: )', 64: '(2-Handed Sword only:)', 128: '(1-Handed Sword only:)', 256: '(Other)', 512: '(Other)', 1024: '(Other)', 2048: '(Halberd Only: )', 65536: '(Dagger Only: )', 4096: '(Other)', 8192: '(Katana Only: )', 16384: '(Heavy Armor Only: )', 32768: '(Light Armor Only: )', 131072: '(Dual Swords only: )', 262144: '(Arrow only: )', 524288: '(Ninjutsu Scroll Only: )' } 
+
+return daftarApplies[appliesId] || '' }
 // Group drop_from by map name
 const groupByMap = (dropFrom) => {
   const groups = {}
