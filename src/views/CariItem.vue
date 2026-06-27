@@ -1,12 +1,13 @@
 <template>
-  <div class="timidb-search-container max-w-[1200px] mx-auto p-2.5 font-sans">
+  <div class="timidb-search-container max-w-[1200px] mx-auto font-sans">
 
     <!-- Attribution -->
     <div :class="['text-[13px] leading-relaxed p-3 px-4 rounded-lg mb-6 border',
       isDark ? 'bg-[#3498db]/[0.08] border-[#3498db]/20 text-slate-400' : 'bg-blue-50 border-blue-200 text-slate-600']">
-      💡 <strong>Database Information:</strong> Data fetched real-time via
-      <a href="https://coryn.club/api/" target="_blank" rel="noopener"
-        class="text-[#3498db] font-semibold no-underline hover:underline">Coryn Club Developer API v1</a>.
+       <img src="@/assets/iconfromhome/what chara39.jpg" class="inline-block w-16 h-16 mr-8"> <strong>Database Information:</strong> Data fetched real-time via
+      <a href="https://coryn.club/" target="_blank" rel="noopener"
+        class="text-[#3498db] font-semibold no-underline hover:underline">Coryn Club</a>.
+        <a class="text-[#8768db] font-semibold no-underline hover:underline">(Max 100 Results)</a>
     </div>
 
     <!-- Search Bar + Type Filter -->
@@ -38,16 +39,16 @@
             />
             <!-- History Dropdown -->
             <div
-              v-if="displayedSearchLogs.length > 0 && isHistoryOpen"
-              :class="['absolute left-0 right-0 z-20 mt-1.5 rounded-xl border shadow-xl overflow-hidden',
-                isDark ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-800']"
-            >
+  v-if="displayedSearchLogs.length > 0 && isHistoryOpen"
+  :class="['absolute left-0 right-0 z-[100] mt-1.5 rounded-xl border shadow-xl overflow-hidden',
+    isDark ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-800']"
+>
               <div :class="['flex items-center justify-between px-4 py-2.5 border-b',
                 isDark ? 'border-white/5' : 'border-slate-100']">
                 <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">Recent searches</span>
                 <button @click.stop="clearSearchLogs" class="text-[10px] font-bold text-red-400 hover:text-red-300">Clear</button>
               </div>
-              <ul class="m-0 p-0 list-none">
+              <ul class="m-0 p-0 list-none max-h-[100px] overflow-y-auto">
                 <li
                   v-for="(log, idx) in displayedSearchLogs" :key="idx"
                   @click="pilihHistory(log)"
@@ -66,13 +67,15 @@
 
         <!-- Type Filter Dropdown -->
         <div class="relative">
-          <select
-            v-model="filterType"
-            :class="['appearance-none pl-3 pr-8 py-3 rounded-lg border text-sm font-semibold outline-none transition-all cursor-pointer',
-              isDark
-                ? 'bg-white/[0.05] border-white/10 focus:border-[#3498db]/60 text-white'
-                : 'bg-white border-slate-300 focus:border-[#3498db] text-slate-700']"
-          >
+          <!-- Tambah style inline untuk fix background native select di dark -->
+<select
+  v-model="filterType"
+  :style="props.isDark ? { backgroundColor: '#0f172a', colorScheme: 'dark' } : {}"
+  :class="['appearance-none pl-3 pr-8 py-3 rounded-lg border text-sm font-semibold outline-none transition-all cursor-pointer',
+    isDark
+      ? 'bg-slate-900 border-white/10 focus:border-[#3498db]/60 text-white'
+      : 'bg-white border-slate-300 focus:border-[#3498db] text-slate-700']"
+>
             <option value="">All Types</option>
             <option v-for="t in availableTypes" :key="t" :value="t">{{ t }}</option>
           </select>
@@ -112,7 +115,7 @@
         </svg>
         Fetching item data, stats, and drop sources...
       </p>
-      <p v-if="pesanError" class="text-red-500 text-sm font-semibold">⚠️ {{ pesanError }}</p>
+      <p v-if="pesanError" class="text-red-500 text-sm font-semibold"> <img src="@/assets/iconfromhome/what chara39.jpg" class="inline-block w-4 h-4 mr-2"> {{ pesanError }}</p>
     </div>
 
     <!-- Results -->
@@ -402,10 +405,10 @@
     <Teleport to="body">
       <Transition name="modal-fade">
         <div
-          v-if="upgradeModal.open"
-          class="fixed inset-0 z-50 flex items-center justify-center p-4"
-          @click.self="tutupModal"
-        >
+  v-if="upgradeModal.open"
+  class="fixed inset-0 z-[200] flex items-center justify-center p-4"
+  @click.self="tutupModal"
+>
           <!-- Backdrop -->
           <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
 
@@ -578,7 +581,7 @@
               <button
                 @click="tutupModal"
                 :class="['px-5 py-2 rounded-lg text-sm font-bold transition-colors',
-                  isDark ? 'bg-white/8 hover:bg-white/12 text-slate-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700']"
+                  isDark ? 'bg-red-500 hover:bg-red-600 text-slate-300' : 'bg-red-500 hover:bg-red-600 text-slate-300']"
               >
                 Close
               </button>
@@ -592,12 +595,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-
-defineProps({
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+const props = defineProps({
   isDark: { type: Boolean, default: true }
 })
 
+const route = useRoute()  
 const namaItem = ref('')
 const listHasilItem = ref([])
 const sedangLoading = ref(false)
@@ -671,7 +675,9 @@ const halamanDitampilkan = computed(() => {
 })
 const paginasiClass = computed(() => [
   'min-w-[36px] h-9 px-2 rounded-lg border text-xs font-bold cursor-pointer transition-colors disabled:opacity-30 disabled:cursor-not-allowed',
-  'bg-transparent border-white/10 text-slate-400 hover:bg-white/5'
+  props.isDark
+    ? 'bg-transparent border-white/10 text-slate-400 hover:bg-white/5'
+    : 'bg-transparent border-slate-200 text-slate-500 hover:bg-slate-50'
 ])
 
 // ── Helpers ──
@@ -836,7 +842,19 @@ onMounted(() => {
   }, 3000)
   document.addEventListener('click', klikLuar)
   document.addEventListener('keydown', handleKeydown)
+  if (route.query.q) {
+    namaItem.value = route.query.q
+    cariItemDanDrop()
+  }
 })
+
+watch(() => route.query.q, (newQ) => {
+  if (newQ) {
+    namaItem.value = newQ
+    cariItemDanDrop()
+  }
+})
+
 onUnmounted(() => {
   clearInterval(placeholderInterval)
   document.removeEventListener('click', klikLuar)
@@ -870,7 +888,7 @@ const cariItemDanDrop = async () => {
   }
 
   try {
-    const resItem = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(q)}`)
+    const resItem = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(q)}&limit=100`)
     if (!resItem.ok) throw new Error('Failed to connect to Item API')
     const jsonItem = await resItem.json()
 

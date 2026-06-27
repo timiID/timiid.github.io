@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'; // Tambah nextTick
-import { LV_CAP, mq_data, quest_data, getTotalXP, addXP } from '../data/toramData';
+import { LV_CAP, mq_data, quest_data, getTotalXP, addXP, SKIP_MQ_COST } from '../data/toramData';
 import { mqData, getAllChapters, mqMaterials } from '@/data/mq.js';
 
 defineProps({
@@ -191,8 +191,16 @@ const calculation = computed(() => {
   const sqXP = (quest_data[selectedSQ.value] || 0) * (sqAmount.value || 0);
   const [sqLv, sqPercent] = addXP(lv, p, sqXP);
 
+  // Hitung jumlah quest dalam range (bukan chapter header)
+  let mqQuestCount = 0;
+  for (let i = start; i <= end; i++) {
+    if (typeof mq_data[mqKeys[i]] === 'number') mqQuestCount++;
+  }
+
   return { 
-    xpNeeded, totalMqXP, resLv, resP, diaryRuns, sqLv, sqPercent, sqXP 
+    xpNeeded, totalMqXP, resLv, resP, diaryRuns, sqLv, sqPercent, sqXP,
+    mqQuestCount,                          // ← TAMBAH
+    skipCost: mqQuestCount * SKIP_MQ_COST  // ← TAMBAH
   };
 });
 
@@ -376,6 +384,31 @@ const questMaterials = computed(() => {
 
       <div class="lg:col-span-1 space-y-8">
         <div class="space-y-8 sticky top-10">
+<div v-if="activeTab === 'mq' && calculation && !isRangeInvalid && showMaterials"
+     class="p-8 rounded-[3rem] border backdrop-blur-3xl shadow-2xl transition-all duration-700 animate-in slide-in-from-right-10"
+     :class="isDark ? 'bg-slate-900/40 border-white/5 shadow-black/50' : 'bg-white/80 border-slate-200 shadow-slate-200'">
+  
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h4 class="text-[12px] font-black uppercase tracking-[0.3em] text-amber-400">💰 Skip MQ Cost</h4>
+      <p class="text-[10px] opacity-40 font-bold uppercase mt-1">Spina Required</p>
+    </div>
+    <div class="px-5 py-3 rounded-2xl bg-amber-500/20 border border-amber-500/20 flex flex-col items-center">
+      <span class="text-[9px] font-black text-amber-400 uppercase tracking-wider leading-none mb-1">Quests</span>
+      <span class="text-2xl font-black italic tracking-tighter text-amber-300">{{ calculation.mqQuestCount }}</span>
+    </div>
+  </div>
+
+  <div class="text-[10px] font-bold opacity-40 uppercase tracking-widest mb-2">
+    {{ calculation.mqQuestCount }} × 500,000
+  </div>
+  <div class="flex items-baseline gap-2">
+    <span class="text-4xl font-black italic tracking-tighter" :class="isDark ? 'text-white' : 'text-slate-800'">
+      {{ calculation.skipCost.toLocaleString() }}
+    </span>
+    <span class="text-sm font-black opacity-50 uppercase tracking-widest">Spina</span>
+  </div>
+</div>
           
           <div :class="[
             'p-10 rounded-[4rem] shadow-2xl text-white relative overflow-hidden flex flex-col justify-between transition-all duration-700 result-card-interactive active:scale-95',

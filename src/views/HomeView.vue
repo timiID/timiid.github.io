@@ -17,6 +17,7 @@ import iconEvent from '@/assets/iconfromhome/event.png'
 import iconLeveling from '@/assets/iconfromhome/lvling.png'
 import iconFavorite from '@/assets/iconfromhome/favorite.png'
 import iconMats from '@/assets/iconfromhome/farmmats.png'
+import iconsearchapi from '@/assets/iconfromhome/what chara39.jpg'
 
 import { ref, onMounted, onUnmounted } from 'vue';
 import { crystalData } from '../data/store.js'; // Pastikan path store lo bener
@@ -113,6 +114,13 @@ const other = [
     icon: iconMats, 
     desc: 'Best all spots farm in Toram Online for farmer mats.',
     color: 'from-purple-500 to-indigo-500'
+  },
+  { 
+    name: 'Search Item (API)', 
+    path: '/item-search', 
+    icon: iconsearchapi, 
+    desc: 'Search for items in the game with API Coryn.',
+    color: 'from-green-500 to-indigo-500'
   }
   ];
 

@@ -169,4 +169,15 @@ html, body {
   transform: translateX(-60px);
   filter: blur(10px);
 }
+/* --- HIDE HORIZONTAL SCROLLBAR ON MOBILE --- */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar:horizontal {
+    display: none;
+  }
+
+  html, body {
+    scrollbar-width: none;
+    overflow-x: hidden;
+  }
+}
 </style>

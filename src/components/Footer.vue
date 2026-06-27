@@ -122,7 +122,7 @@ const goHomeAndScrollTop = async () => {
               <li><router-link to="/lvling" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Leveling Guide</router-link></li>
               <li><router-link to="/spotmats" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Material Farming Spot</router-link></li>
               <li><router-link to="/favorite" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Favorite Xtall</router-link></li>
-              <li><router-link to="/item-search" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Item Search (API)-Versi beta</router-link></li>
+              <li><router-link to="/item-search" @click="scrollTopNow" class="hover:text-indigo-400 transition-colors">Item Search (API)-Coryn Club</router-link></li>
             </ul>
           </div>
 

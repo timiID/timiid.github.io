@@ -5,6 +5,14 @@ import { useRoute, useRouter } from "vue-router";
 const props = defineProps(["isDark"]);
 defineEmits(["toggleDark"]);
 
+const navSearch = ref('')
+
+const submitNavSearch = () => {
+  if (!navSearch.value.trim()) return
+  router.push({ path: '/item-search', query: { q: navSearch.value.trim() } })
+  navSearch.value = ''
+}
+
 const route = useRoute();
 const router = useRouter();
 const itemRefs = ref({});
@@ -202,6 +210,29 @@ watch(
         </div>
 
         <!-- Center: Nav links (desktop) -->
+        <!-- Center: Search bar (mobile only) -->
+<!-- Center: Search bar (mobile only) -->
+<div class="flex lg:hidden flex-1 justify-center px-2">
+  <div class="relative w-full max-w-[200px]">
+    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </span>
+    <input
+      v-model="navSearch"
+      @keyup.enter="submitNavSearch"
+      type="text"
+      placeholder="Search item with API Coryn..."
+      :class="[
+        'w-full pl-8 pr-3 py-1.5 rounded-full border text-[12px] font-medium outline-none transition-all',
+        isDark
+          ? 'bg-white/5 border-white/10 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:bg-white/10'
+          : 'bg-black/5 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:bg-white'
+      ]"
+    />
+  </div>
+</div>
         <div class="hidden lg:flex flex-none px-1">
           <div class="relative flex bg-black/5 dark:bg-white/5 p-1 rounded-full border border-black/5 dark:border-white/5 shadow-inner backdrop-blur-md">
             <div

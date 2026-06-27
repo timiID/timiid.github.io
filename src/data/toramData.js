@@ -1,6 +1,6 @@
 "use strict";
 
-export const LV_CAP = 320;
+export const LV_CAP = 325;
 
 export const quest_data = {
     "Custom Experience Value": 0,
@@ -156,8 +156,12 @@ export const mq_data = {
     "The Village of Lixis": 240000000,
     "Visions of a Distant Past": 246000000,
     "As the Roots Come to Light": 252100000,
-
+    "Chapter 16":"",
+    "Freedos's Thoughts Until Quest":141700000,
+    "Chaos in the Valley Until Quest": 293700000,
 };
+
+export const SKIP_MQ_COST = 500000;
 
 // Logika Fungsi Dasar dari xp.js
 export const getXP = (lv) => Math.floor(0.025 * Math.pow(lv, 4) + 2 * lv);
