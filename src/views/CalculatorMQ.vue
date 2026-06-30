@@ -1,10 +1,110 @@
 <script setup>
 import { ref, computed, watch, onMounted, nextTick } from 'vue'; // Tambah nextTick
-import { LV_CAP, mq_data, quest_data, getTotalXP, addXP, SKIP_MQ_COST } from '../data/toramData';
+import { LV_CAP, mq_data, quest_data, getTotalXP, addXP, SKIP_MQ_COST, mq_quest_names, sq_quest_names } from '../data/toramData';
 import { mqData, getAllChapters, mqMaterials } from '@/data/mq.js';
 
 defineProps({
   isDark: Boolean
+});
+
+// --- LANGUAGE STATE ---
+const language = ref(localStorage.getItem('mq_language') || 'en'); // 'en' atau 'id'
+
+// --- UI TEXT DICTIONARY (EN / ID) ---
+const uiText = {
+  en: {
+    title: 'MQ Calculator',
+    subtitle: 'Timi DB System',
+    mainQuest: 'Main Quest',
+    npcQuest: 'NPC Quest',
+    currentLv: 'Current Lv',
+    percent: 'Percent %',
+    targetLv: 'Target Lv',
+    startFrom: '✦ Start From',
+    endAt: '✦ End At',
+    selectQuest: '✦ Select Quest',
+    amount: '✦ Amount (Stack/Times)',
+    skipPreVenena: 'Skip Pre-Venena',
+    spamDiaries: 'Spam Diaries',
+    showMaterials: 'Show MQ Materials',
+    selectionError: 'Selection Error: Chapter Start > Chapter End!',
+    systemError: 'System Error',
+    chapterInvalid: 'CHAPTER RANGE INVALID',
+    xpRequired: 'XP Required to Target',
+    resultAfterRun: 'Result After 1 Run',
+    postQuestProjection: 'Post-Quest Projection',
+    experience: 'Experience',
+    totalGain: 'Total Gain',
+    diaryAdventure: 'Diary Adventure',
+    simulatedProgress: 'Simulated Progress',
+    totalRun: 'Total Run',
+    run: 'Run',
+    skipMqCost: '💰 Skip MQ Cost',
+    spinaRequired: 'Spina Required',
+    quests: 'Quests',
+    spina: 'Spina',
+    materialsRequired: 'Materials Required',
+    chapterShort: 'CH',
+    questsLabel: 'Quests'
+  },
+  id: {
+    title: 'Kalkulator MQ',
+    subtitle: 'Sistem Basis Data Timi',
+    mainQuest: 'Quest Utama',
+    npcQuest: 'Quest NPC',
+    currentLv: 'Level Sekarang',
+    percent: 'Persentase %',
+    targetLv: 'Level Target',
+    startFrom: '✦ Mulai Dari',
+    endAt: '✦ Sampai',
+    selectQuest: '✦ Pilih Quest',
+    amount: '✦ Jumlah (Stack/Kali)',
+    skipPreVenena: 'Lewati Pra-Venena',
+    spamDiaries: 'Spam Diary',
+    showMaterials: 'Tampilkan Material MQ',
+    selectionError: 'Kesalahan Pilihan: Awal Bab > Akhir Bab!',
+    systemError: 'Kesalahan Sistem',
+    chapterInvalid: 'RENTANG BAB TIDAK VALID',
+    xpRequired: 'XP Dibutuhkan Menuju Target',
+    resultAfterRun: 'Hasil Setelah 1 Kali Quest',
+    postQuestProjection: 'Proyeksi Setelah Quest',
+    experience: 'Pengalaman',
+    totalGain: 'Total Perolehan',
+    diaryAdventure: 'Petualangan Diary',
+    simulatedProgress: 'Simulasi Progres',
+    totalRun: 'Total Pengulangan',
+    run: 'Putaran',
+    skipMqCost: '💰 Biaya Lewati MQ',
+    spinaRequired: 'Spina Dibutuhkan',
+    quests: 'Quest',
+    spina: 'Spina',
+    materialsRequired: 'Material Dibutuhkan',
+    chapterShort: 'BAB',
+    questsLabel: 'Quest'
+  }
+};
+
+const t = computed(() => uiText[language.value] || uiText.en);
+
+// Fungsi untuk get quest name (Main Quest) sesuai language
+const getQuestName = (questNameEn) => {
+  if (language.value === 'id' && mq_quest_names[questNameEn]) {
+    return mq_quest_names[questNameEn];
+  }
+  return questNameEn;
+};
+
+// Fungsi untuk get quest name (NPC Quest / SQ) sesuai language
+const getSQName = (questNameEn) => {
+  if (language.value === 'id' && sq_quest_names[questNameEn]) {
+    return sq_quest_names[questNameEn];
+  }
+  return questNameEn;
+};
+
+// Watch language perubahan
+watch(language, (newLang) => {
+  localStorage.setItem('mq_language', newLang);
 });
 
 // --- TABS STATE ---
@@ -137,7 +237,8 @@ const mqOptions = computed(() => {
     if (key.startsWith('Chapter')) {
       chapter++;
     } else if (mq_data[key] !== "") {
-      options.push({ id: index, label: `CH${chapter} - ${key}` });
+      const displayName = getQuestName(key);
+      options.push({ id: index, label: `${t.value.chapterShort}${chapter} - ${displayName}` });
     }
   });
   return options;
@@ -220,20 +321,33 @@ const questMaterials = computed(() => {
       <div class="text-center relative">
         <div class="absolute -inset-4 bg-indigo-500/20 blur-3xl rounded-full opacity-50"></div>
         <h1 class="relative text-6xl md:text-7xl font-black italic tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
-          MQ Calculator 
+          {{ t.title }}
         </h1>
-        <p class="text-[11px] font-black opacity-60 tracking-[0.5em] uppercase mt-2">Timi DB System</p>
+        <p class="text-[11px] font-black opacity-60 tracking-[0.5em] uppercase mt-2">{{ t.subtitle }}</p>
       </div>
 
       <div :class="['p-1.5 rounded-2xl flex gap-1 border backdrop-blur-2xl transition-all shadow-2xl', 
                     isDark ? 'bg-slate-900/60 border-white/10' : 'bg-slate-200/50 border-slate-300']">
         <button @click.stop="activeTab = 'mq'; closeAllDropdowns()" 
                 :class="['tab-btn active:scale-90', activeTab === 'mq' ? 'tab-active' : '']">
-          Main Quest
+          {{ t.mainQuest }}
         </button>
         <button @click.stop="activeTab = 'npc'; closeAllDropdowns()" 
                 :class="['tab-btn active:scale-90', activeTab === 'npc' ? 'tab-active' : '']">
-          NPC Quest
+          {{ t.npcQuest }}
+        </button>
+      </div>
+
+      <!-- LANGUAGE TOGGLE -->
+      <div :class="['p-1.5 rounded-2xl flex gap-1 border backdrop-blur-2xl transition-all shadow-2xl', 
+                    isDark ? 'bg-slate-900/60 border-white/10' : 'bg-slate-200/50 border-slate-300']">
+        <button @click="language = 'en'" 
+                :class="['tab-btn active:scale-90 px-6', language === 'en' ? 'tab-language-en' : '']">
+          English
+        </button>
+        <button @click="language = 'id'" 
+                :class="['tab-btn active:scale-90 px-6', language === 'id' ? 'tab-language-id' : '']">
+          Indonesia
         </button>
       </div>
     </div>
@@ -246,15 +360,15 @@ const questMaterials = computed(() => {
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
             <div class="group">
-              <label class="label-text">Current Lv</label>
+              <label class="label-text">{{ t.currentLv }}</label>
               <input v-model.number="currentLv" type="number" class="input-style active:scale-[0.98]" :class="isDark ? 'dark-input' : 'light-input'" />
             </div>
             <div class="group">
-              <label class="label-text">Percent %</label>
+              <label class="label-text">{{ t.percent }}</label>
               <input v-model.number="currentP" type="number" class="input-style active:scale-[0.98]" :class="isDark ? 'dark-input' : 'light-input'" />
             </div>
             <div class="group">
-              <label class="label-text text-pink-500">Target Lv</label>
+              <label class="label-text text-pink-500">{{ t.targetLv }}</label>
               <input v-model.number="targetLv" type="number" class="input-style active:scale-[0.98]" :class="isDark ? 'dark-input' : 'light-input'" />
             </div>
           </div>
@@ -264,7 +378,7 @@ const questMaterials = computed(() => {
               
               <!-- START FROM -->
               <div class="relative group select-container">
-                <label class="label-text" :class="isRangeInvalid ? 'text-red-400 animate-pulse' : 'text-indigo-400'">✦ Start From</label>
+                <label class="label-text" :class="isRangeInvalid ? 'text-red-400 animate-pulse' : 'text-indigo-400'">{{ t.startFrom }}</label>
                 <div @click.stop="isStartOpen ? isStartOpen = false : openStart()" 
                      :class="['input-style flex items-center justify-between cursor-pointer active:scale-95', isDark ? 'dark-input' : 'light-input', isRangeInvalid ? '!border-red-500/50' : '']">
                   <span class="truncate font-black text-sm">{{ mqOptions.find(o => o.id === mqFromIdx)?.label }}</span>
@@ -285,7 +399,7 @@ const questMaterials = computed(() => {
 
               <!-- END AT -->
               <div class="relative group select-container">
-                <label class="label-text text-indigo-400">✦ End At</label>
+                <label class="label-text text-indigo-400">{{ t.endAt }}</label>
                 <div @click.stop="isEndOpen ? isEndOpen = false : openEnd()" 
                      :class="['input-style flex items-center justify-between cursor-pointer active:scale-95', isDark ? 'dark-input' : 'light-input']">
                   <span class="truncate font-black text-sm">{{ mqOptions.find(o => o.id === mqUntilIdx)?.label }}</span>
@@ -311,7 +425,7 @@ const questMaterials = computed(() => {
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                 </svg>
               </div>
-              <p class="text-[12px] font-black uppercase tracking-widest text-red-500">Selection Error: Chapter Start > Chapter End!</p>
+              <p class="text-[12px] font-black uppercase tracking-widest text-red-500">{{ t.selectionError }}</p>
             </div>
 
             <div v-else class="flex flex-wrap gap-10 ml-4">
@@ -322,7 +436,7 @@ const questMaterials = computed(() => {
                     <svg v-if="skipVenena" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" /></svg>
                   </div>
                 </div>
-                <span class="text-[12px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">Skip Pre-Venena</span>
+                <span class="text-[12px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">{{ t.skipPreVenena }}</span>
               </label>
               <label class="flex items-center gap-4 cursor-pointer group active:scale-90 transition-all">
                 <div class="relative flex items-center justify-center">
@@ -331,7 +445,7 @@ const questMaterials = computed(() => {
                     <svg v-if="useDiary" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" /></svg>
                   </div>
                 </div>
-                <span class="text-[12px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">Spam Diaries</span>
+                <span class="text-[12px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">{{ t.spamDiaries }}</span>
               </label>
               <label class="flex items-center gap-4 cursor-pointer group active:scale-90 transition-all">
                 <div class="relative flex items-center justify-center">
@@ -340,7 +454,7 @@ const questMaterials = computed(() => {
                     <svg v-if="showMaterials" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" /></svg>
                   </div>
                 </div>
-                <span class="text-[12px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">Show MQ Materials</span>
+                <span class="text-[12px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">{{ t.showMaterials }}</span>
               </label>
             </div>
           </div>
@@ -348,12 +462,12 @@ const questMaterials = computed(() => {
           <div v-else class="space-y-10 animate-in slide-in-from-bottom-4 duration-500">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-white/5">
               <div class="relative group select-container">
-                <label class="label-text text-emerald-400">✦ Select Quest</label>
+                <label class="label-text text-emerald-400">{{ t.selectQuest }}</label>
                 <div class="relative group select-container">
   <!-- UBAH: Ganti @click untuk memanggil openSQ() -->
   <div @click.stop="isSQOpen ? isSQOpen = false : openSQ()" 
        :class="['input-style flex items-center justify-between cursor-pointer active:scale-95', isDark ? 'dark-input' : 'light-input']">
-    <span class="truncate font-black text-sm">{{ selectedSQ }}</span>
+    <span class="truncate font-black text-sm">{{ getSQName(selectedSQ) }}</span>
     <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 transition-transform duration-500', isSQOpen ? 'rotate-180' : '']" viewBox="0 0 20 20" fill="currentColor">
       <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
     </svg>
@@ -367,14 +481,14 @@ const questMaterials = computed(() => {
          :class="['custom-list custom-scroll', isDark ? 'bg-slate-900 shadow-[0_20px_50px_rgba(16,185,129,0.3)]' : 'bg-white shadow-2xl']">
       <div v-for="(val, key) in quest_data" :key="key" @click="selectedSQ = key; isSQOpen = false"
            :class="['list-item active:scale-95', selectedSQ === key ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : (isDark ? 'hover:bg-white/5 text-slate-300' : 'hover:bg-slate-50 text-slate-700')]">
-        {{ key }}
+        {{ getSQName(key) }}
       </div>
     </div>
   </Transition>
 </div>
 </div>
               <div>
-                <label class="label-text text-emerald-400">✦ Amount (Stack/Times)</label>
+                <label class="label-text text-emerald-400">{{ t.amount }}</label>
                 <input v-model.number="sqAmount" type="number" class="input-style active:scale-[0.98]" :class="isDark ? 'dark-input' : 'light-input'" />
               </div>
             </div>
@@ -390,11 +504,11 @@ const questMaterials = computed(() => {
   
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h4 class="text-[12px] font-black uppercase tracking-[0.3em] text-amber-400">💰 Skip MQ Cost</h4>
-      <p class="text-[10px] opacity-40 font-bold uppercase mt-1">Spina Required</p>
+      <h4 class="text-[12px] font-black uppercase tracking-[0.3em] text-amber-400">{{ t.skipMqCost }}</h4>
+      <p class="text-[10px] opacity-40 font-bold uppercase mt-1">{{ t.spinaRequired }}</p>
     </div>
     <div class="px-5 py-3 rounded-2xl bg-amber-500/20 border border-amber-500/20 flex flex-col items-center">
-      <span class="text-[9px] font-black text-amber-400 uppercase tracking-wider leading-none mb-1">Quests</span>
+      <span class="text-[9px] font-black text-amber-400 uppercase tracking-wider leading-none mb-1">{{ t.questsLabel }}</span>
       <span class="text-2xl font-black italic tracking-tighter text-amber-300">{{ calculation.mqQuestCount }}</span>
     </div>
   </div>
@@ -406,7 +520,7 @@ const questMaterials = computed(() => {
     <span class="text-4xl font-black italic tracking-tighter" :class="isDark ? 'text-white' : 'text-slate-800'">
       {{ calculation.skipCost.toLocaleString() }}
     </span>
-    <span class="text-sm font-black opacity-50 uppercase tracking-widest">Spina</span>
+    <span class="text-sm font-black opacity-50 uppercase tracking-widest">{{ t.spina }}</span>
   </div>
 </div>
           
@@ -420,32 +534,32 @@ const questMaterials = computed(() => {
             <div class="relative z-10 space-y-10">
               <div v-if="isRangeInvalid" class="h-full flex flex-col justify-center items-center py-16 text-center">
                 <div class="text-6xl mb-6 animate-pulse">⚠️</div>
-                <h2 class="text-2xl font-black uppercase tracking-tighter">System Error</h2>
-                <p class="text-[12px] font-bold opacity-60 mt-2">CHAPTER RANGE INVALID</p>
+                <h2 class="text-2xl font-black uppercase tracking-tighter">{{ t.systemError }}</h2>
+                <p class="text-[12px] font-bold opacity-60 mt-2">{{ t.chapterInvalid }}</p>
               </div>
 
               <template v-else-if="calculation">
                 <div class="result-item">
-                  <p class="text-[11px] font-black tracking-widest opacity-50 uppercase mb-2">XP Required to Target</p>
+                  <p class="text-[11px] font-black tracking-widest opacity-50 uppercase mb-2">{{ t.xpRequired }}</p>
                   <h3 class="text-3xl font-black tabular-nums tracking-tighter">{{ calculation.xpNeeded.toLocaleString() }}</h3>
                 </div>
                 
                 <div class="pt-10 border-t border-white/20 result-item">
                   <p class="text-[11px] font-black tracking-widest opacity-50 uppercase mb-3">
-                    {{ activeTab === 'mq' ? 'Result After 1 Run' : 'Post-Quest Projection' }}
+                    {{ activeTab === 'mq' ? t.resultAfterRun : t.postQuestProjection }}
                   </p>
                   <div class="flex flex-col gap-1">
                     <span class="text-7xl font-black italic tracking-tighter drop-shadow-2xl">
                       Lv {{ activeTab === 'mq' ? calculation.resLv : calculation.sqLv }}
                     </span>
                     <span class="text-2xl font-bold opacity-60 ml-2">
-                      {{ activeTab === 'mq' ? calculation.resP : calculation.sqPercent }}% Experience
+                      {{ activeTab === 'mq' ? calculation.resP : calculation.sqPercent }}% {{ t.experience }}
                     </span>
                   </div>
                 </div>
 
                 <div class="bg-white/10 p-5 rounded-3xl border border-white/10 backdrop-blur-md result-item">
-                  <p class="text-[10px] font-black opacity-40 uppercase tracking-[0.2em] mb-1">Total Gain</p>
+                  <p class="text-[10px] font-black opacity-40 uppercase tracking-[0.2em] mb-1">{{ t.totalGain }}</p>
                   <p class="text-lg font-black tabular-nums tracking-wide text-indigo-200">
                     + {{ (activeTab === 'mq' ? calculation.totalMqXP : calculation.sqXP).toLocaleString() }} XP
                   </p>
@@ -464,11 +578,11 @@ const questMaterials = computed(() => {
             
             <div class="flex items-center justify-between mb-8">
               <div>
-                <h4 class="text-[12px] font-black uppercase tracking-[0.3em] text-indigo-500">Diary Adventure</h4>
-                <p class="text-[10px] opacity-40 font-bold uppercase mt-1">Simulated Progress</p>
+                <h4 class="text-[12px] font-black uppercase tracking-[0.3em] text-indigo-500">{{ t.diaryAdventure }}</h4>
+                <p class="text-[10px] opacity-40 font-bold uppercase mt-1">{{ t.simulatedProgress }}</p>
               </div>
               <div class="px-6 py-4 rounded-[2rem] bg-gradient-to-br from-yellow-200 to-purple-700 shadow-x9 shadow-indigo-500/20 flex flex-col items-center justify-center border-t border-white/10 transition-all active:scale-95 cursor-default">
-  <span class="text-[9px] font-black opacity-100 uppercase tracking-[0.2em] leading-none mb-1">Total Run</span>
+  <span class="text-[9px] font-black opacity-100 uppercase tracking-[0.2em] leading-none mb-1">{{ t.totalRun }}</span>
   <span class="text-3xl font-black italic tracking-tighter leading-none text-white">
     {{ calculation?.diaryRuns?.length || 0 }}
   </span>
@@ -479,7 +593,7 @@ const questMaterials = computed(() => {
               <div v-for="run in calculation.diaryRuns" :key="run.run" 
                    class="flex items-center justify-between p-5 rounded-3xl transition-all group hover:bg-indigo-500 hover:scale-[1.02] border border-transparent hover:border-white/20 active:scale-95">
                 <div class="flex flex-col">
-                  <span class="text-[10px] font-black opacity-30 group-hover:opacity-100 group-hover:text-indigo-100 transition-all uppercase">Run</span>
+                  <span class="text-[10px] font-black opacity-30 group-hover:opacity-100 group-hover:text-indigo-100 transition-all uppercase">{{ t.run }}</span>
                   <span class="text-sm font-black italic group-hover:text-white transition-all">#{{ run.run.toString().padStart(2, '0') }}</span>
                 </div>
                 <div class="flex items-baseline gap-2">
@@ -502,7 +616,7 @@ const questMaterials = computed(() => {
       <div class="flex items-center gap-3 mb-8">
         <div class="text-3xl">📦</div>
         <div>
-          <h4 class="text-[12px] font-black uppercase tracking-[0.3em]" :class="isDark ? 'text-slate-300' : 'text-slate-700'">Materials Required</h4>
+          <h4 class="text-[12px] font-black uppercase tracking-[0.3em]" :class="isDark ? 'text-slate-300' : 'text-slate-700'">{{ t.materialsRequired }}</h4>
           <p class="text-[10px] opacity-40 font-bold uppercase mt-1">
             {{ mqOptions.find(o => o.id === mqFromIdx)?.label }} → {{ mqOptions.find(o => o.id === mqUntilIdx)?.label }}
           </p>
@@ -646,6 +760,20 @@ const questMaterials = computed(() => {
   cursor: pointer;
   color: #64748b;
   border: 1px solid transparent;
+}
+
+.tab-language-en {
+  background: linear-gradient(135deg, #53186d 10%, #a855f7 100%);
+  color: white !important;
+  box-shadow: 0 15px 30px -10px rgba(158, 23, 135, 0.4);
+  transform: scale(1.05);
+}
+
+.tab-language-id {
+  background: linear-gradient(135deg, #6d1818 10%, #f75555 100%);
+  color: white !important;
+  box-shadow: 0 15px 30px -10px rgba(158, 23, 135, 0.4);
+  transform: scale(1.05);
 }
 
 .tab-active {

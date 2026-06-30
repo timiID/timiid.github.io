@@ -186,12 +186,12 @@ const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
 
 const translations = {
   en: {
-    subtitle: "Toram Online Yearly Event Calendar & Guides",
+    subtitle: "Toram Online Yearly Event Calendar & Guides (Note: generally during those months, although that is not entirely accurate).",
     searchPlaceholder: "🔍︎ Search event or month...",
     noResults: "No events found for your search."
   },
   id: {
-    subtitle: "Kalender Event Tahunan & Panduan Toram Online",
+    subtitle: "Kalender Event Tahunan & Panduan Toram Online (Catatan: umumnya selama bulan-bulan tersebut, meskipun hal itu tidak sepenuhnya akurat).",
     searchPlaceholder: "🔍︎ Cari event atau bulan...",
     noResults: "Event tidak ditemukan."
   }

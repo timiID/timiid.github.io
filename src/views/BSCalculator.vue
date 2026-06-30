@@ -149,7 +149,7 @@ const cardClass = computed(() => [
 const craftTypes = ["Armor", "1H Sword", "2H Sword", "Bow", "Bowgun", "Staff", "Magic Device", "Knuckle", "Halberd", "Katana"];
 
 const form = reactive({
-    level: 320, craftType: "Armor",
+    level: 325, craftType: "Armor",
     stats: { STR: 0, INT: 0, VIT: 0, DEX: 0, AGI: 0, TEC: 0 },
     eStr: 0, eStrP: 0, eDex: 0, eDexP: 0,
     prof: BS.HIGHEST_PROF || 280,

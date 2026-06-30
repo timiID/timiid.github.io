@@ -16,12 +16,12 @@
         style="background-image: linear-gradient(to right, #ffe100, #8260ff, #f87171, #fb923c, #ea580c)">
     SPOT
   </span>
-  1-310
+  1-325
       </h1>
       <div class="flex items-center justify-center gap-4 text-xs font-bold opacity-50 uppercase tracking-widest">
         <span>By Timi DB✌︎㋡</span>
         <span>•</span>
-        <span>Updated April 2026</span>
+        <span>Updated June 2026</span>
       </div>
     </div>
 
@@ -54,7 +54,7 @@
       <div class="p-4 rounded-[2.5rem] border bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 text-white shadow-2xl shadow-indigo-500/20 flex flex-col justify-center">
         <h2 class="text-2xl font-black italic mb-4 uppercase tracking-tighter">Mastering the EXP System</h2>
         <p class="text-sm leading-relaxed opacity-90 font-medium italic">
-          Toram Online currently has a maximum level cap of 320. While you can level up anywhere, specific "Popular Spots" provide optimal EXP efficiency. The core mechanic relies on the +/- 9 Level Difference Rule: to gain maximum experience, your character's level should not differ by more than 9 levels from the target Mob or Boss. 
+          Toram Online currently has a maximum level cap of 325. While you can level up anywhere, specific "Popular Spots" provide optimal EXP efficiency. The core mechanic relies on the +/- 9 Level Difference Rule: to gain maximum experience, your character's level should not differ by more than 9 levels from the target Mob or Boss. 
         </p> 
         <p class="text-lg text leading-relaxed opacity-100 font-medium italic">
           ⚠️
@@ -121,7 +121,7 @@
                     </span>
                     <p class="text-[11px] font-bold opacity-40 uppercase">{{ alt.type || 'Mini Boss' }}</p>
                   </div>
-                  <span v-if="alt.lv" class="text-[10px] font-black px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-500">LV {{ alt.lv }}</span>
+                  <span v-if="alt.range" class="text-[10px] font-black px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-500">LV {{ alt.range }}</span>
                 </div>
                 <p class="text-[10px] opacity-60 font-medium leading-snug">📍 {{ alt.loc }}</p>
               </div>
@@ -137,7 +137,7 @@
           class="w-12 h-12 rounded-2xl flex items-center justify-center border-4 transition-all duration-300 font-black text-xl shadow-lg disabled:opacity-20"
           :class="isDark ? 'border-indigo-500/20 text-indigo-400 bg-slate-900/50' : 'border-indigo-100 text-indigo-300 bg-white'"
         >
-          <
+          
         </button>
 
         <template v-for="page in displayedPages" :key="page">
@@ -201,24 +201,78 @@ const currentPage = ref(1);
 const itemsPerPage = 9;
 
 const filteredSpots = computed(() => {
+  const q = searchQuery.value.toLowerCase().trim();
+
+  // MODE SEARCH: flatten semua entri (main + alts) yang match jadi card individual
+  if (q !== '') {
+    const results = [];
+
+    levelingList.forEach(spot => {
+      // Cek main
+      const mainMatches =
+        spot.main.name.toLowerCase().includes(q) ||
+        spot.main.loc.toLowerCase().includes(q);
+
+      if (mainMatches) {
+        const matchesTab = activeTab.value === 'All' || spot.main.type === activeTab.value;
+        let matchesLevel = true;
+        if (userLevel.value !== null && userLevel.value !== '') {
+          const [minR, maxR] = spot.range.split('-').map(Number);
+          matchesLevel = userLevel.value >= minR && userLevel.value <= maxR;
+        }
+        if (matchesTab && matchesLevel) {
+          results.push({ range: spot.range, main: spot.main });
+        }
+      }
+
+      // Cek setiap alt secara terpisah
+      if (spot.alts) {
+        spot.alts.forEach(alt => {
+          const altMatches =
+            alt.name.toLowerCase().includes(q) ||
+            alt.loc.toLowerCase().includes(q);
+
+          if (altMatches) {
+            const matchesTab = activeTab.value === 'All' || alt.type === activeTab.value;
+            const altRange = alt.range || spot.range;
+            let matchesLevel = true;
+            if (userLevel.value !== null && userLevel.value !== '') {
+              const [minR, maxR] = altRange.split('-').map(Number);
+              matchesLevel = userLevel.value >= minR && userLevel.value <= maxR;
+            }
+            if (matchesTab && matchesLevel) {
+              // Jadikan alt sebagai "main" card mandiri, tanpa alts
+              results.push({ range: altRange, main: alt });
+            }
+          }
+        });
+      }
+    });
+
+    // Hapus duplikat (nama + lokasi + range sama persis)
+    const seen = new Set();
+    return results.filter(r => {
+      const key = `${r.main.name}-${r.main.loc}-${r.range}-${r.main.difficulty || ''}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  // MODE NORMAL (tanpa search): tampilkan grouped seperti biasa
   return levelingList.filter(spot => {
-    // Filter Search
-    const matchesSearch =
-      spot.main.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      spot.main.loc.toLowerCase().includes(searchQuery.value.toLowerCase());
-
-    // Filter Tab
     const matchesTab =
-      activeTab.value === 'All' || spot.main.type === activeTab.value;
+      activeTab.value === 'All' ||
+      spot.main.type === activeTab.value ||
+      (spot.alts && spot.alts.some(alt => alt.type === activeTab.value));
 
-    // Filter Level
     let matchesLevel = true;
     if (userLevel.value !== null && userLevel.value !== '') {
       const [minRange, maxRange] = spot.range.split('-').map(Number);
       matchesLevel = userLevel.value >= minRange && userLevel.value <= maxRange;
     }
 
-    return matchesSearch && matchesTab && matchesLevel;
+    return matchesTab && matchesLevel;
   });
 });
 

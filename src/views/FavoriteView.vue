@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen pt-24 pb-20 px-4">
-    <!-- PERBAIKAN: Dibungkus max-w-4xl mx-auto agar sejajar lurus dengan judul dan card di bawahnya -->
+    <!-- Tombol Back -->
     <div class="max-w-4xl mx-auto mb-6 animate-fade-in">
       <button @click="$router.push('/')" class="group inline-flex items-center gap-3 transition-all hover:-translate-x-2">
         <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
@@ -10,77 +10,64 @@
       </button>
     </div>
 
+    <!-- Filter Pencarian & Dropdown Kategori -->
     <div v-if="favoriteXtalls.length > 0" class="max-w-4xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
       <div class="relative group">
-  <span class="absolute left-4 top-1/2 -translate-y-1/2 
-               text-cyan-500/50 group-focus-within:text-cyan-500 transition-colors">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-    </svg>
-  </span>
-
-  <input 
-    v-model="searchQuery" 
-    type="text" 
-    placeholder="Search in Favorite Xtall..." 
-    class="w-full pl-12 pr-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm transition-all shadow-lg backdrop-blur-sm
-           /* Light Mode (Default) */
-           bg-white/80 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500
-           /* Dark Mode */
-           dark:bg-slate-900/40 dark:border-white/5 dark:text-white dark:placeholder-slate-600 dark:focus:border-cyan-500/30"
-  >
-</div>
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/50 group-focus-within:text-cyan-500 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </span>
+        <input 
+          v-model="searchQuery" 
+          type="text" 
+          placeholder="Search in Favorite Xtall..." 
+          class="w-full pl-12 pr-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm transition-all shadow-lg backdrop-blur-sm bg-white/80 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 dark:bg-slate-900/40 dark:border-white/5 dark:text-white dark:placeholder-slate-600 dark:focus:border-cyan-500/30"
+        >
+      </div>
 
       <div class="relative">
-  <select 
-    v-model="selectedType" 
-    class="w-full px-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer appearance-none transition-all shadow-lg backdrop-blur-sm
-           /* Light Mode */
-           bg-white/80 border-slate-200 text-slate-700 focus:border-purple-500
-           /* Dark Mode */
-           dark:bg-slate-900/40 dark:border-white/5 dark:text-slate-300 dark:focus:border-purple-500/30"
-  >
-    <option value="" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">All Crystas</option>
-    <option value="ADDITIONAL" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Additional Crystas</option>
-    <option value="ADDITIONAL_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Additional Enhancer Crystas</option>
-    <option value="ARMOR" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Armor Crystas</option>
-    <option value="ARMOR_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Armor Enhancer Crystas</option>
-    <option value="NORMAL" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Normal Crystas</option>
-    <option value="NORMAL_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Normal Enhancer Crystas</option>
-    <option value="SPECIAL" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Special Crystas</option>
-    <option value="SPECIAL_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Special Enhancer Crystas</option>
-    <option value="WEAPON" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Weapon Crystas</option>
-    <option value="WEAPON_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Weapon Enhancer Crystas</option>
-  </select>
-
-        <span class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none transition-colors
-               text-purple-400 dark:text-purple-500">
-               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+        <select 
+          v-model="selectedType" 
+          class="w-full px-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm cursor-pointer appearance-none transition-all shadow-lg backdrop-blur-sm bg-white/80 border-slate-200 text-slate-700 focus:border-purple-500 dark:bg-slate-900/40 dark:border-white/5 dark:text-slate-300 dark:focus:border-purple-500/30"
+        >
+          <option value="" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">All Crystas</option>
+          <option value="ADDITIONAL" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Additional Crystas</option>
+          <option value="ADDITIONAL_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Additional Enhancer Crystas</option>
+          <option value="ARMOR" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Armor Crystas</option>
+          <option value="ARMOR_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Armor Enhancer Crystas</option>
+          <option value="NORMAL" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Normal Crystas</option>
+          <option value="NORMAL_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Normal Enhancer Crystas</option>
+          <option value="SPECIAL" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Special Crystas</option>
+          <option value="SPECIAL_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Special Enhancer Crystas</option>
+          <option value="WEAPON" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Weapon Crystas</option>
+          <option value="WEAPON_UP" class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white">Weapon Enhancer Crystas</option>
+        </select>
+        <span class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none transition-colors text-purple-400 dark:text-purple-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
         </span>
       </div>
     </div>
 
+    <!-- List Item Card -->
     <div class="max-w-4xl mx-auto">
       <div v-if="paginatedXtalls.length > 0" class="flex flex-col gap-8 animate-slide-up">
-        
-        <!-- PEMBUNGKUS DENGAN CLASS RELATIVE -->
         <div v-for="(xtall, index) in paginatedXtalls" :key="xtall.code" class="relative group">
-          
           <XtallCard 
             :xtall="xtall"
             :idx="index"
             :isDark="isDark"
             :isFavorite="true"
             :hideFavorite="true"
-             @toggle-favorite="removeFav"
+            @toggle-favorite="confirmRemove(xtall)"
             :iconPath="getIconPath(xtall)" 
             :badgeColorClass="getBadgeColor(xtall.type)"
             :baseXtall="findBase(xtall)"
             :evoXtalls="findEvos(xtall.code)"
           >
-            <!-- TOMBOL DIULUR MASUK KE DALAM SLOT XTALLCARD -->
+            <!-- PERBAIKAN: Fungsi klik diubah memicu modal konfirmasi -->
             <button 
-              @click.stop="removeFav(xtall.code)" 
+              @click.stop="confirmRemove(xtall)" 
               class="absolute top-4 right-4 md:top-6 md:right-6 z-30 p-3 rounded-2xl bg-red-500 border border-red-500/50 text-white hover:bg-red-600 transition-all shadow-2xl active:scale-90"
               title="Hapus dari Favorit"
             >
@@ -89,86 +76,144 @@
               </svg>
             </button>
           </XtallCard>
-
         </div>
 
-        <!-- PAGINATION CONTROLS -->
+        <!-- Pagination Controls -->
         <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 md:gap-3 py-10 flex-wrap">
-  <button 
-    @click="currentPage--" 
-    :disabled="currentPage === 1"
-    :class="['w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border-2 transition-all disabled:opacity-20 shadow-lg',
-      isDark ? 'border-white/10 bg-slate-900/50 text-indigo-400' : 'border-slate-100 bg-white text-indigo-500']"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15 19l-7-7 7-7" /></svg>
-  </button>
+          <button 
+            @click="currentPage--" 
+            :disabled="currentPage === 1"
+            :class="['w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border-2 transition-all disabled:opacity-20 shadow-lg', isDark ? 'border-white/10 bg-slate-900/50 text-indigo-400' : 'border-slate-100 bg-white text-indigo-500']"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15 19l-7-7 7-7" /></svg>
+          </button>
 
-  <div class="flex items-center gap-1.5 md:gap-2">
-    <template v-for="(page, index) in displayedPages" :key="index">
-      
-      <button
-        v-if="page !== '...'"
-        @click="currentPage = page"
-        :class="['w-10 h-10 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border-2 transition-all duration-300 font-black text-sm md:text-lg relative',
-          currentPage === page 
-            ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_0_25px_rgba(79,70,229,0.6)] scale-110 z-10' 
-            : (isDark 
-                ? 'bg-slate-900/40 border-white/5 text-slate-400 hover:border-indigo-500/50' 
-                : 'bg-white border-slate-100 text-slate-600 shadow-sm hover:border-indigo-400')]"
-      >
-        {{ page }}
-        <div v-if="currentPage === page" class="absolute inset-0 bg-indigo-400/20 blur-xl rounded-full"></div>
-      </button>
+          <div class="flex items-center gap-1.5 md:gap-2">
+            <template v-for="(page, index) in displayedPages" :key="index">
+              <button
+                v-if="page !== '...'"
+                @click="currentPage = page"
+                :class="['w-10 h-10 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border-2 transition-all duration-300 font-black text-sm md:text-lg relative', currentPage === page ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_0_25px_rgba(79,70,229,0.6)] scale-110 z-10' : (isDark ? 'bg-slate-900/40 border-white/5 text-slate-400 hover:border-indigo-500/50' : 'bg-white border-slate-100 text-slate-600 shadow-sm hover:border-indigo-400')]"
+              >
+                {{ page }}
+                <div v-if="currentPage === page" class="absolute inset-0 bg-indigo-400/20 blur-xl rounded-full"></div>
+              </button>
+              <span v-else :class="['w-6 md:w-8 text-center font-black tracking-widest opacity-40', isDark ? 'text-slate-500' : 'text-slate-400']">...</span>
+            </template>
+          </div>
 
-      <span 
-        v-else 
-        :class="['w-6 md:w-8 text-center font-black tracking-widest opacity-40', isDark ? 'text-slate-500' : 'text-slate-400']"
-      >
-        ...
-      </span>
-    </template>
-  </div>
-
-  <button 
-    @click="currentPage++" 
-    :disabled="currentPage === totalPages"
-    :class="['w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border-2 transition-all disabled:opacity-20 shadow-lg',
-      isDark ? 'border-white/10 bg-slate-900/50 text-indigo-400' : 'border-slate-100 bg-white text-indigo-500']"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7" /></svg>
-  </button>
-
-    
-  </div>
+          <button 
+            @click="currentPage++" 
+            :disabled="currentPage === totalPages"
+            :class="['w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border-2 transition-all disabled:opacity-20 shadow-lg', isDark ? 'border-white/10 bg-slate-900/50 text-indigo-400' : 'border-slate-100 bg-white text-indigo-500']"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7" /></svg>
+          </button>
+        </div>
       </div>
 
+      <!-- Kondisi Data Kosong -->
       <div v-else class="py-40 text-center animate-fade-in">
         <div v-if="favoriteXtalls.length > 0">
            <h3 class="text-2xl font-black text-white/20 italic uppercase tracking-tighter">Xtall Not Found🕵🏻</h3>
-           <button @click="resetFilters" class="mt-6 px-8 py-3 bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 font-bold rounded-xl hover:bg-cyan-500 hover:text-white transition-all">
-            Reset Filter
-          </button>
+           <button @click="resetFilters" class="mt-6 px-8 py-3 bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 font-bold rounded-xl hover:bg-cyan-500 hover:text-white transition-all">Reset Filter</button>
         </div>
         <div v-else class="py-40 text-center animate-fade-in">
-  <h3 :class="[
-    'text-2xl font-black italic uppercase tracking-tighter transition-colors duration-500',
-    isDark ? 'text-white/20' : 'text-slate-900/30'
-  ]">
-    No Crysta Saved
-  </h3>
-
-  <button @click="$router.push('/xtall')" 
-          :class="[
-            'mt-6 px-10 py-4 font-[1000] italic uppercase text-xs rounded-full transition-all duration-300 shadow-xl active:scale-95',
-            isDark 
-              ? 'bg-white text-black hover:bg-rose-500 hover:text-white' 
-              : 'bg-slate-900 text-white hover:bg-rose-500 shadow-rose-500/20'
-          ]">
-    Browse Database
-  </button>
-</div>
+          <h3 :class="['text-2xl font-black italic uppercase tracking-tighter transition-colors duration-500', isDark ? 'text-white/20' : 'text-slate-900/30']">No Crysta Saved</h3>
+          <button @click="$router.push('/xtall')" :class="['mt-6 px-10 py-4 font-[1000] italic uppercase text-xs rounded-full transition-all duration-300 shadow-xl active:scale-95', isDark ? 'bg-white text-black hover:bg-rose-500 hover:text-white' : 'bg-slate-900 text-white hover:bg-rose-500 shadow-rose-500/20']">Browse Database</button>
+        </div>
       </div>
     </div>
+
+    <!-- MODAL POP-UP DI TENGAH LAYAR (VIEWPORT) -->
+    <Teleport to="body">
+      <div v-if="xtallToRemove" class="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+        <!-- Backdrop Gelap Mengunci Seluruh Layar (Fixed & Full) -->
+        <div class="fixed inset-0 bg-black/70 backdrop-blur-md" @click="xtallToRemove = null"></div>
+        
+        <!-- Konten Box Dialog -->
+<div :class="[
+  'relative w-full max-w-sm rounded-3xl border-2 p-6 shadow-2xl transform transition-all scale-100 animate-fade-in z-10 overflow-hidden',
+  isDark ? 'bg-slate-950 text-white shadow-black/80' : 'bg-white text-slate-900'
+]">
+  
+  <!-- LAYER KHUSUS BACKGROUND (Hanya gambar ini yang opacity-nya berubah) -->
+  <div class="absolute inset-0 pointer-events-none z-0"
+    :style="{
+      backgroundImage: 'url(/images/logo.png)',
+      backgroundRepeat: 'repeat',
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      opacity: isDark ? '0.25' : '0.15'
+    }">
+  </div>
+
+  <!-- BUNGKUSAN KONTEN UTAMA (Diberi z-10 agar berada di atas gambar background) -->
+  <div class="relative z-10 flex flex-col h-full justify-between">
+    <div class="text-center">
+      <div class="w-14 h-14 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </div>
+      <h4 class="text-lg font-black uppercase tracking-tight mb-1">Remove Favorite?</h4>
+      <p :class="['text-xs font-medium px-2 mb-6 leading-relaxed', isDark ? 'text-slate-400' : 'text-slate-500']">
+        Are you sure you want to remove <span class="font-extrabold text-red-500">{{ xtallToRemove?.name }}</span> from your favorites list?
+      </p>
+    </div>
+
+    <!-- Tombol Pilihan -->
+    <div class="grid grid-cols-2 gap-3">
+      <button 
+        @click="xtallToRemove = null"
+        :class="[
+          'py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all active:scale-95 border',
+          isDark ? 'bg-slate-900 border-white/5 text-slate-300 hover:bg-slate-800' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
+        ]"
+      >
+        Cancel
+      </button>
+      <button 
+        @click="executeRemove"
+        class="py-3.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-lg shadow-red-500/20"
+      >
+        Yes, Remove
+      </button>
+    </div>
+  </div>
+
+</div>
+      </div>
+    </Teleport>
+    <Teleport to="body">
+  <transition
+    enter-active-class="transition ease-out duration-300"
+    enter-from-class="opacity-0 translate-y-4"
+    enter-to-class="opacity-100 translate-y-0"
+    leave-active-class="transition ease-in duration-200"
+    leave-from-class="opacity-100 translate-y-0"
+    leave-to-class="opacity-0 translate-y-4"
+  >
+    <div v-if="notification.show"
+      :class="[
+        'fixed top-24 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:max-w-md z-[9999] px-6 py-3 rounded-2xl shadow-2xl border flex items-center gap-3',
+        notification.type === 'add'
+          ? (isDark ? 'bg-green-700 border-green-500/50 text-slate-200' : 'bg-green-100 border-green-400 text-slate-900')
+          : (isDark ? 'bg-red-700/80 border-red-500/50 text-slate-200' : 'bg-red-100 border-red-400 text-slate-900')
+      ]">
+
+      <!-- Ikon gambar: sukses = my c20.png, gagal/hapus = my34.png -->
+      <img
+        :src="notification.type === 'add' ? '/images/my c20.png' : '/images/my34.png'"
+        :alt="notification.type === 'add' ? 'sukses' : 'hapus'"
+        class="w-8 h-8 object-contain flex-shrink-0"
+      />
+
+      <p class="font-bold text-sm tracking-wide">{{ notification.message }}</p>
+    </div>
+  </transition>
+</Teleport>
+
   </div>
 </template>
 
@@ -204,8 +249,11 @@ const itemsPerPage = 6;
 const favoriteXtalls = ref([]);
 const searchQuery = ref('');
 const selectedType = ref('');
+const isMobile = ref(false);
+const xtallToRemove = ref(null); 
+const notification = ref({ show: false, message: '', type: 'remove' });
 
-// --- LOGIC: ICON & CATEGORY ---
+// --- UTILS FUNCTION ---
 const findRootItem = (item) => {
   if (!item) return null;
   let current = item;
@@ -236,22 +284,14 @@ const getIconPath = (xtall) => {
   const type = xtall.type?.toUpperCase() || '';
   const isUpgrade = type.includes('UPGRADE') || type.includes('ENHANCER') || type.includes(' UP');
 
-  // --- LOGIK UNTUK KRISTAL BIASA (BUKAN UPGRADE) ---
   if (!isUpgrade) {
-    // Cek Senjata
     if (type.includes('SENJATA') || type.includes('WEAPON')) return iconMap.WEAPON;
-    // Cek Zirah/Armor
     if (type.includes('ZIRAH') || type.includes('ARMOR')) return iconMap.ARMOR;
-    // Cek Pelengkap/Additional
     if (type.includes('PELENGKAP') || type.includes('ADDITIONAL')) return iconMap.ADDITIONAL;
-    // Cek Tambahan/Special
     if (type.includes('TAMBAHAN') || type.includes('SPECIAL')) return iconMap.SPECIAL;
-    
-    // Default jika tidak cocok ke kategori di atas
     return iconMap.NORMAL;
   }
 
-  // --- LOGIK UNTUK KRISTAL UPGRADE ---
   const rootType = findRootType(xtall);
   return iconMap[`${rootType}_UPGRADE`] || iconMap.NORMAL_UPGRADE;
 };
@@ -268,31 +308,22 @@ const getBadgeColor = (typeStr) => {
 // --- LOGIC: FILTERING & PAGINATION ---
 const filteredFavs = computed(() => {
   let res = favoriteXtalls.value;
-  
-  // 1. Filter Search
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase();
     res = res.filter(c => c.name.toLowerCase().includes(q));
   }
-
-  // 2. Filter Dropdown
   if (selectedType.value) {
     res = res.filter(c => {
       const type = c.type?.toUpperCase() || '';
-      const filter = selectedType.value; // Contoh: 'WEAPON_UP' atau 'WEAPON'
-      
+      const filter = selectedType.value;
       const isItemUpgrade = type.includes('UPGRADE') || type.includes('ENHANCER') || type.includes(' UP');
       const isFilterUpgrade = filter.endsWith('_UP');
-      
       if (isItemUpgrade !== isFilterUpgrade) return false;
-
-      const itemCategory = findRootType(c); // Mengembalikan 'WEAPON', 'ARMOR', dll.
+      const itemCategory = findRootType(c);
       const filterCategory = filter.replace('_UP', '');
-
       return itemCategory === filterCategory;
     });
   }
-  
   return res;
 });
 
@@ -302,65 +333,61 @@ const paginatedXtalls = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   return filteredFavs.value.slice(start, start + itemsPerPage);
 });
+
 const displayedPages = computed(() => {
   const total = totalPages.value;
   const current = currentPage.value;
-  const delta = 2; // Menampilkan 2 angka di kiri & 2 di kanan (Total 5 angka di tengah)
+  const delta = 2;
   const range = [];
   const rangeWithDots = [];
   let l;
 
-  // 1. Selalu sertakan halaman pertama
   range.push(1);
-
-  // 2. Hitung range di sekitar halaman aktif
   for (let i = current - delta; i <= current + delta; i++) {
-    if (i > 1 && i < total) {
-      range.push(i);
-    }
+    if (i > 1 && i < total) range.push(i);
   }
+  if (total > 1) range.push(total);
 
-  // 3. Selalu sertakan halaman terakhir
-  if (total > 1) {
-    range.push(total);
-  }
-
-  // 4. Masukkan Ellipsis (...) jika ada gap
   for (let i of range) {
     if (l) {
-      if (i - l === 2) {
-        rangeWithDots.push(l + 1);
-      } else if (i - l !== 1) {
-        rangeWithDots.push('...');
-      }
+      if (i - l === 2) rangeWithDots.push(l + 1);
+      else if (i - l !== 1) rangeWithDots.push('...');
     }
     rangeWithDots.push(i);
     l = i;
   }
-
   return rangeWithDots;
-});
-
-const visiblePages = computed(() => {
-  const maxVisible = 3; // Kurangi jumlah yang tampil di mobile
-  let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2));
-  let end = Math.min(totalPages.value, start + maxVisible - 1);
-
-  if (end - start < maxVisible - 1) {
-    start = Math.max(1, end - maxVisible + 1);
-  }
-
-  const pages = [];
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
-  return pages;
 });
 
 // --- ACTIONS ---
 const loadFavs = () => {
   const favIds = JSON.parse(localStorage.getItem('xtall_favs') || '[]');
   favoriteXtalls.value = crystalData.filter(c => favIds.includes(String(c.code)));
+};
+
+const showNotification = (msg, type = 'remove') => {
+  notification.value = { show: true, message: msg, type };
+  setTimeout(() => { notification.value.show = false; }, 4000);
+};
+
+const confirmRemove = (xtall) => {
+  xtallToRemove.value = xtall;
+};
+
+const executeRemove = () => {
+  if (!xtallToRemove.value) return;
+  
+  const removedName = xtallToRemove.value.name;
+  let favs = JSON.parse(localStorage.getItem('xtall_favs') || '[]');
+  favs = favs.filter(id => id !== String(xtallToRemove.value.code));
+  localStorage.setItem('xtall_favs', JSON.stringify(favs));
+  
+  loadFavs();
+  
+  // Panggil toast di sini dengan nama item asli
+  showNotification(`${removedName} has been removed from favorites!`, 'remove');
+  
+  xtallToRemove.value = null; 
 };
 
 const removeFav = (code) => {

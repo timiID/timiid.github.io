@@ -88,14 +88,14 @@ const router = useRouter();
 
 const other = [
   { 
-    name: 'EVENT GUIDE', 
+    name: 'Event Guide', 
     path: '/event', 
     icon: iconEvent, 
-    desc: 'Annual events & calendar overview.',
+    desc: 'Annual events & calendar overview (Note: generally during those months, although that is not entirely accurate).',
     color: 'from-yellow-500 to-orange-400'
   },
   { 
-    name: 'LEVELING GUIDE', 
+    name: 'Leveling Spot', 
     path: '/lvling', 
     icon: iconLeveling, 
     desc: 'Fast leveling strategies, best EXP spots, and efficient progression tips.',
@@ -184,87 +184,91 @@ const navigateTo = (path) => router.push(path);
   "Your ultimate companion for Toram Online adventures."
 </p>
 
-<p class="relative max-w-xl text-sm font-medium leading-relaxed italic uppercase tracking-widest mt-2
-          text-slate-900 dark:text-white">
+<p class="font-mono-code relative max-w-xl text-sm font-bold leading-relaxed uppercase tracking-widest mt-2
+          text-slate-900 dark:text-white
+          filter drop-shadow-[0_1px_5px_rgba(180,83,9,0.4)] dark:drop-shadow-[0_0_12px_rgba(34,211,238,0.6)]">
   © 2026
+  
+  <!-- Nama Brand (Link Aktif) -->
   <a href="https://timiid.github.io/" target="_blank"
-     class="font-black text-cyan-600 dark:text-cyan-400 hover:text-cyan-300
+     class="font-extrabold text-cyan-600 dark:text-cyan-400 hover:text-cyan-300
             [-webkit-text-stroke:_0.2px_white]
-            underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all">
+            underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all
+            drop-shadow-[0_1px_4px_rgba(146,64,14,0.5)] dark:drop-shadow-[0_0_10px_rgba(34,211,238,0.85)]">
     TIMI DB㋡
   </a>
-  <a class="relative max-w-xl text-sm font-bold leading-relaxed italic uppercase tracking-widest mt-2
-          text-slate-900 dark:text-white
-          [-webkit-text-stroke:_0.2px_white]
-          dark:[-webkit-text-stroke:_0.2px_black]">
+
+  <!-- Deskripsi Project -->
+  <span class="[-webkit-text-stroke:_0.0px_white] dark:[-webkit-text-stroke:_0.3px_black]
+               drop-shadow-[0_1px_4px_rgba(146,64,14,0.45)] dark:drop-shadow-[0_0_10px_rgba(34,211,238,0.75)]">
     Toram Online Digital Database Project
-  </a>
+  </span>
 </p>
 
-        <div class="relative space-y-1 mt-11">
+        <div class="relative space-y-1 mt-11 font-archivo">
   <div class="flex flex-col items-center text-center space-y-8 mt-1 pb-2">
     
     <!-- SECTION CONTRIBUTION -->
-    <div class="space-y-3 group/item">
-      <span :class="[
-  'inline-block px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] rounded-full transition-all duration-300',
-  isDark 
-    ? 'bg-gradient-to-r from-pink-600/25 via-purple-600/25 to-indigo-600/25 text-white shadow-[0_0_15px_rgba(168,85,247,0.2)] border border-purple-500/30' 
-    : 'bg-gradient-to-r from-pink-500/50 via-purple-500/50 to-cyan-500/50 text-black shadow-[0_0_10px_rgba(168,85,247,0.1)] border border-purple-400/25'
-]">
-  Contribution
-</span>
-      <a href="https://www.facebook.com/J7Timi" target="_blank" 
-         :class="[
-           'relative block font-black italic uppercase text-xl transition-all duration-300 tracking-tight text-transparent bg-clip-text',
-           isDark 
-             ? 'bg-gradient-to-r from-cyan-300 to-blue-400 hover:from-cyan-200 hover:to-purple-400' 
-             : 'bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-500 hover:to-purple-600'
-         ]">
-        TIMI
-        <span :class="[
-          'absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-[3px] transition-all duration-300 group-hover/item:w-12 rounded-full',
-          isDark 
-            ? 'bg-gradient-to-r from-pink-400 to-cyan-400' 
-            : 'bg-gradient-to-r from-pink-600 to-indigo-500'
-        ]"></span>
-      </a>
-    </div>
+<div class="space-y-1.5 group/item">
+  <span :class="[
+    'inline-block px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] rounded-full transition-all duration-300',
+    isDark 
+      ? 'bg-gradient-to-r from-pink-600/25 via-purple-600/25 to-indigo-600/25 text-white shadow-[0_0_15px_rgba(168,85,247,0.2)] border border-purple-500/30' 
+      : 'bg-gradient-to-r from-pink-500/50 via-purple-500/50 to-cyan-500/50 text-black shadow-[0_0_10px_rgba(168,85,247,0.1)] border border-purple-400/25'
+  ]">
+    Contribution
+  </span>
+  <a href="https://www.facebook.com/J7Timi" target="_blank" 
+     :class="[
+       'group relative flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5',
+       isDark 
+         ? 'border-white/20 bg-gradient-to-br from-purple-900/20 to-black/40 hover:from-purple-700/40 hover:to-white/10' 
+         : 'border-purple-300/50 bg-gradient-to-br from-white/60 to-purple-50/30 hover:from-white hover:to-purple-100/60 shadow-sm hover:shadow-md'
+     ]">
+    <span :class="[
+      'font-black uppercase text-base tracking-tight text-transparent bg-clip-text',
+      isDark 
+        ? 'bg-gradient-to-r from-cyan-300 to-blue-400 group-hover:from-cyan-200 group-hover:to-purple-400' 
+        : 'bg-gradient-to-r from-blue-700 to-indigo-700 group-hover:from-blue-500 group-hover:to-purple-600'
+    ]">
+      TIMI
+    </span>
+  </a>
+</div>
 
-    <!-- SECTION REFERENCE -->
-    <div class="space-y-3 group/item">
-      <span :class="[
-  'inline-block px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] rounded-full transition-all duration-300',
-  isDark 
-    ? 'bg-gradient-to-r from-amber-400/50 via-orange-500/50 to-rose-500/50 text- shadow-[0_0_15px_rgba(249,115,22,0.2)] border border-orange-500/30' 
-    : 'bg-gradient-to-r from-amber-500/25 via-orange-600/25 to-rose-600/25 text-black shadow-[0_0_10px_rgba(249,115,22,0.1)] border border-orange-400/25'
-]">
-  Reference
-</span>
-      <div class="flex flex-col items-center">
-        <a href="https://en.toram.jp/information/?type_code=update" target="_blank" 
-           :class="[
-             'relative font-black italic uppercase text-base transition-all duration-300 tracking-wide text-transparent bg-clip-text',
-             isDark 
-               ? 'bg-gradient-to-r from-amber-300 to-orange-400 hover:from-yellow-200 hover:to-rose-400' 
-               : 'bg-gradient-to-r from-orange-600 to-rose-700 hover:from-amber-500 hover:to-rose-500'
-           ]">
-          Toram Online Official Website
-          <span :class="[
-            'absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-[3px] transition-all duration-300 group-hover/item:w-24 rounded-full',
-            isDark 
-              ? 'bg-gradient-to-r from-amber-400 to-rose-400' 
-              : 'bg-gradient-to-r from-amber-500 to-rose-600'
-          ]"></span>
-        </a>
-        <p :class="[
-          'text-[9px] font-black uppercase tracking-[0.4em] mt-2',
-          isDark ? 'text-slate-300 opacity-100' : 'text-slate-900 opacity-100'
-        ]">
-          and Other Database Websites
-        </p>
-      </div>
-    </div>
+<!-- SECTION REFERENCE -->
+<div class="space-y-1.5 group/item">
+  <span :class="[
+    'inline-block px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] rounded-full transition-all duration-300',
+    isDark 
+      ? 'bg-gradient-to-r from-amber-400/50 via-orange-500/50 to-rose-500/50 text-white shadow-[0_0_15px_rgba(249,115,22,0.2)] border border-orange-500/30' 
+      : 'bg-gradient-to-r from-amber-500/25 via-orange-600/25 to-rose-600/25 text-black shadow-[0_0_10px_rgba(249,115,22,0.1)] border border-orange-400/25'
+  ]">
+    Reference
+  </span>
+  <a href="https://en.toram.jp/information/?type_code=update" target="_blank" 
+     :class="[
+       'group relative flex flex-col items-center gap-1 px-5 py-2.5 rounded-xl border backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5',
+       isDark 
+         ? 'border-white/20 bg-gradient-to-br from-orange-900/20 to-black/40 hover:from-orange-700/40 hover:to-white/10' 
+         : 'border-orange-300/50 bg-gradient-to-br from-white/60 to-orange-50/30 hover:from-white hover:to-orange-100/60 shadow-sm hover:shadow-md'
+     ]">
+    <span :class="[
+      'font-black uppercase text-sm tracking-wide text-transparent bg-clip-text',
+      isDark 
+        ? 'bg-gradient-to-r from-amber-300 to-orange-400 group-hover:from-yellow-200 group-hover:to-rose-400' 
+        : 'bg-gradient-to-r from-orange-600 to-rose-700 group-hover:from-amber-500 group-hover:to-rose-500'
+    ]">
+      Toram Online Official Website
+    </span>
+    <span :class="[
+      'text-[9px] font-black uppercase tracking-[0.4em]',
+      isDark ? 'text-slate-300 opacity-70' : 'text-slate-700 opacity-60'
+    ]">
+      and Other Database Websites
+    </span>
+  </a>
+</div>
 
           </div>
         </div>
@@ -316,14 +320,14 @@ const navigateTo = (path) => router.push(path);
 
   <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
     <div v-for="fav in favoriteXtalls" :key="fav.code"
-         @click="navigateTo(`/xtall/${fav.code}`)"
-        :class="[
-  'group relative overflow-hidden rounded-2xl border backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1',
-  isDark 
-    ? 'border-white/90 bg-gradient-to-br from-orange-600/50 to-white/5 hover:from-orange-300/75 hover:to-white/10' 
-    : 'border-b border-red-900 bg-gradient-to-br from-orange-500/10 to-white/20 to-yellow-300/50 hover:from-white hover:to-yellow-500/80 hover:to-orange-900/40 shadow-sm hover:shadow-md'
-]"
-  >
+     @click="navigateTo(`/xtall/${fav.code}`)"
+     :class="[
+       'group relative overflow-hidden rounded-2xl border backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1',
+       isDark 
+         ? 'border-zinc-800 bg-gradient-to-br from-zinc-900/20 via-zinc-900/40 to-amber-950/40 hover:from-zinc-800 hover:to-amber-900/60 shadow-inner'
+         : 'border-amber-100 bg-gradient-to-br from-orange-50 via-amber-50/50 to-amber-100/70 hover:from-orange-100/80 hover:to-amber-200/60 shadow-sm hover:shadow-md'
+     ]"
+>
      <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
           <img :src="getIconPath(fav.type)" class="w-7 h-7 object-contain drop-shadow-md" />
@@ -339,7 +343,7 @@ const navigateTo = (path) => router.push(path);
 
       <div class="w-full flex items-center gap-6 my-16 opacity-50">
         <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-blue-500 to-purple-500"></div>
-        <h2 class="font-black italic text-2xl tracking-tighter uppercase shrink-0">
+        <h2 class="font-archivo italic text-2xl tracking-tighter uppercase shrink-0">
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">MAIN GUIDES</span>
         </h2>
         <div class="h-[1px] flex-1 bg-gradient-to-r from-purple-500 via-red-500 to-transparent"></div>
@@ -364,7 +368,7 @@ const navigateTo = (path) => router.push(path);
 
       <div class="w-full flex items-center gap-6 my-16 opacity-50">
         <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-yellow-500 to-orange-500"></div>
-        <h2 class="font-black italic text-2xl tracking-tighter uppercase shrink-0">
+        <h2 class="font-archivo italic text-2xl tracking-tighter uppercase shrink-0">
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">OTHER GUIDES</span>
         </h2>
         <div class="h-[1px] flex-1 bg-gradient-to-r from-orange-500 via-red-500 to-transparent"></div>
@@ -392,6 +396,19 @@ const navigateTo = (path) => router.push(path);
 </template>
 
 <style scoped>
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
+.font-archivo {
+  font-family: 'Archivo Black', sans-serif;
+}
+
 .animate-gradient-xy {
   background-size: 200% 200%;
   animation: gradientXY 4s ease infinite;

@@ -33,6 +33,19 @@ onUnmounted(() => {
   }
 });
 
+// 3. DATA BUNGA (Flowers)
+const flowerColors = ['#f472b6', '#fb923c', '#a78bfa', '#60a5fa', '#fbbf24', '#f87171'];
+const flowers = Array.from({ length: 30 }, (_, i) => ({ 
+  id: i, 
+  size: Math.random() * 40 + 20 + 'px', 
+  top: Math.random() * 100 + '%',
+  left: Math.random() * 100 + '%', 
+  duration: Math.random() * 20 + 15 + 's', 
+  delay: Math.random() * -20 + 's',
+  rotate: Math.random() * 360 + 'deg',
+  color: flowerColors[i % flowerColors.length]
+}))
+
 // 3. DATA GELEMBUNG (Bubbles)
 const bubbles = Array.from({ length: 30 }, (_, i) => ({ 
   id: i, 
@@ -79,22 +92,32 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
     ></div>
 
     <div class="absolute inset-0 pointer-events-none z-[1] overflow-hidden hidden md:block">
-      <div v-for="bubble in bubbles" :key="'bubble-'+bubble.id" 
-        class="absolute rounded-full border border-white/20 backdrop-blur-[1px] animate-float opacity-30 bubble-glow" 
-        :style="{ 
-          width: bubble.size, 
-          height: bubble.size, 
-          top: bubble.top, 
-          left: bubble.left, 
-          animationDuration: bubble.duration, 
-          animationDelay: bubble.delay,
-          background: isDark 
-            ? 'radial-gradient(circle at 30% 30%, rgb(83, 112, 142), transparent)' 
-            : 'radial-gradient(circle at 30% 30%, rgba(201, 177, 241, 0.6), rgb(81, 139, 232))'
-        }">
-        <div class="absolute top-1/4 left-1/4 right-1/4 w-1/4 h-1/4 bg-white/40 rounded-full blur-[1px]"></div>
-      </div>
-    </div>
+  <div v-for="flower in flowers" :key="'flower-'+flower.id" 
+    class="absolute animate-float opacity-40"
+    :style="{ 
+      width: flower.size, 
+      height: flower.size, 
+      top: flower.top, 
+      left: flower.left, 
+      animationDuration: flower.duration, 
+      animationDelay: flower.delay,
+      transform: `rotate(${flower.rotate})`
+    }">
+    <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+      <g :fill="flower.color" :opacity="isDark ? 0.5 : 0.65">
+        <ellipse cx="50" cy="25" rx="14" ry="22" />
+        <ellipse cx="50" cy="75" rx="14" ry="22" />
+        <ellipse cx="25" cy="50" rx="22" ry="14" />
+        <ellipse cx="75" cy="50" rx="22" ry="14" />
+        <ellipse cx="32" cy="32" rx="14" ry="22" transform="rotate(45 32 32)" />
+        <ellipse cx="68" cy="68" rx="14" ry="22" transform="rotate(45 68 68)" />
+        <ellipse cx="68" cy="32" rx="14" ry="22" transform="rotate(-45 68 32)" />
+        <ellipse cx="32" cy="68" rx="14" ry="22" transform="rotate(-45 32 68)" />
+      </g>
+      <circle cx="50" cy="50" r="12" fill="#fde68a" :opacity="isDark ? 0.6 : 0.8" />
+    </svg>
+  </div>
+</div>
 
     <!-- NAVBAR -->
     <Navbar :isDark="isDark" @toggleDark="$emit('toggleDark')" />
