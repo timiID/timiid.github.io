@@ -202,39 +202,70 @@ const navigateTo = (path) => router.push(path);
 </p>
 
         <div class="relative space-y-1 mt-11">
-          <div class="flex flex-col items-center text-center space-y-6 mt-1 pb-2">
-            <div class="space-y-1">
-              <p class="text-[14px] font-black uppercase tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-amber-400 to-orange-600 to-red-800 dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400
-              [-webkit-text-stroke:_0.2px_black]
-          dark:[-webkit-text-stroke:_0.2px_white]">
-                Contribution
-              </p>
-              <a href="https://www.facebook.com/J7Timi" target="_blank" 
-                 class="block font-black italic uppercase transition-all duration-300 text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-blue-600/30
-                 [-webkit-text-stroke:_0.2px_black]
-          dark:[-webkit-text-stroke:_0.2px_white]">
-                TIMI
-              </a>
-            </div>
+  <div class="flex flex-col items-center text-center space-y-8 mt-1 pb-2">
+    
+    <!-- SECTION CONTRIBUTION -->
+    <div class="space-y-3 group/item">
+      <span :class="[
+  'inline-block px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] rounded-full transition-all duration-300',
+  isDark 
+    ? 'bg-gradient-to-r from-pink-600/25 via-purple-600/25 to-indigo-600/25 text-white shadow-[0_0_15px_rgba(168,85,247,0.2)] border border-purple-500/30' 
+    : 'bg-gradient-to-r from-pink-500/50 via-purple-500/50 to-cyan-500/50 text-black shadow-[0_0_10px_rgba(168,85,247,0.1)] border border-purple-400/25'
+]">
+  Contribution
+</span>
+      <a href="https://www.facebook.com/J7Timi" target="_blank" 
+         :class="[
+           'relative block font-black italic uppercase text-xl transition-all duration-300 tracking-tight text-transparent bg-clip-text',
+           isDark 
+             ? 'bg-gradient-to-r from-cyan-300 to-blue-400 hover:from-cyan-200 hover:to-purple-400' 
+             : 'bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-500 hover:to-purple-600'
+         ]">
+        TIMI
+        <span :class="[
+          'absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-[3px] transition-all duration-300 group-hover/item:w-12 rounded-full',
+          isDark 
+            ? 'bg-gradient-to-r from-pink-400 to-cyan-400' 
+            : 'bg-gradient-to-r from-pink-600 to-indigo-500'
+        ]"></span>
+      </a>
+    </div>
 
-            <div class="space-y-1">
-              <p class="text-[14px] font-black uppercase tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-b from-amber-400 to-orange-600 to-red-800 dark:from-yellow-100 dark:to-amber-300 dark:to-orange-400
-              [-webkit-text-stroke:_0.2px_black]
-          dark:[-webkit-text-stroke:_0.2px_white]">
-                Reference
-              </p>
-              <div class="flex flex-col items-center">
-                <a href="https://en.toram.jp/information/?type_code=update" target="_blank" 
-                   class="font-black italic uppercase transition-all duration-300 text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-blue-600/30
-                   [-webkit-text-stroke:_0.2px_black]
-          dark:[-webkit-text-stroke:_0.2px_white]">
-                  Toram Online Official Website
-                </a>
-                <p class="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 dark:opacity-50 mt-1">
-                  and Other Database Websites
-                </p>
-              </div>
-            </div>
+    <!-- SECTION REFERENCE -->
+    <div class="space-y-3 group/item">
+      <span :class="[
+  'inline-block px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] rounded-full transition-all duration-300',
+  isDark 
+    ? 'bg-gradient-to-r from-amber-400/50 via-orange-500/50 to-rose-500/50 text- shadow-[0_0_15px_rgba(249,115,22,0.2)] border border-orange-500/30' 
+    : 'bg-gradient-to-r from-amber-500/25 via-orange-600/25 to-rose-600/25 text-black shadow-[0_0_10px_rgba(249,115,22,0.1)] border border-orange-400/25'
+]">
+  Reference
+</span>
+      <div class="flex flex-col items-center">
+        <a href="https://en.toram.jp/information/?type_code=update" target="_blank" 
+           :class="[
+             'relative font-black italic uppercase text-base transition-all duration-300 tracking-wide text-transparent bg-clip-text',
+             isDark 
+               ? 'bg-gradient-to-r from-amber-300 to-orange-400 hover:from-yellow-200 hover:to-rose-400' 
+               : 'bg-gradient-to-r from-orange-600 to-rose-700 hover:from-amber-500 hover:to-rose-500'
+           ]">
+          Toram Online Official Website
+          <span :class="[
+            'absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-[3px] transition-all duration-300 group-hover/item:w-24 rounded-full',
+            isDark 
+              ? 'bg-gradient-to-r from-amber-400 to-rose-400' 
+              : 'bg-gradient-to-r from-amber-500 to-rose-600'
+          ]"></span>
+        </a>
+        <p :class="[
+          'text-[9px] font-black uppercase tracking-[0.4em] mt-2',
+          isDark ? 'text-slate-300 opacity-100' : 'text-slate-900 opacity-100'
+        ]">
+          and Other Database Websites
+        </p>
+      </div>
+    </div>
+
           </div>
         </div>
       </div>
@@ -243,35 +274,33 @@ const navigateTo = (path) => router.push(path);
     <div class="w-full max-w-6xl px-4 flex flex-col items-center relative z-10">
       
       <div v-if="favoriteXtalls && favoriteXtalls.length > 0" class="w-full mb-12 animate-slide-up">
-        <div class="grid grid-cols-2 md:grid-cols-2 gap-4 items-center mb-8 px-2">
-  
-  <div class="max-w-[200px] flex items-center gap-4 px-3 py-2 border-b-4 border-rose-500/50 
-            bg-gradient-to-r from-white/90 to-white/5
-            dark:from-slate-800/30 dark:to-slate-950/5 
-            [box-shadow:0_4px_15px_-4px_rgba(244,63,94,0.5)]">
-    <h2 
-      :class="[
-        'font-black italic text-xl tracking-tighter uppercase transition-all duration-300',
-        isDark 
-          ? 'text-transparent border-b-6 border-rose-200/50 bg-clip-text bg-gradient-to-l from-yellow-400 to-pink-300 to-pink-600 [text-shadow:0_0_15px_rgba(244,63,94,0.4)]' 
-          : 'text-transparent border-b-6 border-rose-700 bg-clip-text bg-gradient-to-l from-pink-900 to-pink-600 to-yellow-500 [text-shadow:0_0_10px_rgba(244,63,94,0.2)]'
-      ]"
-    >
-      Your Favorites
-    </h2>
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-8 px-2">
 
-    <span 
-      :class="[
-        'font-black italic text-xl tracking-tighter uppercase transition-all duration-300',
-        isDark ? 'text-yellow-400/90' : 'text-orange-900/90'
-      ]"
-    >
-      >>
-    </span>
-    <div class="h-[2px] w-24 bg-gradient-to-r from-rose-500 to-transparent opacity-30"></div>
-  </div>
+    <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl border-b-4 border-rose-500/50 
+              bg-gradient-to-r from-white/90 to-white/5
+              dark:from-slate-800/30 dark:to-slate-950/5 
+              [box-shadow:0_4px_15px_-4px_rgba(244,63,94,0.5)]">
+      <h2 
+        :class="[
+          'font-black italic text-xl tracking-tighter uppercase transition-all duration-300',
+          isDark 
+            ? 'text-transparent bg-clip-text bg-gradient-to-l from-yellow-400 to-pink-300 to-pink-600 [text-shadow:0_0_15px_rgba(244,63,94,0.4)]' 
+            : 'text-transparent bg-clip-text bg-gradient-to-l from-pink-900 to-pink-600 to-yellow-500 [text-shadow:0_0_10px_rgba(244,63,94,0.2)]'
+        ]"
+      >
+        Your Favorites
+      </h2>
 
-  <div class="justify-self-end">
+      <span 
+        :class="[
+          'font-black italic text-xl tracking-tighter uppercase transition-all duration-300',
+          isDark ? 'text-yellow-400/90' : 'text-orange-900/90'
+        ]"
+      >
+        >>
+      </span>
+    </div>
+
     <button @click="navigateTo('/favorite')" 
             :class="[
               'group flex items-center gap-2 px-5 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all duration-300 shadow-lg active:scale-95',
@@ -282,33 +311,31 @@ const navigateTo = (path) => router.push(path);
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 7l5 5m0 0l-5 5m5-5H6" />
       </svg>
     </button>
+
   </div>
 
-</div>
-
-        <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
-          <div v-for="fav in favoriteXtalls" :key="fav.code"
-               @click="navigateTo(`/xtall/${fav.code}`)"
-              :class="[
-    'group relative overflow-hidden rounded-2xl border backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1',
-    isDark 
-      ? 'border-white/90 bg-gradient-to-br from-blue-900/50 to-white/5 hover:from-blue-300/75 hover:to-white/10' 
-      : 'border-b border-red-900 bg-gradient-to-br from-orange-500/10 to-white/20 to-yellow-300/50 hover:from-white hover:to-yellow-500/80 hover:to-orange-900/40 shadow-sm hover:shadow-md'
-  ]"
->
-
-               <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <img :src="getIconPath(fav.type)" class="w-7 h-7 object-contain drop-shadow-md" />
-              </div>
-              <div class="text-left overflow-hidden">
-                <h4 class="text-[11px] font-black uppercase tracking-tight truncate">{{ fav.name }}</h4>
-                <p class="text-[8px] opacity-40 font-bold uppercase tracking-widest">{{ fav.type }}</p>
-              </div>
-            </div>
-          </div>
+  <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div v-for="fav in favoriteXtalls" :key="fav.code"
+         @click="navigateTo(`/xtall/${fav.code}`)"
+        :class="[
+  'group relative overflow-hidden rounded-2xl border backdrop-blur-md p-4 cursor-pointer transition-all duration-300 hover:-translate-y-1',
+  isDark 
+    ? 'border-white/90 bg-gradient-to-br from-orange-600/50 to-white/5 hover:from-orange-300/75 hover:to-white/10' 
+    : 'border-b border-red-900 bg-gradient-to-br from-orange-500/10 to-white/20 to-yellow-300/50 hover:from-white hover:to-yellow-500/80 hover:to-orange-900/40 shadow-sm hover:shadow-md'
+]"
+  >
+     <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <img :src="getIconPath(fav.type)" class="w-7 h-7 object-contain drop-shadow-md" />
+        </div>
+        <div class="text-left overflow-hidden">
+          <h4 class="text-[11px] font-black uppercase tracking-tight truncate">{{ fav.name }}</h4>
+          <p class="text-[8px] opacity-40 font-bold uppercase tracking-widest">{{ fav.type }}</p>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 
       <div class="w-full flex items-center gap-6 my-16 opacity-50">
         <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-blue-500 to-purple-500"></div>
@@ -365,6 +392,20 @@ const navigateTo = (path) => router.push(path);
 </template>
 
 <style scoped>
+.animate-gradient-xy {
+  background-size: 200% 200%;
+  animation: gradientXY 4s ease infinite;
+}
+
+@keyframes gradientXY {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 1s ease-out forwards;
 }

@@ -133,7 +133,7 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
 }
 
 .bg-mesh-dark {
-  background-color: #020617;
+  background-color: #303c72;
   background-image: radial-gradient(at 0% 0%, #1e1b4b 0, transparent 50%), 
                     radial-gradient(at 100% 0%, #450a0a 0, transparent 50%), 
                     radial-gradient(at 100% 100%, #3b0764 0, transparent 50%);
