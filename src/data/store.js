@@ -172,6 +172,7 @@ export const crystalData = [
           link: null,
           name: "Gerumi",
           type: "NORMAL",
+          eventLabel: "Alchemia Story x Toram Online Collaboration Event!",
           view: `\nMaxHP +200\nMaxMP +100`,
         },
         {
@@ -325,8 +326,9 @@ export const crystalData = [
           code: 48,
           link: null,
           type: "NORMAL",
-          name: "",
-          view: `\n`,
+          name: "Wainhorn",
+          eventLabel: "Rainy Season Event",
+          view: `\nCritical Rate +10\nResistensi Status Buruk +6%\nMotion Speed +2%\nMaxHP -20%`,
         },
         {
           code: 49,
@@ -992,6 +994,7 @@ export const crystalData = [
           link: 208,
           type: "UPGRADE",
           name: "Eripmav",
+          eventLabel: "Halloween Event",
           view: `\nAttack MP Recovery +18\nKebal Api +12%\nCritical Damage +6`,
         },
         {
@@ -1216,6 +1219,7 @@ export const crystalData = [
           link: 468,
           type: "UPGRADE",
           name: "Jeila",
+          eventLabel: "Halloween Event",
           view: `\nAttack MP Recovery +6\nKebal Api +4%\nCritical Damage +2`,
         },
         {
@@ -1447,6 +1451,7 @@ export const crystalData = [
           link: 259,
           type: "UPGRADE",
           name: "Neewollah",
+          eventLabel: "Halloween Event",
           view: `\nAttack MP Recovery +15\nKebal Api +10%\nCritical Damage +5`,
         },
         {
@@ -1489,6 +1494,7 @@ export const crystalData = [
           link: 367,
           type: "UPGRADE",
           name: "Yuveria",
+          eventLabel: "Summer Event",
           view: `\nMaxMP+300\nKekebalan Fisik +3%\nKekebalan Sihir +3%\nDaya Jarak Dekat +6%\nAggro -15%`,
         },
         {
@@ -1552,6 +1558,7 @@ export const crystalData = [
           link: 456,
           type: "UPGRADE",
           name: "Alfenix",
+          eventLabel: "White Day Event",
           view: `\n.ATK +3%\nPhysical Pierce +10%\nMaxHP +18%\nAggro -15%`,
         },
         {
@@ -1559,6 +1566,7 @@ export const crystalData = [
           link: 223,
           type: "UPGRADE",
           name: "Zuccoto Goblin",
+          eventLabel: "White Day Event",
           view: `\n.ATK 10%\nPhysical Pierce +10%\nMaxHP +24%\nAggro -15%\nDengan Perisai:\nMotion speed +1%`,
         },
         {
@@ -1804,6 +1812,7 @@ export const crystalData = [
           link: 276,
           type: "UPGRADE",
           name: "Zarth",
+          eventLabel: "Halloween Event",
           view: `\nAttack MP Recovery +12\nKebal Api +8%\nCritical Damage +4`,
         },
         {
@@ -1867,6 +1876,7 @@ export const crystalData = [
           link: 479,
           type: "UPGRADE",
           name: "Candela II",
+          eventLabel: "White Day Event",
           view: `\nMaxHP +20%\nMaxMP -250\nASPD +600`,
         },
         {
@@ -1923,6 +1933,7 @@ export const crystalData = [
           link: 175,
           type: "UPGRADE",
           name: "Zoe",
+          eventLabel: "Halloween Event",
           view: `\nAttack MP Recovery +9\nKebal Api +6%\nCritical Damage +3`,
         },
         {
@@ -1979,6 +1990,7 @@ export const crystalData = [
           link: 317,
           type: "UPGRADE",
           name: "Fubbit",
+          eventLabel: "Tsukimi Event",
           view: `\n.ATK +6%\nPhysical Pierce +20%\nAggro -15%\nResistansi Status Buruk -15%\nMaxMP -200`,
         },
         {
@@ -2210,6 +2222,7 @@ export const crystalData = [
           link: null,
           type: "WEAPON",
           name: "Dango Iblis",
+          eventLabel: "Tsukimi Event",
           view: `\n.ATK +4%\nPhysical Pierce +20%\nAggro -10%\nResistansi Status Buruk -15%\nMaxMP -200`,
         },
         {
@@ -2273,6 +2286,7 @@ export const crystalData = [
           link: null,
           type: "WEAPON",
           name: "Stormun",
+          eventLabel: "Summer Event",
           view: `\n.ATK +5%\nMATK +5%\nDaya Jarak Dekat +5%\nASPD +5%\nDengan Pedang Ganda :\nMotion Speed +2%\nMaxHP -9%\nDengan Pesawat Sihir:\nINT +5%`,
         },
         {
@@ -2490,6 +2504,7 @@ export const crystalData = [
           link: null,
           type: "ARMOR",
           name: "Sibylares",
+          eventLabel: "Halloween Event",
           view: `\n.ATK +5%\nMATK +5%\nPhysical Pierce +5%\nPeneterasi Sihir +5%\nCritical Rate +15\nMaxMP -100`,
         },
         {
@@ -2504,6 +2519,7 @@ export const crystalData = [
           link: 357,
           type: "UPGRADE",
           name: "Bemoz",
+          eventLabel: "Halloween Event",
           view: `\nMaxMP -150\n.ATK 6%\nMATK +6%\nPhysical Pierce +8%\nPeneterasi Sihir +8%\nCritical Rate +17`,
         },
         {
@@ -2735,6 +2751,7 @@ export const crystalData = [
           link: null,
           type: "SPECIAL",
           name: "Naga Terong Auvio",
+          eventLabel: "Autumn Event",
           view: `\nMaxMP +300\nDaya Jarak Dekat +4%\nASPD +500\nDaya Jarak Jauh -12%\nDengan Kitab Ninjutsu:\nSerangan Menghunus +5%\nCritical Rate +5`,
         },
         {
@@ -2805,6 +2822,7 @@ export const crystalData = [
           link: null,
           type: "SPECIAL",
           name: "Zeagrysta",
+          eventLabel: "Summer Event",
           view: `\nStability +2%\nKekebalan Fisik +3%\nKekebalan Sihir +3%\nDaya Jarak Dekat +2%\nMaxMP -100\nDengan Perisai:\nResistansi Status Buruk +5%`,
         },
         {
@@ -2847,6 +2865,7 @@ export const crystalData = [
           link: null,
           type: "SPECIAL",
           name: "Dewa Mesin Maple",
+          eventLabel: "Bofuri: I Don't Want to Get Hurt, so I'll Max Out My Defense Season 2 x Toram Online Collab Event",
           view: `\nMaxMP +200\nKekebalan Fisik +10%\nKekebalan Sihir +10%\nDaya Jarak Dekat +10%\nResistansi Status Buruk +5%\nPelindung Fraksional +5%\nDengan Zirah Berat:\nKekebalan Fisik +5%\nKekebalan Sihir +5%\nResistansi Status Buruk +10%`,
         },
         {
@@ -3036,6 +3055,7 @@ export const crystalData = [
           link: null,
           type: "ADDITIONAL",
           name: "Fallburrows",
+          eventLabel: "Summer Event",
           view: `\nDaya Jarak Jauh +9%\nMaxMP +200\nDodge +10%\nDodge Absolut +5%\nDengan Bowgun:\nDaya Jarak Dekat +9%`,
         },
         {
@@ -3043,6 +3063,7 @@ export const crystalData = [
           link: null,
           type: "ADDITIONAL",
           name: "Magi Filecia",
+          eventLabel: "White Day Event",
           view: `\nMATK +9%\nINT +3%\nStability +6%\nDengan Tongkat:\nGuard Break +10%\nDengan Pesawat Sihir:\nReduksi DMG (Bowling) +20%`,
         },
         {
@@ -3085,6 +3106,7 @@ export const crystalData = [
           link: null,
           type: "ADDITIONAL",
           name: "Lefina Jahat",
+          eventLabel: "White Day Event",
           view: `\n.ATK +8%\nPhysical Pierce +10%\nCritical Rate +12\nMATK -4%\nKekebalan Fisik -20%\nDengan Zirah Berat:\nKekebalan Fisik +24%`,
         },
         {
@@ -3105,8 +3127,8 @@ export const crystalData = [
           code: 445,
           link: null,
           type: "ADDITIONAL",
-          name: "",
-          view: `\n`,
+          name: "Ponier",
+          view: `\nDrop Rate +1%`,
         },
         {
           code: 446,
@@ -3134,6 +3156,7 @@ export const crystalData = [
           link: null,
           type: "ADDITIONAL",
           name: "Adaro",
+          eventLabel: "Summer Event",
           view: `\nMATK +6%\nCritical Damage +6\nMaxHP +1000\nDengan Zirah Berat:\nAggro +10%`,
         },
         {
@@ -3141,14 +3164,15 @@ export const crystalData = [
           link: null,
           type: "ADDITIONAL",
           name: "Mercy",
+          eventLabel: "White Day Event",
           view: `\nCritical Rate +15\nAggro -15%`,
         },
         {
           code: 451,
           link: null,
           type: "ADDITIONAL",
-          name: "",
-          view: `\n`,
+          name: "Ophy",
+          view: `\nDrop Rate +1%`,
         },
         {
           code: 452,
@@ -3182,6 +3206,7 @@ export const crystalData = [
           code: 456,
           link: null,
           type: "ADDITIONAL",
+          eventLabel: "White Day Event",
           name: "Biskuit Buatan Tangan",
           view: `\nPhysical Pierce +10%\nMaxHP +12%\nAggro -15%`,
         },
@@ -3189,8 +3214,9 @@ export const crystalData = [
           code: 457,
           link: null,
           type: "ADDITIONAL",
-          name: "",
-          view: `\n`,
+          name: "Aba",
+          eventLabel: "Summer Event 2026",
+          view: `\nDaya Jarak Dekat +12%\nGuard Break +15%\nDengan Perisai:\nAggro +15%`,
         },
         {
           code: 458,
@@ -3267,6 +3293,7 @@ export const crystalData = [
           link: null,
           type: "ADDITIONAL",
           name: "Pumpking",
+          eventLabel: "Halloween Event",
           view: `\nCritical Damage +1\nKebal Api +2%\nAttack MP Recovery +3`,
         },
         {
@@ -3344,6 +3371,7 @@ export const crystalData = [
           link: null,
           type: "ADDITIONAL",
           name: "Candela",
+          eventLabel: "White Day Event",
           view: `\nMaxHP +10%\nMaxMP -200\nASPD +500`,
         },
         {
@@ -3386,6 +3414,7 @@ export const crystalData = [
           link: 26,
           type: "UPGRADE",
           name: "Gerumi Kuat",
+          eventLabel: "Alchemia Story x Toram Online Collaboration Event!",
           view: `\nMaxHP +400\nMaxMP +200\nStability +2%\nAccuracy +2%\nCritical Rate +4`,
         },
         {
@@ -3400,6 +3429,7 @@ export const crystalData = [
           link: null,
           type: "ARMOR",
           name: "Bangrudom",
+          eventLabel: "White Day Event",
           view: `\n.ATK +10%\nMATK +10%\nASPD +10%\nCSPD +10%\nMaxHP -20%\nDengan Perisai\nDex +5%\nDengan ZIrah Ringan\nPeneterasi SIhir +5%`,
         },
         {
@@ -3484,6 +3514,7 @@ export const crystalData = [
           link : null,
           type: "ADDITIONAL",
           name: "Jibril",
+          eventLabel: "NO GAME NO LIFE x Toram Online Collaboration Event",
           view: `\nDaya Jarak Dekat +3%\nDaya Jarak Jauh +5%\nMaxMP +100\nCritical Rate +8\nAntisipasi +1%\nNatural MP Regen +2\nNatural MP Regen +4%`,
         },
         {
@@ -3491,6 +3522,7 @@ export const crystalData = [
           link : 499,
           type: "UPGRADE",
           name: "Jibril II",
+          eventLabel: "NO GAME NO LIFE x Toram Online Collaboration Event",
           view: `\nDaya Jarak Dekat +6%\nDaya Jarak Jauh +8%\nMaxMP +100\nCritical Rate +12\nAntisipasi +2%\nNatural MP Regen +4\nNatural MP Regen +8%`,
         },
         {
@@ -3498,6 +3530,7 @@ export const crystalData = [
           link : 500,
           type: "UPGRADE",
           name: "Jibril III",
+          eventLabel: "NO GAME NO LIFE x Toram Online Collaboration Event",
           view: `\nDaya Jarak Dekat +9%\nDaya Jarak Jauh +11%\nMaxMP +100\nCritical Rate +16\nAntisipasi +3%\nNatural MP Regen +6\nNatural MP Regen +12%`,
         },
         {
@@ -3673,6 +3706,7 @@ export const crystalData = [
           link: 442,
           type: "UPGRADE",
           name: "Sanmurbon",
+          eventLabel: "White Day Event",
           view: `\n.ATK +12%\nPhysical Pierce +10%\nCritical Rate +16\nMATK -4%\nKekebalan Fisik -20%\nDengan Zirah Berat:\nKekebalan Fisik +24%`,
         },   
         {
@@ -3736,6 +3770,7 @@ export const crystalData = [
           link: null,
           type: "ARMOR",
           name: "Arnold",
+          eventLabel: "Let This Grieving Soul Retire! x Toram Online Collaboration Event 2026",
           view: `\n.ATK +5%\nMATK +5%\nDaya Jarak Dekat +5%\nCritical Rate +15\nCritical Rate +15%\nMaxHP +5000\nAntisipasi +10%\nMotion Speed +2%\nDengan Pedang 2 Tangan:\nAntisipasi +10%`,
         },
         {
@@ -3743,6 +3778,7 @@ export const crystalData = [
           link: 534,
           type: "UPGRADE",
           name: "Arnold II",
+          eventLabel: "Let This Grieving Soul Retire! x Toram Online Collaboration Event 2026",
           view: `\n.ATK +6%\nMATK +6%\nDaya Jarak Dekat +6%\nCritical Rate +15\nCritical Rate +15%\nMaxHP +6000\nAntisipasi +10%\nMotion Speed +2%\nDengan Pedang 2 Tangan:\nAntisipasi +10%`,
         },
         {
@@ -3750,8 +3786,47 @@ export const crystalData = [
           link: 535,
           type: "UPGRADE",
           name: "Petir Penghancur Raya",
+          eventLabel: "Let This Grieving Soul Retire! x Toram Online Collaboration Event 2026",
           view: `\n.ATK +7%\nMATK +7%\nDaya Jarak Dekat +7%\nCritical Rate +15\nCritical Rate +15%\nMaxHP +7000\nAntisipasi +10%\nMotion Speed +2%\nDengan Pedang 2 Tangan:\nAntisipasi +10%`,
-        }
+        },
+        {
+          code: 537,
+          link: 351,
+          type: "UPGRADE",
+          name: "Colon Melara",
+          eventLabel: "11th Anniversary Event",
+          view: `\nDaya Jarak Dekat +12%\nCSPD +1000\nMaxMP -20%`,
+        },
+        {
+          code: 538,
+          link: 343,
+          type: "UPGRADE",
+          name: "Pawang Hantu Usan",
+          eventLabel: "11th Anniversary Event",
+          view: `\nMATK +12%\nTambahan Sihir +125%\nASPD +200\nPelindung Sihir +200`,
+        },
+        {
+          code: 539,
+          link: 400,
+          type: "UPGRADE",
+          name: "Leomino",
+          view: `\nAttack Mp Recovery +8\nVIT +7%\nResistensi Status Buruk +5%\nDengan Perisai:\nAggro +15%`,
+        },
+        {
+          code: 540,
+          link: 489,
+          type: "UPGRADE",
+          name: "Kipina",
+          view: `\nMATK +12%\nPeneterasi Sihir +8%\nAggro -13%\nMDEF -36%`,
+        },
+        {
+          code: 541,
+          link: 404,
+          type: "UPGRADE",
+          name: "Potum Duyung",
+          eventLabel: "Summer Event 2026",
+          view: `\nMaxHP +1500\nMaxMP +300\nAttack MP Recovery +15`,
+        },
       ];
       
       import iconNormal from '@/assets/icons/crysta_normal.jpg'

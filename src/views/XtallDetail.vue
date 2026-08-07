@@ -60,7 +60,22 @@
           <div>
             <p :class="['text-xs font-black uppercase tracking-[0.4em] mb-2 drop-shadow-sm', getLabelColor(xtall.name)]">
               {{ formatBadgeText(xtall.type) }}
-            </p>            
+            </p>
+            <div v-if="xtall.eventLabel" class="mb-4">
+  <span :class="[
+    'inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wide px-4 py-1.5 rounded-full border shadow-sm',
+    isDark
+      ? 'bg-amber-500/15 text-amber-200 border-amber-500/20'
+      : 'bg-amber-500/10 text-amber-700 border-amber-500/20'
+  ]">
+  <span class="inline-flex items-center justify-center p-1 bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20">
+  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/>
+  </svg>
+</span> Event : 
+    {{ xtall.eventLabel }}
+  </span>
+</div>
             <h1 :class="[
     'text-4xl md:text-6xl lg:text-7xl font-[1000] tracking-tighter italic uppercase leading-[0.9] mb-4 drop-shadow-2xl transition-all duration-500 break-words max-w-full', 
     getLabelColor(xtall.type), 

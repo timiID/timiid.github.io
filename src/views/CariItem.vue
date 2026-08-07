@@ -43,12 +43,17 @@
   :class="['absolute left-0 right-0 z-[100] mt-1.5 rounded-xl border shadow-xl overflow-hidden',
     isDark ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-800']"
 >
-              <div :class="['flex items-center justify-between px-4 py-2.5 border-b',
+              <div :class="['flex items-center justify-between px-4 py-2.5 border-b gap-3',
                 isDark ? 'border-white/5' : 'border-slate-100']">
-                <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">Recent searches</span>
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-500/15 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">
+                    ⏱
+                  </span>
+                  <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">Recent searches</span>
+                </div>
                 <button @click.stop="clearSearchLogs" class="text-[10px] font-bold text-red-400 hover:text-red-300">Clear</button>
               </div>
-              <ul class="m-0 p-0 list-none max-h-[100px] overflow-y-auto">
+              <ul class="m-0 p-0 list-none max-h-[120px] overflow-y-auto">
                 <li
                   v-for="(log, idx) in displayedSearchLogs" :key="idx"
                   @click="pilihHistory(log)"
@@ -143,7 +148,16 @@
               <span :class="['text-[11px] font-medium px-1.5 py-0.5 rounded font-mono',
                 isDark ? 'text-slate-500 bg-white/5' : 'text-slate-400 bg-slate-200']">#{{ item.id }}</span>
             </div>
-            <span :class="['inline-block mt-1.5 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded',
+            <div v-if="getEventLabel(item)" :class="['inline-flex flex-wrap items-center gap-2 mt-2', isDark ? 'text-slate-200' : 'text-slate-700']">
+              <span :class="['text-[10px] font-black uppercase tracking-[0.25em] px-2 py-1 rounded-full',
+                isDark ? 'bg-rose-500/15 text-rose-300 border border-rose-500/15' : 'bg-rose-100 text-rose-700 border border-rose-200']">
+                EVENT
+              </span>
+              <span class="text-[11px] font-semibold uppercase tracking-wide">
+                {{ getEventLabel(item).replace('EVENT: ', '') }}
+              </span>
+            </div>
+            <span :class="['inline-block mt-3 text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded',
               isDark ? 'bg-[#3498db]/15 text-[#3498db]' : 'bg-blue-100 text-blue-700']">
               {{ item.type_label ? item.type_label.replace('[','').replace(']','') : 'Unknown' }}
             </span>
@@ -684,6 +698,18 @@ const paginasiClass = computed(() => [
 const dapatkanNamaMaterial = (id) => {
   if (id === -1) return 'None'
   return { 1:'Beast', 2:'Wood', 3:'Metal', 4:'Cloth', 5:'Medicine', 6:'Mana' }[id] || `Type ${id}`
+}
+
+const getEventLabel = (item) => {
+  const note = item?.meta?.note
+  if (!note || !/event/i.test(note)) return null
+
+  let label = note.trim().replace(/[.]+$/g, '')
+  if (/event/i.test(label)) {
+    label = label.replace(/event[:\s]*/gi, '').trim()
+  }
+  if (!label) return null
+  return `EVENT: ${label.toUpperCase()}`
 }
 
 // Fungsi kamus untuk menerjemahkan angka applies_to 

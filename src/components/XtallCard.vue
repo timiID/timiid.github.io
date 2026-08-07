@@ -87,6 +87,17 @@
   <span :class="['text-[9px] font-[1000] px-4 py-1.5 rounded-full ring-1 uppercase tracking-tighter', badgeColorClass, isDark ? 'text-white' : 'text-slate-900']">
     {{ xtall.type }}
   </span>
+  <span
+    v-if="xtall.eventLabel"
+    :class="[
+      'text-[9px] font-[1000] px-3 py-1 rounded-full ring-1 uppercase tracking-tighter whitespace-nowrap',
+      isDark
+        ? 'bg-sky-500/15 text-sky-200 ring-sky-500/20'
+        : 'bg-sky-500/10 text-sky-700 ring-sky-500/20'
+    ]"
+  >
+    {{ xtall.eventLabel }}
+  </span>
   
   <div class="flex items-center gap-3">
   <div v-if="!props.hideFavorite" class="relative group">
