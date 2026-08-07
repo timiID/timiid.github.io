@@ -73,6 +73,8 @@
         :class="['w-full pl-14 pr-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm transition-all', 
         isDark ? 'bg-[#0f172a] border-white/5 focus:border-cyan-500 text-white placeholder-slate-600' : 'bg-white border-slate-200 focus:border-cyan-500']">
 
+    
+
     <div 
       v-if="displayedSearchLogs.length > 0 && isHistoryOpen && !isMobile" 
         class="absolute left-0 right-0 z-20 mt-2 rounded-3xl border-2 shadow-2xl backdrop-blur-xl overflow-hidden"
@@ -312,10 +314,9 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
-import { useRouter } from 'vue-router' // TAMBAHKAN INI
+import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
-import { crystalData, CrystalType } from '../data/store.js';
+import { crystalData } from '../data/store.js';
 
 // Crysta Biasa
 import normalCrystas from "@/assets/icons/crysta_normal.jpg";
@@ -332,7 +333,19 @@ import weaponEnhancerCrystas from "@/assets/icons/enhance_weapon_crysta.png";
 import armorEnhancerCrystas from "@/assets/icons/enhance_armor_crysta.png";
 import additionalEnhancerCrystas from "@/assets/icons/enhance_additional_crysta.png";
 import specialEnhancerCrystas from "@/assets/icons/enhace_special_crysta.png";
- import { parseXtallStats } from '@/utils/parseXtallStats'
+import { parseXtallStats } from '@/utils/parseXtallStats'
+
+const route = useRoute();
+const router = useRouter();
+
+/**
+ * RECTIVE STATE
+ */
+const searchQuery = ref('');
+const appliedSearchQuery = ref('');
+const selectedTypes = ref([]);
+const appliedSelectedTypes = ref([]);
+const selectedStats = ref([]);
 
 const searchLogs = ref([]);
 const searchRef = ref(null);
@@ -341,65 +354,128 @@ const maxStoredLogs = 20;
 const maxVisibleLogs = 3;
 
 const isMobile = ref(false);
+const isStatusOpen = ref(false);
+const isTypeOpen = ref(false);
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+const sortOrder = ref('asc');
+const statusRef = ref(null);
+const typeRef = ref(null);
+
+const notification = ref({ show: false, message: '', type: 'add' });
+const favorites = ref(JSON.parse(localStorage.getItem('xtall_favs') || '[]'));
+
 const checkMobile = () => {
   isMobile.value = window.innerWidth < 768;
 };
 
-const notification = ref({ show: false, message: '', type: 'add' })
-
 const showNotification = (msg, type = 'add') => {
-  notification.value = { show: true, message: msg, type }
-  setTimeout(() => { notification.value.show = false }, 5000)
-}
-
-const appliedSearchQuery = ref('');
-const appliedSelectedTypes = ref([]);
-
-const favorites = ref(JSON.parse(localStorage.getItem('xtall_favs') || '[]'))
+  notification.value = { show: true, message: msg, type };
+  setTimeout(() => { notification.value.show = false; }, 5000);
+};
 
 function handleToggleFavorite(code) {
-  const idStr = String(code)
-  const idx = favorites.value.indexOf(idStr)
-  
-  // Cari nama xtall untuk pesan notifikasi
-  const xtall = crystalData.find(c => String(c.code) === idStr)
-  const name = xtall?.name || 'Xtall'
+  const idStr = String(code);
+  const idx = favorites.value.indexOf(idStr);
+  const xtall = crystalData.find(c => String(c.code) === idStr);
+  const name = xtall?.name || 'Xtall';
 
   if (idx >= 0) {
-    favorites.value.splice(idx, 1)
-    showNotification('Berhasil dihapus dari favorit!', 'remove')
+    favorites.value.splice(idx, 1);
+    showNotification('Berhasil dihapus dari favorit!', 'remove');
   } else {
-    favorites.value.push(idStr)
-    showNotification(`Selamat! ${name} telah disimpan ke favorit.`, 'add')
+    favorites.value.push(idStr);
+    showNotification(`Selamat! ${name} telah disimpan ke favorit.`, 'add');
   }
-  localStorage.setItem('xtall_favs', JSON.stringify(favorites.value))
+  localStorage.setItem('xtall_favs', JSON.stringify(favorites.value));
 }
+
+// ----------------------------------------------------
+// LOGIKA SINKRONISASI URL QUERY PARAMS (FIX UTAMA)
+// ----------------------------------------------------
+const applyQueryParams = (params) => {
+  let nameParam = params?.name ?? '';
+  if (Array.isArray(nameParam)) {
+    nameParam = nameParam[0] ?? '';
+  }
+  nameParam = String(nameParam || '');
+
+  if (nameParam) {
+    try { 
+      nameParam = decodeURIComponent(nameParam.replace(/\+/g, ' ')); 
+    } catch (e) {}
+    nameParam = nameParam.trim();
+  }
+
+  // Setel state tampilan & state filter sekaligus
+  searchQuery.value = nameParam;
+  appliedSearchQuery.value = nameParam;
+
+  if (params?.types) {
+    try {
+      const parsedTypes = JSON.parse(String(params.types));
+      const validTypes = Array.isArray(parsedTypes) ? parsedTypes : [];
+      selectedTypes.value = validTypes;
+      appliedSelectedTypes.value = [...validTypes];
+    } catch (e) {
+      selectedTypes.value = [];
+      appliedSelectedTypes.value = [];
+    }
+  } else {
+    selectedTypes.value = [];
+    appliedSelectedTypes.value = [];
+  }
+
+  currentPage.value = 1;
+};
+
+// Waspadai perubahan URL dan jalankan langsung saat komponen di-load
+watch(
+  () => route.query,
+  (newQuery) => {
+    applyQueryParams(newQuery);
+  },
+  { immediate: true, deep: true }
+);
 
 const applyFilters = () => {
   appliedSearchQuery.value = searchQuery.value;
   appliedSelectedTypes.value = [...selectedTypes.value];
   currentPage.value = 1;
+
+  const query = {};
+  if (appliedSearchQuery.value) query.name = appliedSearchQuery.value;
+  if (appliedSelectedTypes.value && appliedSelectedTypes.value.length > 0) {
+    query.types = JSON.stringify(appliedSelectedTypes.value);
+  }
+
+  router.push({ query }).catch(() => {});
 };
 
 const handleEnterSearch = () => {
   const value = searchQuery.value?.trim();
   saveSearchLog(value);
-  applyFilters(); // Panggil fungsi apply
-  document.activeElement.blur();
+  applyFilters();
+  if (document.activeElement) document.activeElement.blur();
   isHistoryOpen.value = false;
 };
 
+function handleResetAll() {
+  searchQuery.value = '';
+  selectedTypes.value = [];
+  appliedSearchQuery.value = '';
+  appliedSelectedTypes.value = [];
+  sortOrder.value = 'asc';
+  itemsPerPage.value = 10;
+  router.push({ query: {} });
+}
+
+// --- LOGIKA RIWAYAT PENCARIAN ---
 const historyLabel = computed(() => {
   return searchQuery.value.trim() 
     ? 'Hasil kecocokan' 
     : '3 terbaru dari pencarian Anda.';
 });
-
-const openSearchHistory = () => {
-  if (searchQuery.value?.trim().length > 0 && displayedSearchLogs.value.length > 0) {
-    isHistoryOpen.value = true;
-  }
-};
 
 const loadSearchLogs = () => {
   try {
@@ -414,14 +490,7 @@ const loadSearchLogs = () => {
 
 const displayedSearchLogs = computed(() => {
   const q = searchQuery.value.toLowerCase().trim();
-  
-  // 1. Jika kolom pencarian kosong, tampilkan 3 riwayat terbaru
-  if (!q) {
-    return searchLogs.value.slice(0, maxVisibleLogs);
-  }
-  
-  // 2. Jika sedang mengetik, filter riwayat yang mengandung kata tersebut
-  // Menampilkan hingga 3 hasil kecocokan teratas
+  if (!q) return searchLogs.value.slice(0, maxVisibleLogs);
   return searchLogs.value
     .filter(log => log.toLowerCase().includes(q))
     .slice(0, maxVisibleLogs);
@@ -430,7 +499,6 @@ const displayedSearchLogs = computed(() => {
 const saveSearchLog = (query) => {
   const trimmed = query?.trim();
   if (!trimmed) return;
-
   const filtered = searchLogs.value.filter(log => log.toLowerCase() !== trimmed.toLowerCase());
   filtered.unshift(trimmed);
   searchLogs.value = filtered.slice(0, maxStoredLogs);
@@ -440,14 +508,13 @@ const saveSearchLog = (query) => {
 const applySearchLog = (value) => {
   searchQuery.value = value;
   saveSearchLog(value);
+  applyFilters();
 };
 
 const removeSearchLog = (query) => {
   searchLogs.value = searchLogs.value.filter(log => log.toLowerCase() !== query.toLowerCase());
   localStorage.setItem('xtallSearchLogs', JSON.stringify(searchLogs.value));
-  if (searchLogs.value.length === 0) {
-    isHistoryOpen.value = false;
-  }
+  if (searchLogs.value.length === 0) isHistoryOpen.value = false;
 };
 
 const clearSearchLogs = () => {
@@ -456,121 +523,22 @@ const clearSearchLogs = () => {
   isHistoryOpen.value = false;
 };
 
-
-const parsedCache = new Map()
-
+// --- STATS & FILTER ENGINE ---
+const parsedCache = new Map();
 function getParsedStats(xtall) {
   if (!parsedCache.has(xtall.code)) {
-    parsedCache.set(xtall.code, parseXtallStats(xtall.view))
+    parsedCache.set(xtall.code, parseXtallStats(xtall.view));
   }
-  return parsedCache.get(xtall.code)
+  return parsedCache.get(xtall.code);
 }
 
-const router = useRouter()
-
-function handleResetAll() {
-  searchQuery.value = '';
-  selectedTypes.value = [];
-  appliedSearchQuery.value = ''; // Reset yang sudah di-apply
-  appliedSelectedTypes.value = [];
-  sortOrder.value = 'asc';
-  itemsPerPage.value = 10;
-  router.push({ query: {} });
-}
-/**
- * COMPONENT PROPS
- */
 const props = defineProps({
   isDark: { type: Boolean, default: true }
 });
 
-/**
- * VISUAL COLOR ENGINE
- */
-const groupColors = {
-  "Base Stats": { text: "text-orange-400", border: "border-orange-500/30", accent: "text-orange-500 focus:ring-orange-500" },
-  "ATK & DEF": { text: "text-cyan-400", border: "border-cyan-500/30", accent: "text-cyan-500 focus:ring-cyan-500" },
-  "Stability, Accuracy, Dodge": { text: "text-blue-400", border: "border-blue-500/30", accent: "text-blue-500 focus:ring-blue-500" },
-  "Critical": { text: "text-red-400", border: "border-red-500/30", accent: "text-red-500 focus:ring-red-500" },
-  "Speed": { text: "text-pink-400", border: "border-pink-500/30", accent: "text-pink-500 focus:ring-pink-500" },
-  "HP & MP": { text: "text-emerald-400", border: "border-emerald-500/30", accent: "text-emerald-500 focus:ring-emerald-500" },
-  "Weapon ATK & Element": { text: "text-yellow-400", border: "border-yellow-500/30", accent: "text-yellow-500 focus:ring-yellow-500" },
-  "Element Resistance": { text: "text-amber-500", border: "border-amber-500/30", accent: "text-amber-500 focus:ring-amber-500" },
-  "Barrier & Defense Effect": { text: "text-green-500", border: "border-green-500/30", accent: "text-green-500 focus:ring-green-500" },
-  "Offensive Effect": { text: "text-indigo-400", border: "border-indigo-500/30", accent: "text-indigo-500 focus:ring-indigo-500" },
-  "Reduce DMG": { text: "text-teal-400", border: "border-teal-500/30", accent: "text-teal-500 focus:ring-teal-500" },
-  "Other Stat": { text: "text-purple-400", border: "border-purple-500/30", accent: "text-purple-500 focus:ring-purple-500" }
-};
-
-const statusGroups = { "Base Stats": [ { label: "STR / STR%", value: "STR" }, { label: "INT / INT%", value: "INT" }, { label: "DEX / DEX%", value: "DEX" }, { label: "AGI / AGI%", value: "AGI" }, { label: "VIT / VIT%", value: "VIT" } ], 
-"ATK & DEF": [ { label: "ATK / ATK%", value: ".ATK" }, { label: "MATK / MATK%", value: "MATK" }, { label: "DEF", value: ".DEF" }, { label: "MDEF", value: "MDEF" } ], 
-"Stability, Accuracy, Dodge": [ { label: "Stability", value: "Stability" }, { label: "Akurasi", value: "Akurasi" }, { label: "Dodge", value: "Dodge" } ], 
-"Critical": [ { label: "Critical Rate / CR%", value: "Critical Rate" }, { label: "Critical Damage / CD%", value: "Critical Damage" } ], 
-"Speed": [ { label: "ASPD", value: "ASPD" }, { label: "CSPD", value: "CSPD" }, { label: "Motion Speed%", value: "Motion Speed" } ], 
-"HP & MP": [ { label: "MaxHP / MaxHP%", value: "MaxHP" }, { label: "MaxMP / MaxMP%", value: "MaxMP" }, { label: "Natural MP Regen", value: "Natural MP Regen" }, { label: "Natural HP Regen", value: "Natural HP Regen" }, { label: "Attack MP Recovery", value: "Attack MP Recovery" } ],
- "Weapon ATK & Element": [ { label: "Weapon ATK", value: "Weapon ATK" }, { label: "DTE (Elements)", value: "stronger against" } ], 
- "Element Resistance": [ { label: "Phys Resistance%", value: "Kekebalan Fisik" }, { label: "Magic Resistance%", value: "Kekebalan Sihir" }, { label: "Light Resistance%", value: "kebal Cahaya" }, { label: "Dark Resistance%", value: "kebal Gelap" }, { label: "Earth Resistance%", value: "kebal Bumi" }, { label: "Fire Resistance%", value: "kebal Api" }, { label: "Water Resistance%", value: "kebal Air" }, { label: "Wind Resistance%", value: "kebal Angin" } ],
-  "Barrier & Defense Effect": [ { label: "Fractional Barrier%", value: "Pelindung Fraksional" }, { label: "Ailment Resistance%", value: "Resistansi Status Buruk" }, { label: "Aggro%", value: "Aggro" } ], 
-  "Offensive Effect": [ { label: "Physical Pierce%", value: "Physical Pierce" }, { label: "Magic Pierce%", value: "Peneterasi Sihir" }, { label: "Short Range Dmg%", value: "Daya Jarak Dekat" }, { label: "Long Range Dmg%", value: "Daya Jarak Jauh" }, { label: "Unsheathe Attack%", value: "Serangan Menghunus" }, { label: "Additional Melee", value: "Tambahan Fisik" }, { label: "Additional Magic", value: "Tambahan Sihir" }, { label: "Antisipasi", value: "Antisipasi" }, { label: "Guard Break", value: "Guard Break" } ], 
-  "Reduce DMG": [ { label: "Reduksi DMG (Sekitar Pemain)", value: "Reduksi DMG (Sekitar Pemain)" }, { label: "Reduksi DMG (Sekitar Musuh)", value: "Reduksi DMG (Sekitar Musuh)" }, { label: "Reduksi DMG (Lantai)", value: "Reduksi DMG (Lantai)" }, { label: "Reduksi DMG (Linear)", value: "Reduksi DMG (Linear)" }, { label: "Reduksi DMG (Bowling)", value: "Reduksi DMG (Bowling)" }, { label: "Reduksi DMG (Terjang)", value: "Reduksi DMG (Terjang)" }, { label: "Reduksi DMG (Peluru)", value: "Reduksi DMG (Peluru)" } ], 
-  "Other Stat": [ { label: "Drop Rate%", value: "Drop Rate" }, { label: "EXP%", value: "EXP" }, { label: "Revive Time%", value: "Revive Time" }, { label: "Tumble Unavailable", value: "Tumble Unavailable" }, { label: "Evasion Recharge", value: "Evasion Recharge" }, { label: "Refleks", value: "Refleks" }, { label: "Recoil", value: "Recoil" } ] };
-
-
-/**
- * RECTIVE STATE
- */
-const searchQuery = ref('');
-const selectedTypes = ref([]);
-const selectedStats = ref([]);
-const isStatusOpen = ref(false);
-const isTypeOpen = ref(false);
-const currentPage = ref(1);
-const itemsPerPage = ref(10);
-const sortOrder = ref('asc');
-const statusRef = ref(null);
-const typeRef = ref(null);
-
-const route = useRoute()
-
-const advancedFilter = computed(() => {
-  try {
-    return route.query.filter
-      ? JSON.parse(route.query.filter)
-      : null
-  } catch {
-    return null
-  }
-})
-
-function parseStatsFromView(viewText) {
-  const result = {}
-  if (!viewText) return result
-
-  viewText.split('\n').forEach(line => {
-    const match = line.match(/(.+?)\s([+-])\s?(\d+)/)
-    if (match) {
-      const [, name, sign, value] = match
-      result[name.trim().toUpperCase()] = {
-        sign,
-        value: Number(value)
-      }
-    }
-  })
-
-  return result
-}
-
-
- /** LOGIC METHODS
- */
- const toggleTypeDropdown = () => {
+const toggleTypeDropdown = () => {
   isTypeOpen.value = !isTypeOpen.value;
-  if (isTypeOpen.value) isStatusOpen.value = false; // Tutup Status jika Type dibuka
-};
-
-const toggleStatusDropdown = () => {
-  isStatusOpen.value = !isStatusOpen.value;
-  if (isStatusOpen.value) isTypeOpen.value = false; // Tutup Type jika Status dibuka
+  if (isTypeOpen.value) isStatusOpen.value = false;
 };
 
 const toggleType = (type) => {
@@ -592,36 +560,59 @@ const toggleType = (type) => {
   }
 };
 
-// Fungsi Toggle Stat
-const toggleStat = (stat) => {
-  const index = selectedStats.value.indexOf(stat);
-  if (index === -1) {
-    selectedStats.value.push(stat);
-  } else {
-    selectedStats.value.splice(index, 1);
-  }
+const displayTypes = [
+  { label: 'Semua Kategori', value: 'ALL' },
+  { label: 'Weapon Crystas', value: 'WEAPON' },
+  { label: 'Weapon Enhancer Crystas', value: 'WEAPON_UPGRADE' },
+  { label: 'Armor Crystas', value: 'ARMOR' },
+  { label: 'Armor Enhancer Crystas', value: 'ARMOR_UPGRADE' },
+  { label: 'Additional Crystas', value: 'ADDITIONAL' },
+  { label: 'Additional Enhancer Crystas', value: 'ADDITIONAL_UPGRADE' },
+  { label: 'Normal Crystas', value: 'NORMAL' },
+  { label: 'Normal Enhancer Crystas', value: 'NORMAL_UPGRADE' },
+  { label: 'Special Crystas', value: 'SPECIAL' },
+  { label: 'Special Enhancer Crystas', value: 'SPECIAL_UPGRADE' }
+];
+
+const iconMap = {
+  NORMAL: normalCrystas,
+  UPGRADE: normalEnhancerCrystas,
+  ADDITIONAL: additionalCrystas,
+  ADDITIONAL_UPGRADE: additionalEnhancerCrystas,
+  ARMOR: armorCrystas,
+  ARMOR_UPGRADE: armorEnhancerCrystas,
+  WEAPON: weaponCrystas,
+  WEAPON_UPGRADE: weaponEnhancerCrystas,
+  SPECIAL: specialCrystas,
+  SPECIAL_UPGRADE: specialEnhancerCrystas,
 };
 
-const resetFilters = () => {
-  searchQuery.value = '';
-  selectedTypes.value = [];
-  selectedStats.value = [];
-  currentPage.value = 1;
+const findRootItem = (item) => {
+  if (!item) return null;
+  let current = item;
+  let safety = 0;
+  while (current.link && safety < 10) {
+    const parent = crystalData.find(c => String(c.code) === String(current.link));
+    if (!parent) break;
+    current = parent;
+    safety++;
+  }
+  return current;
+};
+
+const findRootType = (item) => {
+  const root = findRootItem(item);
+  return root?.type?.toUpperCase() || 'NORMAL';
 };
 
 const getIconPath = (xtall) => {
   const type = xtall.type?.toUpperCase();
-
-  // Kalau bukan upgrade
   if (type !== 'UPGRADE') {
     return iconMap[type] || normalCrystas;
   }
-
-  // Kalau upgrade → cari root type
   const rootType = findRootType(xtall);
   return iconMap[`${rootType}_UPGRADE`] || normalEnhancerCrystas;
 };
-
 
 const getBadgeColor = (type) => {
   const map = { 
@@ -643,108 +634,14 @@ const getBaseFor = (xtall) => {
 const getEvoFor = (xtall) => {
   return crystalData.filter(c => String(c.link) === String(xtall.code));
 };
-const displayTypes = [
-  { label: 'Semua Kategori', value: 'ALL' },
-  { label: 'Weapon Crystas', value: 'WEAPON' },
-  { label: 'Weapon Enhancer Crystas', value: 'WEAPON_UPGRADE' },
 
-  { label: 'Armor Crystas', value: 'ARMOR' },
-  { label: 'Armor Enhancer Crystas', value: 'ARMOR_UPGRADE' },
-
-  { label: 'Additional Crystas', value: 'ADDITIONAL' },
-  { label: 'Additional Enhancer Crystas', value: 'ADDITIONAL_UPGRADE' },
-
-  { label: 'Normal Crystas', value: 'NORMAL' },
-  { label: 'Normal Enhancer Crystas', value: 'NORMAL_UPGRADE' },
-
-  { label: 'Special Crystas', value: 'SPECIAL' },
-  { label: 'Special Enhancer Crystas', value: 'SPECIAL_UPGRADE' }
-];
-const iconMap = {
-  NORMAL: normalCrystas,
-  UPGRADE: normalEnhancerCrystas,
-
-  ADDITIONAL: additionalCrystas,
-  ADDITIONAL_UPGRADE: additionalEnhancerCrystas,
-
-  ARMOR: armorCrystas,
-  ARMOR_UPGRADE: armorEnhancerCrystas,
-
-  WEAPON: weaponCrystas,
-  WEAPON_UPGRADE: weaponEnhancerCrystas,
-
-  SPECIAL: specialCrystas,
-  SPECIAL_UPGRADE: specialEnhancerCrystas,
-};
-
-
-const getTypeLabel = (type) => {
-  const t = type.toUpperCase();
-
-  const isEnhancer = t === 'UPGRADE' || t === 'ENHANCER';
-
-  const rootMap = {
-    WEAPON: 'Weapon',
-    ARMOR: 'Armor',
-    ADDITIONAL: 'Additional',
-    NORMAL: 'Normal',
-    SPECIAL: 'Special'
-  };
-
-  // Kalau DB sudah kasih full info
-  if (rootMap[t]) {
-    return `${rootMap[t]} Crystas`;
-  }
-
-  // Untuk UPGRADE / ENHANCER
-  if (isEnhancer) {
-    return 'Enhancer Crystas';
-  }
-
-  return `${type} Crystas`;
-};
-
-/**
- * ROOT XTALL RESOLVER (BASE XTALL)
- */
-const findRootItem = (item) => {
-  if (!item) return null;
-
-  let current = item;
-  let safety = 0;
-
-  while (current.link && safety < 10) {
-    const parent = crystalData.find(
-      c => String(c.code) === String(current.link)
-    );
-    if (!parent) break;
-    current = parent;
-    safety++;
-  }
-
-  return current;
-};
-
-const findRootType = (item) => {
-  const root = findRootItem(item);
-  return root?.type?.toUpperCase() || 'NORMAL';
-};
-
-/**
- * LABEL COLOR ENGINE (FOLLOW BASE XTALL)
- */
 const getLabelColor = (xtall) => {
   if (!xtall) return 'text-cyan-500';
-
   const type = xtall.type?.toUpperCase();
-
-  // Upgrade / Enhancer selalu abu
   if (type === 'UPGRADE' || type === 'ENHANCER') {
     return 'text-gray-400';
   }
-
   const rootType = findRootType(xtall);
-
   const map = { 
     WEAPON: 'text-red-500',
     ARMOR: 'text-green-500',
@@ -752,33 +649,36 @@ const getLabelColor = (xtall) => {
     ADDITIONAL: 'text-yellow-500',
     SPECIAL: 'text-purple-500'
   };
-
   return map[rootType] || 'text-cyan-500';
-};
-
-
-const parseStats = (view) => {
-  if (!view) return [];
-  return Array.isArray(view) ? view : view.split(/,|\n/).map(s => s.trim()).filter(s => s);
 };
 
 const setSearch = (name) => { 
   searchQuery.value = name; 
+  applyFilters();
   window.scrollTo({ top: 0, behavior: 'smooth' }); 
 };
 
+const advancedFilter = computed(() => {
+  try {
+    return route.query.filter ? JSON.parse(route.query.filter) : null;
+  } catch {
+    return null;
+  }
+});
+
 /**
- * COMPUTED ENGINE
+ * COMPUTED ENGINE FILTERING
  */
 const filteredResults = computed(() => {
   let res = crystalData.filter(c => c.name?.trim());
 
-  // 1. FILTER NAMA (Hanya gunakan yang sudah di-apply)
+  // Filter berdasarkan Nama dari Query/Applied Search
   if (appliedSearchQuery.value) {
     const q = appliedSearchQuery.value.toLowerCase();
     res = res.filter(c => c.name.toLowerCase().includes(q));
   }
   
+  // Filter berdasarkan Kategori yang di-apply
   if (appliedSelectedTypes.value.length > 0) {
     res = res.filter(c => {
       const rootType = findRootType(c);
@@ -791,11 +691,9 @@ const filteredResults = computed(() => {
     });
   }
 
-  // 1. FILTER DARI URL (HASIL ADVANCED SEARCH)
+  // Filter tambahan jika datang dari Advanced Search
   if (advancedFilter.value) {
     const { stats, types } = advancedFilter.value;
-
-    // Filter Stats dari URL
     if (stats && Object.keys(stats).length > 0) {
       res = res.filter(c => {
         const parsed = getParsedStats(c);
@@ -812,7 +710,6 @@ const filteredResults = computed(() => {
       });
     }
 
-    // Filter Types dari URL
     if (types && types.length > 0) {
       res = res.filter(c => {
         const rootType = findRootType(c);
@@ -826,38 +723,32 @@ const filteredResults = computed(() => {
     }
   }
   
-  return res.sort((a, b) => sortOrder.value === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
-
+  return res.sort((a, b) => 
+    sortOrder.value === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+  );
 });
 
 const paginatedResults = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   return filteredResults.value.slice(start, start + itemsPerPage.value);
 });
+
+const totalPages = computed(() => Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1);
+
 const displayedPages = computed(() => {
   const total = totalPages.value;
   const current = currentPage.value;
-  const delta = 2; // Menampilkan 2 angka di kiri & 2 di kanan (Total 5 angka di tengah)
+  const delta = 2;
   const range = [];
   const rangeWithDots = [];
   let l;
 
-  // 1. Selalu sertakan halaman pertama
   range.push(1);
-
-  // 2. Hitung range di sekitar halaman aktif
   for (let i = current - delta; i <= current + delta; i++) {
-    if (i > 1 && i < total) {
-      range.push(i);
-    }
+    if (i > 1 && i < total) range.push(i);
   }
+  if (total > 1) range.push(total);
 
-  // 3. Selalu sertakan halaman terakhir
-  if (total > 1) {
-    range.push(total);
-  }
-
-  // 4. Masukkan Ellipsis (...) jika ada gap
   for (let i of range) {
     if (l) {
       if (i - l === 2) {
@@ -869,25 +760,7 @@ const displayedPages = computed(() => {
     rangeWithDots.push(i);
     l = i;
   }
-
   return rangeWithDots;
-});
-const totalPages = computed(() => Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1);
-
-const visiblePages = computed(() => {
-  const maxVisible = 5; // Kurangi jumlah yang tampil di mobile
-  let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2));
-  let end = Math.min(totalPages.value, start + maxVisible - 1);
-
-  if (end - start < maxVisible - 1) {
-    start = Math.max(1, end - maxVisible + 1);
-  }
-
-  const pages = [];
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
-  return pages;
 });
 
 /**
@@ -902,18 +775,17 @@ const closeOnOutside = (e) => {
 onMounted(() => {
   loadSearchLogs();
   window.addEventListener('click', closeOnOutside);
-
-checkMobile();
+  checkMobile();
   window.addEventListener('resize', checkMobile);
 });
 
 onUnmounted(() => {
   window.removeEventListener('click', closeOnOutside);
+  window.removeEventListener('resize', checkMobile);
 });
 
-window.removeEventListener('resize', checkMobile);
-
-watch([selectedTypes, selectedStats, itemsPerPage, sortOrder], () => {
+// Watcher skala & urutan saja yang mereset page (selectedTypes tidak lagi mereset page secara sepihak)
+watch([itemsPerPage, sortOrder], () => {
   currentPage.value = 1;
 });
 </script>

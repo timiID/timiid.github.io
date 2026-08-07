@@ -184,27 +184,34 @@ const navigateTo = (path) => router.push(path);
   "Your ultimate companion for Toram Online adventures."
 </p>
 
-<p class="font-mono-code relative max-w-xl text-sm font-bold leading-relaxed uppercase tracking-widest mt-2
-          text-slate-900 dark:text-white
-          filter drop-shadow-[0_1px_5px_rgba(180,83,9,0.4)] dark:drop-shadow-[0_0_12px_rgba(34,211,238,0.6)]">
-  © 2026
-  
-  <!-- Nama Brand (Link Aktif) -->
-  <a href="https://timiid.github.io/" target="_blank"
-     class="font-extrabold text-cyan-600 dark:text-cyan-400 hover:text-cyan-300
-            [-webkit-text-stroke:_0.2px_white]
-            underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all
-            drop-shadow-[0_1px_4px_rgba(146,64,14,0.5)] dark:drop-shadow-[0_0_10px_rgba(34,211,238,0.85)]">
-    TIMI DB㋡
-  </a>
+<div class="relative max-w-2xl mx-auto mt-4 flex justify-center">
+  <div class="inline-flex items-center justify-center px-5 py-2.5 rounded-2xl border transition-all duration-500
+              bg-white/50 border-amber-500/30 shadow-lg shadow-amber-500/10 backdrop-blur-md
+              dark:bg-slate-900/60 dark:border-cyan-500/30 dark:shadow-cyan-500/20 hover:scale-[1.02]">
+    
+    <p class="font-mono-code text-xs sm:text-sm font-bold leading-relaxed uppercase tracking-widest text-center
+              text-slate-900 dark:text-white
+              filter drop-shadow-[0_1px_5px_rgba(180,83,9,0.4)] dark:drop-shadow-[0_0_12px_rgba(34,211,238,0.6)]">
+      © 2026
+      
+      <!-- Nama Brand (Link Aktif) -->
+      <a href="https://timiid.github.io/" target="_blank"
+         class="font-extrabold text-indigo-900 hover:text-purple-600 dark:text-cyan-400 hover:text-cyan-300 mx-1
+                [-webkit-text-stroke:_0.2px_white]
+                underline decoration-blue-500/30 hover:decoration-cyan-400 transition-all
+                drop-shadow-[0_1px_9px_rgba(146,64,14,0.5)] dark:drop-shadow-[0_0_10px_rgba(34,211,238,0.85)]">
+        TIMI DB㋡
+      </a>
 
-  <!-- Deskripsi Project -->
-  <span class="[-webkit-text-stroke:_0.0px_white] dark:[-webkit-text-stroke:_0.3px_black]
-               drop-shadow-[0_1px_4px_rgba(146,64,14,0.45)] dark:drop-shadow-[0_0_10px_rgba(34,211,238,0.75)]">
-    Toram Online Digital Database Project
-  </span>
-</p>
+      <!-- Deskripsi Project -->
+      <span class="[-webkit-text-stroke:_0.0px_white] dark:[-webkit-text-stroke:_0.3px_black]
+                   drop-shadow-[0_1px_9px_rgba(146,64,14,0.45)] dark:drop-shadow-[0_0_10px_rgba(34,211,238,0.75)]">
+        Toram Online Digital Database Project
+      </span>
+    </p>
 
+  </div>
+</div>
         <div class="relative space-y-1 mt-11 font-archivo">
   <div class="flex flex-col items-center text-center space-y-8 mt-1 pb-2">
     

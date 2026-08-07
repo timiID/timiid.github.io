@@ -175,4 +175,8 @@ export const levelingList = [
       { name: 'Wild Beast Lixi', type: 'Mini Boss', lv: 310, range: '308-326', loc: 'Lixaro Ghost Town: Area 3' }
     ]
   },
+  {
+    range: '310-325',
+    main: { name: 'Merzehal', type: 'High Difficulty Boss', lv: 325, loc: 'El Scaro : High Difficulty Hunting Event' },
+  },
 ];
