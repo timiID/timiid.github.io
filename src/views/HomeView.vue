@@ -64,14 +64,14 @@ const router = useRouter();
     color: 'from-purple-500 to-indigo-500'
   },
   { 
-    name: 'MQ CALC', 
+    name: 'MQ CALCULATOR', 
     path: '/mq-calc', 
     icon: iconMqCalc, 
     desc: 'Calculate the EXP you need to level up.',
     color: 'from-pink-500 to-rose-500'
   },
   { 
-    name: 'BS CALC', 
+    name: 'BLACKSMITH CALCULATOR', 
     path: '/bs-calc', 
     icon: iconBsCalc, 
     desc: 'Blacksmith simulator for perfect crafting.',
@@ -89,7 +89,7 @@ const router = useRouter();
 
 const other = [
   { 
-    name: 'Event Guide', 
+    name: 'Annual Event Calendar', 
     path: '/event', 
     icon: iconEvent, 
     desc: 'Annual events & calendar overview (Note: generally during those months, although that is not entirely accurate).',
@@ -113,7 +113,7 @@ const other = [
     name: 'Material Farming Spot', 
     path: '/spotmats', 
     icon: iconMats, 
-    desc: 'Best all spots farm in Toram Online for farmer mats.',
+    desc: 'Best all spots farm in Toram Online for farmer mats. (Update 2025)',
     color: 'from-purple-500 to-indigo-500'
   },
   { 

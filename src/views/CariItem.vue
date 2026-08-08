@@ -72,7 +72,6 @@ isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50']"
 
 <!-- Type Filter Dropdown -->
 <div class="relative">
-<!-- Tambah style inline untuk fix background native select di dark -->
 <select
 v-model="filterType"
 :style="props.isDark ? { backgroundColor: '#0f172a', colorScheme: 'dark' } : {}"
@@ -523,7 +522,7 @@ isDark
 {{ upgradeModal.predecessor.name }}
 </button>
 <div v-else :class="['flex-1 text-center text-xs', isDark ? 'text-slate-500' : 'text-slate-400']">
-← Starting point
+← Start/ This Xtall
 </div>
 
 <!-- Center divider -->
@@ -626,6 +625,51 @@ stat.amount < 0
 <!-- No stats fallback in modal -->
 <div v-else class="py-8 text-center">
 <p :class="['text-sm italic', isDark ? 'text-slate-500' : 'text-slate-400']">No stat data available for this item.</p>
+</div>
+
+<!-- Indikator saat index Crysta sedang dibangun pertama kali -->
+<div
+v-if="crystaIndexState.building && upgradeModal.item"
+:class="['mt-5 px-4 py-3 rounded-lg text-xs flex items-center gap-2',
+isDark ? 'bg-purple-500/10 text-purple-300' : 'bg-purple-50 text-purple-700']"
+>
+<svg class="w-3.5 h-3.5 animate-spin shrink-0" fill="none" viewBox="0 0 24 24">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+</svg>
+Membangun index Crysta untuk "Used For" (sekali saja per sesi)…
+{{ crystaIndexState.totalCrysta > 0 ? `${crystaIndexState.scanned}/${crystaIndexState.totalCrysta}` : '' }}
+</div>
+
+<!-- ── Used For di dalam modal (Crysta lanjutan) ── -->
+<div
+v-if="upgradeModal.item && upgradeModal.item.usedFor && upgradeModal.item.usedFor.length > 0"
+class="mt-5"
+>
+<div :class="['text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-2',
+isDark ? 'text-purple-400' : 'text-purple-700']">
+Used for (Upgrade into)
+</div>
+<div
+v-for="(u, ui) in upgradeModal.item.usedFor" :key="'mused-'+ui"
+:class="['grid grid-cols-[1fr_auto] px-4 py-2.5 rounded-lg mb-0.5 items-center text-sm',
+isDark ? 'bg-white/[0.02] hover:bg-white/[0.04]' : 'bg-slate-50 hover:bg-slate-100']"
+>
+<span :class="['font-medium', isDark ? 'text-slate-300' : 'text-slate-700']">Upgrade into</span>
+<button
+@click="bukaModalUpgrade(u.id, u.name)"
+:class="['inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border font-bold text-xs transition-all justify-self-end',
+isDark
+? 'bg-violet-500/10 border-violet-500/25 text-violet-300 hover:bg-violet-500/20'
+: 'bg-violet-50 border-violet-200 text-violet-700 hover:bg-violet-100']"
+>
+<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 3l14 9-14 9V3z"/>
+</svg>
+{{ u.name }}
+<span class="text-[9px] font-black uppercase tracking-widest opacity-60">XTAL</span>
+</button>
+</div>
 </div>
 
 <!-- Drop sources in modal -->
@@ -740,7 +784,7 @@ Close
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 const props = defineProps({
-isDark: { type: Boolean, default: true }
+  isDark: { type: Boolean, default: true }
 })
 
 const route = useRoute()
@@ -758,368 +802,444 @@ const mapViewActive = ref(null)
 const activeMonster = ref({ itemId: null, mi: null })
 
 const toggleMonsterLocation = (itemId, mi) => {
-if (activeMonster.value.itemId === itemId && activeMonster.value.mi === mi) {
-activeMonster.value = { itemId: null, mi: null }
-} else {
-activeMonster.value = { itemId, mi }
-}
+  if (activeMonster.value.itemId === itemId && activeMonster.value.mi === mi) {
+    activeMonster.value = { itemId: null, mi: null }
+  } else {
+    activeMonster.value = { itemId, mi }
+  }
 }
 
 const expandedMaps = ref([])
 
 const toggleExpandedMap = (mapKey) => {
-const idx = expandedMaps.value.indexOf(mapKey)
-if (idx > -1) {
-expandedMaps.value.splice(idx, 1)
-} else {
-expandedMaps.value.push(mapKey)
-}
+  const idx = expandedMaps.value.indexOf(mapKey)
+  if (idx > -1) {
+    expandedMaps.value.splice(idx, 1)
+  } else {
+    expandedMaps.value.push(mapKey)
+  }
 }
 
 // ── Upgrade Modal State ──
 const upgradeModal = ref({
-open: false,
-loading: false,
-error: '',
-id: null,
-name: '',
-typeLabel: '',
-sell: undefined,
-stats: [],
-statsNormal: [],
-statsConditional: [],
-upgradeForRows: [],
-upgradeForResolvedNames: {},
-dropFrom: [],
-predecessor: null,
-successor: null,
-chainItems: []
+  open: false,
+  loading: false,
+  error: '',
+  id: null,
+  name: '',
+  typeLabel: '',
+  sell: undefined,
+  stats: [],
+  statsNormal: [],
+  statsConditional: [],
+  upgradeForRows: [],
+  upgradeForResolvedNames: {},
+  dropFrom: [],
+  predecessor: null,
+  successor: null,
+  chainItems: [],
+  // Object bersih yang dibaca template modal untuk "Used For": { id, name, usedFor }
+  item: { id: null, name: '', usedFor: [] }
 })
 
 const placeholders = [
-'Search boss: kuzto', 'Search item: boss colon',
-'Search crystal: mimyugon', 'Search material: ghostfire', 'Search event boss: myco'
+  'Search boss: kuzto', 'Search item: boss colon',
+  'Search crystal: mimyugon', 'Search material: ghostfire', 'Search event boss: myco'
 ]
 const currentPlaceholder = ref(placeholders[0])
 let placeholderInterval = null
 
 // ── Available types for dropdown (populated after search) ──
 const availableTypes = computed(() => {
-const set = new Set()
-listHasilItem.value.forEach(item => {
-if (item.type_label) {
-const clean = item.type_label.replace('[','').replace(']','').trim()
-if (clean) set.add(clean)
-}
-})
-return Array.from(set).sort()
+  const set = new Set()
+  listHasilItem.value.forEach(item => {
+    if (item.type_label) {
+      const clean = item.type_label.replace('[', '').replace(']', '').trim()
+      if (clean) set.add(clean)
+    }
+  })
+  return Array.from(set).sort()
 })
 
 // ── Filtered results ──
 const listHasilFiltered = computed(() => {
-if (!filterType.value) return listHasilItem.value
-return listHasilItem.value.filter(item => {
-const clean = item.type_label ? item.type_label.replace('[','').replace(']','').trim() : ''
-return clean === filterType.value
-})
+  if (!filterType.value) return listHasilItem.value
+  return listHasilItem.value.filter(item => {
+    const clean = item.type_label ? item.type_label.replace('[', '').replace(']', '').trim() : ''
+    return clean === filterType.value
+  })
 })
 
 // ── Pagination computed ──
 const itemsDiHalamanIni = computed(() => {
-const a = (halamanSekarang.value - 1) * itemPerHalaman
-return listHasilFiltered.value.slice(a, a + itemPerHalaman)
+  const a = (halamanSekarang.value - 1) * itemPerHalaman
+  return listHasilFiltered.value.slice(a, a + itemPerHalaman)
 })
 const totalHalaman = computed(() => Math.ceil(listHasilFiltered.value.length / itemPerHalaman))
 const halamanDitampilkan = computed(() => {
-const total = totalHalaman.value
-const cur = halamanSekarang.value
-if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
-if (cur <= 4) return [1, 2, 3, 4, 5, '...', total]
-if (cur >= total - 3) return [1, '...', total-4, total-3, total-2, total-1, total]
-return [1, '...', cur-1, cur, cur+1, '...', total]
+  const total = totalHalaman.value
+  const cur = halamanSekarang.value
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+  if (cur <= 4) return [1, 2, 3, 4, 5, '...', total]
+  if (cur >= total - 3) return [1, '...', total - 4, total - 3, total - 2, total - 1, total]
+  return [1, '...', cur - 1, cur, cur + 1, '...', total]
 })
 const paginasiClass = computed(() => [
-'min-w-[36px] h-9 px-2 rounded-lg border text-xs font-bold cursor-pointer transition-colors disabled:opacity-30 disabled:cursor-not-allowed',
-props.isDark
-? 'bg-transparent border-white/10 text-slate-400 hover:bg-white/5'
-: 'bg-transparent border-slate-200 text-slate-500 hover:bg-slate-50'
+  'min-w-[36px] h-9 px-2 rounded-lg border text-xs font-bold cursor-pointer transition-colors disabled:opacity-30 disabled:cursor-not-allowed',
+  props.isDark
+    ? 'bg-transparent border-white/10 text-slate-400 hover:bg-white/5'
+    : 'bg-transparent border-slate-200 text-slate-500 hover:bg-slate-50'
 ])
 
 // ── Helpers ──
 const dapatkanNamaMaterial = (id) => {
-if (id === -1) return 'None'
-return { 1:'Beast', 2:'Wood', 3:'Metal', 4:'Cloth', 5:'Medicine', 6:'Mana' }[id] || `Type ${id}`
+  if (id === -1) return 'None'
+  return { 1: 'Beast', 2: 'Wood', 3: 'Metal', 4: 'Cloth', 5: 'Medicine', 6: 'Mana' }[id] || `Type ${id}`
 }
 
 const getEventLabel = (item) => {
-const note = item?.meta?.note
-if (!note || !/event/i.test(note)) return null
+  const note = item?.meta?.note
+  if (!note || !/event/i.test(note)) return null
 
-let label = note.trim().replace(/[.]+$/g, '')
-if (/event/i.test(label)) {
-label = label.replace(/event[:\s]*/gi, '').trim()
-}
-if (!label) return null
-return `EVENT: ${label.toUpperCase()}`
+  let label = note.trim().replace(/[.]+$/g, '')
+  if (/event/i.test(label)) {
+    label = label.replace(/event[:\s]*/gi, '').trim()
+  }
+  if (!label) return null
+  return `EVENT: ${label.toUpperCase()}`
 }
 
 // Fungsi kamus untuk menerjemahkan angka applies_to
-
 const dapatkanLabelApplies = (appliesId) => {
-const daftarApplies = {
-1: '(Shield Only: )',
-2: '(Knuckle Only: )', 4: '(Magic Device Only: )', 8: '(Staff Only: )', 16: '(Bowgun Only: )', 32: '(Bow Only: )', 48: '(Bowgun, Bow Only: )', 64: '(2-Handed Sword only:)', 128: '(1-Handed Sword only:)', 256: '(Other)', 512: '(Other)', 1024: '(Other)', 2048: '(Halberd Only: )', 65536: '(Dagger Only: )', 4096: '(Other)', 8192: '(Katana Only: )', 16384: '(Heavy Armor Only: )', 32768: '(Light Armor Only: )', 131072: '(Dual Swords only: )', 262144: '(Arrow only: )', 524288: '(Ninjutsu Scroll Only: )' }
+  const daftarApplies = {
+    1: '(Shield Only: )',
+    2: '(Knuckle Only: )', 4: '(Magic Device Only: )', 8: '(Staff Only: )', 16: '(Bowgun Only: )',
+    32: '(Bow Only: )', 48: '(Bowgun, Bow Only: )', 64: '(2-Handed Sword only:)', 128: '(1-Handed Sword only:)',
+    256: '(Other)', 512: '(Other)', 1024: '(Other)', 2048: '(Halberd Only: )', 65536: '(Dagger Only: )',
+    4096: '(Other)', 8192: '(Katana Only: )', 16384: '(Heavy Armor Only: )', 32768: '(Light Armor Only: )',
+    131072: '(Dual Swords only: )', 262144: '(Arrow only: )', 524288: '(Ninjutsu Scroll Only: )'
+  }
+  return daftarApplies[appliesId] || ''
+}
 
-return daftarApplies[appliesId] || '' }
 // Group drop_from by map name
 const groupByMap = (dropFrom) => {
-const groups = {}
-dropFrom.forEach(m => {
-const key = m.map || 'Unknown Map'
-if (!groups[key]) groups[key] = []
-groups[key].push(m)
-})
-return groups
+  const groups = {}
+  dropFrom.forEach(m => {
+    const key = m.map || 'Unknown Map'
+    if (!groups[key]) groups[key] = []
+    groups[key].push(m)
+  })
+  return groups
 }
 
 // Toggle map view per item card
 const toggleMapView = (itemId) => {
-mapViewActive.value = mapViewActive.value === itemId ? null : itemId
+  mapViewActive.value = mapViewActive.value === itemId ? null : itemId
 }
 
-// Build full enhancement chain (all items in upgrade path)
-const buildEnhancementChain = async (itemId, itemName) => {
-const chain = []
-const visited = new Set()
-
-// Fetch item data
-const fetchItemData = async (id, name) => {
-if (visited.has(id)) return null
-visited.add(id)
-try {
-const r = await fetch(`https://coryn.club/api/v1/items.php?id=${id}`)
-if (!r.ok) return null
-const j = await r.json()
-if (j.success && j.data) {
-return { id, name: j.data.name, data: j.data }
+// ────────────────────────────────────────────────────────────
+// ATURAN PENTING:
+// "Upgrade for" & "Used for" HANYA berlaku untuk Crysta / XTAL.
+// Deteksi lewat type_label (mis. "[Enhancer Crysta]", "[Crysta]").
+// ────────────────────────────────────────────────────────────
+const isCrystaItem = (item) => {
+  const label = (item?.type_label || '').toLowerCase()
+  return label.includes('crysta') || label.includes('xtal')
 }
-} catch { return null }
-return null
-}
-
-// Go back to find the first item in chain
-let current = await fetchItemData(itemId, itemName)
-if (!current) return []
-
-const predecessors = []
-let pred = current
-
-while (pred) {
-const stats = pred.data?.stats || []
-const upgradeFor = stats.find(s => s.effect_name === 'Upgrade for')
-if (!upgradeFor) break
-
-const predData = await fetchItemData(upgradeFor.amount, await ambilNamaItem(upgradeFor.amount))
-if (!predData) break
-predecessors.unshift(predData)
-pred = predData
-}
-
-// Build chain starting from first item
-chain.push(...predecessors, current)
-
-// Go forward to find successors
-let succ = current
-while (succ) {
-const baseName = succ.name.split(' ').slice(0, -1).join(' ') || succ.name
-try {
-const sr = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(baseName)}&limit=30`)
-if (!sr.ok) break
-const sj = await sr.json()
-if (!sj.success || !Array.isArray(sj.data)) break
-
-let foundSucc = null
-for (const candidate of sj.data) {
-if (visited.has(candidate.id) || candidate.id === succ.id) continue
-const cr = await fetch(`https://coryn.club/api/v1/items.php?id=${candidate.id}`)
-if (!cr.ok) continue
-const cj = await cr.json()
-if (cj.success && cj.data?.stats) {
-const hasUpgradeFrom = cj.data.stats.some(s => s.effect_name === 'Upgrade for' && s.amount === succ.id)
-if (hasUpgradeFrom) {
-foundSucc = { id: candidate.id, name: candidate.name, data: cj.data }
-visited.add(candidate.id)
-break
-}
-}
-}
-
-if (foundSucc) {
-chain.push(foundSucc)
-succ = foundSucc
-} else {
-break
-}
-} catch { break }
-}
-
-return chain
-}
-
-// Toggle map view per item card
 
 // Cache nama item
 const cacheNama = {}
 const ambilNamaItem = async (id) => {
-if (!id || id <= 0) return null
-if (cacheNama[id]) return cacheNama[id]
-try {
-const r = await fetch(`https://coryn.club/api/v1/items.php?id=${id}`)
-if (!r.ok) return null
-const j = await r.json()
-if (j.success && j.data?.name) { cacheNama[id] = j.data.name; return j.data.name }
-} catch { return null }
-return null
+  if (!id || id <= 0) return null
+  if (cacheNama[id]) return cacheNama[id]
+  try {
+    const r = await fetch(`https://coryn.club/api/v1/items.php?id=${id}`)
+    if (!r.ok) return null
+    const j = await r.json()
+    if (j.success && j.data?.name) { cacheNama[id] = j.data.name; return j.data.name }
+  } catch { return null }
+  return null
 }
 
 // Parse stats helper (reusable)
 const parseStats = (rawStats) => {
-const upgradeForRows = rawStats.filter(s => s.effect_name === 'Upgrade for')
-const statsNormal = rawStats.filter(s => s.effect_name !== 'Upgrade for' && (!s.applies_to || s.applies_to === 0))
-const statsCond = rawStats.filter(s => s.effect_name !== 'Upgrade for' && s.applies_to && s.applies_to !== 0)
-const groupMap = {}
-statsCond.forEach(s => {
-const label = dapatkanLabelApplies(s.applies_to) || `Type ${s.applies_to}`
-if (!groupMap[label]) groupMap[label] = []
-groupMap[label].push(s)
-})
-const statsConditional = Object.entries(groupMap).map(([label, stats]) => ({ label: label + ':', stats }))
-return { upgradeForRows, statsNormal, statsConditional }
+  const upgradeForRows = rawStats.filter(s => s.effect_name === 'Upgrade for')
+  const statsNormal = rawStats.filter(s => s.effect_name !== 'Upgrade for' && (!s.applies_to || s.applies_to === 0))
+  const statsCond = rawStats.filter(s => s.effect_name !== 'Upgrade for' && s.applies_to && s.applies_to !== 0)
+  const groupMap = {}
+  statsCond.forEach(s => {
+    const label = dapatkanLabelApplies(s.applies_to) || `Type ${s.applies_to}`
+    if (!groupMap[label]) groupMap[label] = []
+    groupMap[label].push(s)
+  })
+  const statsConditional = Object.entries(groupMap).map(([label, stats]) => ({ label: label + ':', stats }))
+  return { upgradeForRows, statsNormal, statsConditional }
+}
+
+// ────────────────────────────────────────────────────────────
+// "USED FOR" — REVERSE INDEX
+//
+// Kenapa tidak bisa dicari lewat nama: rantai upgrade Crysta sering
+// GANTI NAMA TOTAL antar tingkat (contoh dari spesifikasi awal:
+// "Vulture" naik jadi "Trickster Dragon Mimyugon" — dua nama itu
+// tidak ada hubungannya sama sekali). Jadi mencari kandidat successor
+// lewat items.php?name=<nama item ini> tidak akan pernah ketemu.
+//
+// Solusi yang benar: karena API tidak punya endpoint "cari item yang
+// Upgrade for-nya == id ini", kita bangun index terbalik SEKALI saja:
+// pindai semua item Crysta/XTAL, baca stat "Upgrade for" masing-masing,
+// lalu simpan sebagai predecessorId -> [ {id, name}, ... ].
+// Index di-cache di module scope, jadi cuma dibangun sekali per sesi
+// (dipicu lazy saat modal Crysta pertama kali dibuka / hasil pencarian
+// pertama yang mengandung Crysta).
+// ────────────────────────────────────────────────────────────
+const crystaSuccessorIndex = {}      // predecessorId -> [{ id, name }]
+const crystaIndexState = ref({ building: false, built: false, scanned: 0, totalCrysta: 0 })
+let crystaIndexPromise = null
+
+// Ambil satu halaman daftar item. Offset dimajukan berdasarkan jumlah
+// data yang BENAR-BENAR dikembalikan server (bukan asumsi limit tetap),
+// supaya tetap aman walau server membatasi page size sendiri.
+const fetchItemsPage = async (offset, limit) => {
+  const r = await fetch(`https://coryn.club/api/v1/items.php?limit=${limit}&offset=${offset}`)
+  if (!r.ok) throw new Error('Gagal memuat daftar item')
+  return r.json()
+}
+
+// Jalankan worker atas array dengan batas concurrency, supaya tidak
+// membanjiri server dengan ratusan request bersamaan.
+const runWithConcurrency = async (items, worker, concurrency = 15) => {
+  let idx = 0
+  const next = async () => {
+    while (idx < items.length) {
+      const current = idx++
+      await worker(items[current])
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, next))
+}
+
+const buildCrystaIndex = () => {
+  if (crystaIndexPromise) return crystaIndexPromise
+  crystaIndexState.value.building = true
+
+  crystaIndexPromise = (async () => {
+    // 1) Kumpulkan semua item yang type-nya Crysta/XTAL (scan penuh,
+    //    karena filter by-type di API belum tentu didukung/terverifikasi).
+    const crystaCandidates = []
+    let offset = 0
+    let total = Infinity
+    const PAGE_SIZE = 100
+    while (offset < total) {
+      let j
+      try {
+        j = await fetchItemsPage(offset, PAGE_SIZE)
+      } catch {
+        break
+      }
+      if (!j?.success || !Array.isArray(j.data) || j.data.length === 0) break
+      total = j.meta?.total ?? j.data.length
+      j.data.forEach(it => { if (isCrystaItem(it)) crystaCandidates.push(it) })
+      offset += j.data.length
+      if (offset > 30000) break // safety guard, jangan sampai infinite loop
+    }
+
+    crystaIndexState.value.totalCrysta = crystaCandidates.length
+
+    // 2) Untuk tiap Crysta, ambil detail stat-nya dan baca "Upgrade for".
+    //    Ini yang membentuk index terbalik predecessorId -> successor.
+    await runWithConcurrency(crystaCandidates, async (c) => {
+      try {
+        const r = await fetch(`https://coryn.club/api/v1/items.php?id=${c.id}`)
+        if (!r.ok) return
+        const j = await r.json()
+        if (!j.success || !j.data?.stats) return
+        const uf = j.data.stats.find(s => s.effect_name === 'Upgrade for')
+        if (uf) {
+          if (!crystaSuccessorIndex[uf.amount]) crystaSuccessorIndex[uf.amount] = []
+          crystaSuccessorIndex[uf.amount].push({ id: c.id, name: c.name })
+        }
+      } catch { /* ignore */ } finally {
+        crystaIndexState.value.scanned++
+      }
+    }, 15)
+
+    crystaIndexState.value.building = false
+    crystaIndexState.value.built = true
+  })()
+
+  return crystaIndexPromise
+}
+
+// Lookup "Used For" — O(1) setelah index terbangun.
+// Hanya dipanggil untuk item Crysta/XTAL (dicek di caller).
+const cariUsedForCrysta = async (targetId) => {
+  await buildCrystaIndex()
+  return crystaSuccessorIndex[targetId] || []
+}
+
+// Build full enhancement chain (all items in upgrade path) — hanya relevan untuk Crysta
+const buildEnhancementChain = async (itemId, itemName) => {
+  const chain = []
+  const visited = new Set()
+
+  const fetchItemData = async (id) => {
+    if (visited.has(id)) return null
+    visited.add(id)
+    try {
+      const r = await fetch(`https://coryn.club/api/v1/items.php?id=${id}`)
+      if (!r.ok) return null
+      const j = await r.json()
+      if (j.success && j.data) {
+        return { id, name: j.data.name, data: j.data }
+      }
+    } catch { return null }
+    return null
+  }
+
+  let current = await fetchItemData(itemId)
+  if (!current || !isCrystaItem(current.data)) return []
+
+  const predecessors = []
+  let pred = current
+  while (pred) {
+    const stats = pred.data?.stats || []
+    const upgradeFor = stats.find(s => s.effect_name === 'Upgrade for')
+    if (!upgradeFor) break
+    const predData = await fetchItemData(upgradeFor.amount)
+    if (!predData || !isCrystaItem(predData.data)) break
+    predecessors.unshift(predData)
+    pred = predData
+  }
+
+  chain.push(...predecessors, current)
+
+  let succ = current
+  while (succ) {
+    const found = await cariUsedForCrysta(succ.id)
+    if (found.length === 0) break
+    const nextId = found[0].id
+    if (visited.has(nextId)) break
+    const succData = await fetchItemData(nextId)
+    if (!succData) break
+    chain.push(succData)
+    succ = succData
+  }
+
+  return chain
 }
 
 // ── Open Upgrade Modal ──
 const bukaModalUpgrade = async (itemId, itemName) => {
-upgradeModal.value = {
-open: true,
-loading: true,
-error: '',
-id: itemId,
-name: itemName,
-typeLabel: '',
-sell: undefined,
-stats: [],
-statsNormal: [],
-statsConditional: [],
-upgradeForRows: [],
-upgradeForResolvedNames: {},
-dropFrom: []
-}
+  upgradeModal.value = {
+    open: true,
+    loading: true,
+    error: '',
+    id: itemId,
+    name: itemName,
+    typeLabel: '',
+    sell: undefined,
+    stats: [],
+    statsNormal: [],
+    statsConditional: [],
+    upgradeForRows: [],
+    upgradeForResolvedNames: {},
+    dropFrom: [],
+    predecessor: null,
+    successor: null,
+    item: { id: itemId, name: itemName, usedFor: [] }
+  }
 
-try {
-// Fetch item detail
-const r = await fetch(`https://coryn.club/api/v1/items.php?id=${itemId}`)
-if (!r.ok) throw new Error('Failed to fetch item data')
-const j = await r.json()
-if (!j.success) throw new Error('Item not found')
+  try {
+    // Fetch item detail
+    const r = await fetch(`https://coryn.club/api/v1/items.php?id=${itemId}`)
+    if (!r.ok) throw new Error('Failed to fetch item data')
+    const j = await r.json()
+    if (!j.success) throw new Error('Item not found')
 
-const data = j.data
-const rawStats = data.stats || []
-const { upgradeForRows, statsNormal, statsConditional } = parseStats(rawStats)
+    const data = j.data
+    const rawStats = data.stats || []
+    const isCrysta = isCrystaItem(data)
 
-// Resolve upgrade for names
-const upgradeForResolvedNames = {}
-await Promise.all(upgradeForRows.map(async (s) => {
-const nama = await ambilNamaItem(s.amount)
-if (nama) upgradeForResolvedNames[s.amount] = nama
-}))
+    const { upgradeForRows: rawUpgradeForRows, statsNormal, statsConditional } = parseStats(rawStats)
+    // "Upgrade for" hanya berlaku untuk Crysta/XTAL
+    const upgradeForRows = isCrysta ? rawUpgradeForRows : []
 
-// Fetch monster drop data for this item name
-let dropFrom = []
-try {
-const rm = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(itemName)}`)
-if (rm.ok) {
-const jm = await rm.json()
-if (jm.success && Array.isArray(jm.data)) {
-const mapUnik = new Map()
-jm.data.forEach(m => {
-if (
-itemName.toLowerCase().includes(m.name.toLowerCase()) ||
-m.name.toLowerCase().includes(
-itemName.toLowerCase()
-.replace('mask','').replace('splinter','').replace('fists','')
-.replace('cane','').replace('sword','').replace('bow','').trim()
-)
-) {
-const k = `${m.name}-${m.map_name}-${m.level}`
-if (!mapUnik.has(k)) mapUnik.set(k, {
-name: m.name, level: m.level || '?',
-type: m.type_label || 'Normal', map: m.map_name || 'Unknown Map'
-})
-}
-})
-dropFrom = Array.from(mapUnik.values())
-}
-}
-} catch { /* ignore */ }
+    // Resolve upgrade for names (hanya kalau Crysta)
+    const upgradeForResolvedNames = {}
+    if (isCrysta) {
+      await Promise.all(upgradeForRows.map(async (s) => {
+        const nama = await ambilNamaItem(s.amount)
+        if (nama) upgradeForResolvedNames[s.amount] = nama
+      }))
+    }
 
-// Find predecessor from upgradeForRows
-let predecessor = null
-if (upgradeForRows.length > 0) {
-const predId = upgradeForRows[0].amount
-const predName = upgradeForResolvedNames[predId] || await ambilNamaItem(predId)
-if (predName) predecessor = { id: predId, name: predName }
-}
+    // Fetch monster drop data for this item name (berlaku untuk semua tipe item)
+    let dropFrom = []
+    try {
+      const rm = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(itemName)}`)
+      if (rm.ok) {
+        const jm = await rm.json()
+        if (jm.success && Array.isArray(jm.data)) {
+          const mapUnik = new Map()
+          jm.data.forEach(m => {
+            if (
+              itemName.toLowerCase().includes(m.name.toLowerCase()) ||
+              m.name.toLowerCase().includes(
+                itemName.toLowerCase()
+                  .replace('mask', '').replace('splinter', '').replace('fists', '')
+                  .replace('cane', '').replace('sword', '').replace('bow', '').trim()
+              )
+            ) {
+              const k = `${m.name}-${m.map_name}-${m.level}`
+              if (!mapUnik.has(k)) mapUnik.set(k, {
+                name: m.name, level: m.level || '?',
+                type: m.type_label || 'Normal', map: m.map_name || 'Unknown Map'
+              })
+            }
+          })
+          dropFrom = Array.from(mapUnik.values())
+        }
+      }
+    } catch { /* ignore */ }
 
-// Find successor (items that upgrade FROM current item)
-let successor = null
-try {
-const baseName = itemName.split(' ').slice(0, -1).join(' ') || itemName
-const sr = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(baseName)}&limit=30`)
-if (sr.ok) {
-const sj = await sr.json()
-if (sj.success && Array.isArray(sj.data)) {
-const successorCheck = await Promise.all(
-sj.data.map(async (candidate) => {
-if (candidate.id === itemId) return null
-try {
-const cr = await fetch(`https://coryn.club/api/v1/items.php?id=${candidate.id}`)
-if (!cr.ok) return null
-const cj = await cr.json()
-if (cj.success && cj.data?.stats) {
-const hasUpgradeFrom = cj.data.stats.some(s =>
-s.effect_name === 'Upgrade for' && s.amount === itemId
-)
-if (hasUpgradeFrom) {
-return { id: candidate.id, name: candidate.name }
-}
-}
-} catch { return null }
-return null
-})
-)
-successor = successorCheck.find(s => s !== null) || null
-}
-}
-} catch { /* ignore */ }
+    // Predecessor ("Upgrade for") — hanya Crysta
+    let predecessor = null
+    if (isCrysta && upgradeForRows.length > 0) {
+      const predId = upgradeForRows[0].amount
+      const predName = upgradeForResolvedNames[predId] || await ambilNamaItem(predId)
+      if (predName) predecessor = { id: predId, name: predName }
+    }
 
-upgradeModal.value = {
-...upgradeModal.value,
-loading: false,
-typeLabel: data.type_label ? data.type_label.replace('[','').replace(']','') : '',
-sell: data.sell,
-stats: rawStats,
-statsNormal,
-statsConditional,
-upgradeForRows,
-upgradeForResolvedNames,
-dropFrom,
-predecessor,
-successor
-}
-} catch (err) {
-upgradeModal.value.loading = false
-upgradeModal.value.error = err.message
-}
+    // Successor / "Used for" — hanya Crysta, pakai reverse index (bukan cari nama)
+    let usedFor = []
+    let successor = null
+    if (isCrysta) {
+      usedFor = await cariUsedForCrysta(itemId)
+      successor = usedFor[0] || null
+    }
+
+    upgradeModal.value = {
+      ...upgradeModal.value,
+      loading: false,
+      typeLabel: data.type_label ? data.type_label.replace('[', '').replace(']', '') : '',
+      sell: data.sell,
+      stats: rawStats,
+      statsNormal,
+      statsConditional,
+      upgradeForRows,
+      upgradeForResolvedNames,
+      dropFrom,
+      predecessor,
+      successor,
+      // Object bersih untuk dibaca template modal (blok "Used For")
+      item: { id: itemId, name: data.name || itemName, usedFor }
+    }
+  } catch (err) {
+    upgradeModal.value.loading = false
+    upgradeModal.value.error = err.message
+  }
 }
 
 // ── Open Monster Modal (fetch monster details from Coryn) ──
@@ -1127,240 +1247,223 @@ const monsterModal = ref({ open: false, loading: false, error: '', data: null })
 const mapMonsters = ref([])
 
 const loadMapMonsters = async (mapName) => {
-mapMonsters.value = []
-if (!mapName) return
-try {
-// Try map-based endpoint first (if API supports it)
-let r = await fetch(`https://coryn.club/api/v1/monsters.php?map=${encodeURIComponent(mapName)}`)
-if (r.ok) {
-const j = await r.json()
-if (j.success && Array.isArray(j.data)) { mapMonsters.value = j.data; return }
-}
-
-// Fallback: search by name and filter by map_name
-r = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(mapName)}`)
-if (r.ok) {
-const j = await r.json()
-if (j.success && Array.isArray(j.data)) {
-mapMonsters.value = j.data.filter(m => (m.map_name || '').toLowerCase().includes((mapName||'').toLowerCase()))
-}
-}
-} catch (e) {
-mapMonsters.value = []
-}
+  mapMonsters.value = []
+  if (!mapName) return
+  try {
+    let r = await fetch(`https://coryn.club/api/v1/monsters.php?map=${encodeURIComponent(mapName)}`)
+    if (r.ok) {
+      const j = await r.json()
+      if (j.success && Array.isArray(j.data)) { mapMonsters.value = j.data; return }
+    }
+    r = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(mapName)}`)
+    if (r.ok) {
+      const j = await r.json()
+      if (j.success && Array.isArray(j.data)) {
+        mapMonsters.value = j.data.filter(m => (m.map_name || '').toLowerCase().includes((mapName || '').toLowerCase()))
+      }
+    }
+  } catch (e) {
+    mapMonsters.value = []
+  }
 }
 
 const bukaModalMonster = async (monster) => {
-if (!monster || !monster.name) return
-monsterModal.value = { open: true, loading: true, error: '', data: null }
-try {
-const r = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(monster.name)}`)
-if (!r.ok) throw new Error('Failed to fetch monster data')
-const j = await r.json()
-if (!j.success || !Array.isArray(j.data) || j.data.length === 0) throw new Error('Monster not found')
+  if (!monster || !monster.name) return
+  monsterModal.value = { open: true, loading: true, error: '', data: null }
+  try {
+    const r = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(monster.name)}`)
+    if (!r.ok) throw new Error('Failed to fetch monster data')
+    const j = await r.json()
+    if (!j.success || !Array.isArray(j.data) || j.data.length === 0) throw new Error('Monster not found')
 
-// Try to find the exact entry by map or level if provided
-let sel = j.data[0]
-if (monster.map || monster.level) {
-const found = j.data.find(m => {
-const sameMap = monster.map && (m.map_name === monster.map || (m.map_name || '').includes(monster.map) || (monster.map || '').includes(m.map_name))
-const sameLevel = monster.level && String(m.level) === String(monster.level)
-return (sameMap && sameLevel) || sameLevel || sameMap
-})
-if (found) sel = found
-}
+    let sel = j.data[0]
+    if (monster.map || monster.level) {
+      const found = j.data.find(m => {
+        const sameMap = monster.map && (m.map_name === monster.map || (m.map_name || '').includes(monster.map) || (monster.map || '').includes(m.map_name))
+        const sameLevel = monster.level && String(m.level) === String(monster.level)
+        return (sameMap && sameLevel) || sameLevel || sameMap
+      })
+      if (found) sel = found
+    }
 
-monsterModal.value.data = sel
-// load other monsters on same map (bosses/minibosses)
-await loadMapMonsters(sel.map_name || sel.map || '')
-monsterModal.value.loading = false
-} catch (err) {
-monsterModal.value.loading = false
-monsterModal.value.error = err.message || 'Unknown error'
-}
+    monsterModal.value.data = sel
+    await loadMapMonsters(sel.map_name || sel.map || '')
+    monsterModal.value.loading = false
+  } catch (err) {
+    monsterModal.value.loading = false
+    monsterModal.value.error = err.message || 'Unknown error'
+  }
 }
 
 const handleClickDrop = async (d) => {
-if (!d) return
-// If drop has item id, open upgrade modal
-const id = d.id || d.item_id || d.itemId
-const name = d.name || d.item || d.title || ''
-if (id) {
-await bukaModalUpgrade(id, name)
-return
-}
-// Otherwise try lookup by name
-const lookup = name || (typeof d === 'string' ? d : '')
-if (!lookup) return
-try {
-const r = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(lookup)}&limit=1`)
-if (!r.ok) return
-const j = await r.json()
-if (j.success && Array.isArray(j.data) && j.data.length) {
-await bukaModalUpgrade(j.data[0].id, j.data[0].name)
-}
-} catch (e) {}
+  if (!d) return
+  const id = d.id || d.item_id || d.itemId
+  const name = d.name || d.item || d.title || ''
+  if (id) {
+    await bukaModalUpgrade(id, name)
+    return
+  }
+  const lookup = name || (typeof d === 'string' ? d : '')
+  if (!lookup) return
+  try {
+    const r = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(lookup)}&limit=1`)
+    if (!r.ok) return
+    const j = await r.json()
+    if (j.success && Array.isArray(j.data) && j.data.length) {
+      await bukaModalUpgrade(j.data[0].id, j.data[0].name)
+    }
+  } catch (e) {}
 }
 
 const tutupModal = () => {
-upgradeModal.value.open = false
+  upgradeModal.value.open = false
 }
 
 // Close modal on Escape
 const handleKeydown = (e) => {
-if (e.key === 'Escape' && upgradeModal.value.open) tutupModal()
+  if (e.key === 'Escape' && upgradeModal.value.open) tutupModal()
 }
 
 // ── Lifecycle ──
 onMounted(() => {
-const logs = localStorage.getItem('timidb_search_logs')
-if (logs) displayedSearchLogs.value = JSON.parse(logs)
-let i = 0
-placeholderInterval = setInterval(() => {
-i = (i + 1) % placeholders.length
-currentPlaceholder.value = placeholders[i]
-}, 3000)
-document.addEventListener('click', klikLuar)
-document.addEventListener('keydown', handleKeydown)
-if (route.query.q) {
-namaItem.value = route.query.q
-cariItemDanDrop()
-}
+  const logs = localStorage.getItem('timidb_search_logs')
+  if (logs) displayedSearchLogs.value = JSON.parse(logs)
+  let i = 0
+  placeholderInterval = setInterval(() => {
+    i = (i + 1) % placeholders.length
+    currentPlaceholder.value = placeholders[i]
+  }, 3000)
+  document.addEventListener('click', klikLuar)
+  document.addEventListener('keydown', handleKeydown)
+  if (route.query.q) {
+    namaItem.value = route.query.q
+    cariItemDanDrop()
+  }
 })
 
 watch(() => route.query.q, (newQ) => {
-if (newQ) {
-namaItem.value = newQ
-cariItemDanDrop()
-}
+  if (newQ) {
+    namaItem.value = newQ
+    cariItemDanDrop()
+  }
 })
 
 onUnmounted(() => {
-clearInterval(placeholderInterval)
-document.removeEventListener('click', klikLuar)
-document.removeEventListener('keydown', handleKeydown)
+  clearInterval(placeholderInterval)
+  document.removeEventListener('click', klikLuar)
+  document.removeEventListener('keydown', handleKeydown)
 })
 const klikLuar = (e) => {
-if (searchRef.value && !searchRef.value.contains(e.target)) isHistoryOpen.value = false
+  if (searchRef.value && !searchRef.value.contains(e.target)) isHistoryOpen.value = false
 }
 const clearSearchLogs = () => {
-displayedSearchLogs.value = []
-localStorage.removeItem('timidb_search_logs')
+  displayedSearchLogs.value = []
+  localStorage.removeItem('timidb_search_logs')
 }
 const pilihHistory = (k) => { namaItem.value = k; isHistoryOpen.value = false; cariItemDanDrop() }
 
 // ── Main Search ──
 const cariItemDanDrop = async () => {
-if (!namaItem.value.trim()) { pesanError.value = 'Please type an item name first!'; return }
-isHistoryOpen.value = false
-sedangLoading.value = true
-pesanError.value = ''
-listHasilItem.value = []
-halamanSekarang.value = 1
-filterType.value = ''
-mapViewActive.value = null
+  if (!namaItem.value.trim()) { pesanError.value = 'Please type an item name first!'; return }
+  isHistoryOpen.value = false
+  sedangLoading.value = true
+  pesanError.value = ''
+  listHasilItem.value = []
+  halamanSekarang.value = 1
+  filterType.value = ''
+  mapViewActive.value = null
 
-const q = namaItem.value.trim()
-if (!displayedSearchLogs.value.includes(q)) {
-displayedSearchLogs.value.unshift(q)
-if (displayedSearchLogs.value.length > 5) displayedSearchLogs.value.pop()
-localStorage.setItem('timidb_search_logs', JSON.stringify(displayedSearchLogs.value))
-}
+  const q = namaItem.value.trim()
+  if (!displayedSearchLogs.value.includes(q)) {
+    displayedSearchLogs.value.unshift(q)
+    if (displayedSearchLogs.value.length > 5) displayedSearchLogs.value.pop()
+    localStorage.setItem('timidb_search_logs', JSON.stringify(displayedSearchLogs.value))
+  }
 
-try {
-const resItem = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(q)}&limit=100`)
-if (!resItem.ok) throw new Error('Failed to connect to Item API')
-const jsonItem = await resItem.json()
+  try {
+    const resItem = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(q)}&limit=100`)
+    if (!resItem.ok) throw new Error('Failed to connect to Item API')
+    const jsonItem = await resItem.json()
 
-if (!jsonItem.success || !jsonItem.data?.length) {
-pesanError.value = 'Item not found in Toram Database.'
-return
-}
+    if (!jsonItem.success || !jsonItem.data?.length) {
+      pesanError.value = 'Item not found in Toram Database.'
+      return
+    }
 
-let listMonster = []
-try {
-const rm = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(q)}`)
-if (rm.ok) {
-const jm = await rm.json()
-if (jm.success && Array.isArray(jm.data)) listMonster = jm.data
-}
-} catch { /* ignore */ }
+    let listMonster = []
+    try {
+      const rm = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(q)}`)
+      if (rm.ok) {
+        const jm = await rm.json()
+        if (jm.success && Array.isArray(jm.data)) listMonster = jm.data
+      }
+    } catch { /* ignore */ }
 
-const detailPromises = jsonItem.data.map(async (itemBiasa) => {
-let rawStats = []
-try {
-const rd = await fetch(`https://coryn.club/api/v1/items.php?id=${itemBiasa.id}`)
-if (rd.ok) {
-const jd = await rd.json()
-if (jd.success && jd.data?.stats) rawStats = jd.data.stats
-}
-} catch { /* ignore */ }
+    const detailPromises = jsonItem.data.map(async (itemBiasa) => {
+      let rawStats = []
+      try {
+        const rd = await fetch(`https://coryn.club/api/v1/items.php?id=${itemBiasa.id}`)
+        if (rd.ok) {
+          const jd = await rd.json()
+          if (jd.success && jd.data?.stats) rawStats = jd.data.stats
+        }
+      } catch { /* ignore */ }
 
-const { upgradeForRows, statsNormal, statsConditional } = parseStats(rawStats)
+      const { upgradeForRows: rawUpgradeForRows, statsNormal, statsConditional } = parseStats(rawStats)
 
-const upgradeForNames = {}
-await Promise.all(upgradeForRows.map(async (s) => {
-const nama = await ambilNamaItem(s.amount)
-if (nama) upgradeForNames[s.amount] = nama
-}))
+      // ── ATURAN: "Upgrade for" & "Used for" hanya untuk Crysta/XTAL ──
+      const isCrysta = isCrystaItem(itemBiasa)
 
-let usedFor = []
-try {
-const ru = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(itemBiasa.name)}`)
-if (ru.ok) {
-const ju = await ru.json()
-if (ju.success && Array.isArray(ju.data)) {
-const checks = await Promise.all(
-ju.data.filter(r => r.id !== itemBiasa.id).map(async (r) => {
-try {
-const rr = await fetch(`https://coryn.club/api/v1/items.php?id=${r.id}`)
-if (!rr.ok) return null
-const jr = await rr.json()
-if (jr.success && jr.data?.stats?.some(s => s.effect_name === 'Upgrade for' && s.amount === itemBiasa.id))
-return { id: r.id, name: r.name }
-} catch { return null }
-return null
-})
-)
-usedFor = checks.filter(Boolean)
-}
-}
-} catch { /* ignore */ }
+      const upgradeForRows = isCrysta ? rawUpgradeForRows : []
+      const upgradeForNames = {}
+      if (isCrysta) {
+        await Promise.all(upgradeForRows.map(async (s) => {
+          const nama = await ambilNamaItem(s.amount)
+          if (nama) upgradeForNames[s.amount] = nama
+        }))
+      }
 
-const monsterCocok = listMonster.filter(m =>
-itemBiasa.name.toLowerCase().includes(m.name.toLowerCase()) ||
-m.name.toLowerCase().includes(
-itemBiasa.name.toLowerCase()
-.replace('mask','').replace('splinter','').replace('fists','')
-.replace('cane','').replace('sword','').replace('bow','').trim()
-)
-)
-const mapUnik = new Map()
-monsterCocok.forEach(m => {
-const k = `${m.name}-${m.map_name}-${m.level}`
-if (!mapUnik.has(k)) mapUnik.set(k, {
-name: m.name, level: m.level || '?',
-type: m.type_label || 'Normal', map: m.map_name || 'Unknown Map'
-})
-})
+      // Jika BUKAN Crysta/XTAL: usedFor kosong, tidak ada API tambahan.
+      // Jika Crysta: lookup dari reverse index (bukan cari berdasarkan nama).
+      let usedFor = []
+      if (isCrysta) {
+        usedFor = await cariUsedForCrysta(itemBiasa.id)
+      }
 
-return {
-...itemBiasa,
-statsNormal,
-statsConditional,
-upgradeForStats: upgradeForRows,
-upgradeForNames,
-usedFor,
-drop_from: Array.from(mapUnik.values())
-}
-})
+      const monsterCocok = listMonster.filter(m =>
+        itemBiasa.name.toLowerCase().includes(m.name.toLowerCase()) ||
+        m.name.toLowerCase().includes(
+          itemBiasa.name.toLowerCase()
+            .replace('mask', '').replace('splinter', '').replace('fists', '')
+            .replace('cane', '').replace('sword', '').replace('bow', '').trim()
+        )
+      )
+      const mapUnik = new Map()
+      monsterCocok.forEach(m => {
+        const k = `${m.name}-${m.map_name}-${m.level}`
+        if (!mapUnik.has(k)) mapUnik.set(k, {
+          name: m.name, level: m.level || '?',
+          type: m.type_label || 'Normal', map: m.map_name || 'Unknown Map'
+        })
+      })
 
-listHasilItem.value = await Promise.all(detailPromises)
-} catch (err) {
-pesanError.value = 'Database Connection Error: ' + err.message
-} finally {
-sedangLoading.value = false
-}
+      return {
+        ...itemBiasa,
+        statsNormal,
+        statsConditional,
+        upgradeForStats: upgradeForRows,
+        upgradeForNames,
+        usedFor,
+        drop_from: Array.from(mapUnik.values())
+      }
+    })
+
+    listHasilItem.value = await Promise.all(detailPromises)
+  } catch (err) {
+    pesanError.value = 'Database Connection Error: ' + err.message
+  } finally {
+    sedangLoading.value = false
+  }
 }
 </script>
 
