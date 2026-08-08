@@ -1,14 +1,26 @@
 <template>
 <div class="timidb-search-container max-w-[1200px] mx-auto font-sans">
 
-<!-- Attribution -->
-<div :class="['text-[13px] leading-relaxed p-3 px-4 rounded-lg mb-6 border',
-isDark ? 'bg-[#3498db]/[0.08] border-[#3498db]/20 text-slate-400' : 'bg-blue-50 border-blue-200 text-slate-600']">
-<img src="@/assets/iconfromhome/what chara39.jpg" class="inline-block w-16 h-16 mr-8"> <strong>Database Information:</strong> Data fetched real-time via
-<a href="https://coryn.club/" target="_blank" rel="noopener"
-class="text-[#3498db] font-semibold no-underline hover:underline">Coryn Club</a>.
-<a class="text-[#8768db] font-semibold no-underline hover:underline">(Max 100 Results)</a>
-</div>
+  <!-- Attribution -->
+  <div 
+    class="flex items-start gap-3 text-[13px] leading-relaxed p-3 px-4 rounded-lg mb-6 border"
+    :class="isDark ? 'bg-[#3498db]/[0.08] border-[#3498db]/20 text-slate-400' : 'bg-blue-50 border-blue-200 text-slate-600'"
+  >
+    <!-- Gambar -->
+    <img 
+      src="@/assets/iconfromhome/what chara39.jpg" 
+      class="w-12 h-12 object-contain shrink-0" 
+      alt="Icon"
+    />
+    
+    <!-- Teks -->
+    <div class="flex-1 min-w-0">
+      <strong>Database Information:</strong> Data fetched real-time via
+      <a href="https://coryn.club/" target="_blank" rel="noopener" class="text-[#3498db] font-semibold no-underline hover:underline">Coryn Club</a>.
+      <a class="text-[#8768db] font-semibold no-underline hover:underline">(Max 100 Results)</a>. 
+      Or visit <a href="https://coryn.club/index2.php" target="_blank" rel="noopener" class="text-[#3498db] font-semibold no-underline hover:underline">Coryn Club</a>. if you need complete details... ^-^
+    </div>
+  </div>
 
 <!-- Search Bar + Type Filter -->
 <div class="space-y-3 mb-6">
