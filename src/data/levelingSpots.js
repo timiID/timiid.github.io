@@ -163,10 +163,6 @@ export const levelingList = [
     ]
   },
   {
-    range: '303-305',
-    main: { name: 'Wiltileaf', type: 'Mini Boss', lv: 305, loc: 'Eumano Village Ruins: Area 2' },
-  },
-  {
     range: '305-324',
     main: { name: 'Mulgoon', type: 'Boss', difficulty: 'Ultimate', lv: 311, loc: 'Menabra Plains' },
     alts: [

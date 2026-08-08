@@ -45,7 +45,7 @@
         </div>
       </section>
 
-      <RouterLink to="/xtall/advanced" class="my-6 block w-full rounded-2xl border-2 border-indigo-500 bg-gradient-to-t from-indigo-400 to-purple-500 px-6 py-5 text-center text-lg font-black text-white shadow-xl hover:scale-[1.02] transition">
+      <RouterLink :to="{ name: 'xtall-advanced', query: { filter: route.query.filter } }" class="my-6 block w-full rounded-2xl border-2 border-indigo-500 bg-gradient-to-t from-indigo-400 to-purple-500 px-6 py-5 text-center text-lg font-black text-white shadow-xl hover:scale-[1.02] transition">
         🔎 Advanced Search
       </RouterLink>
 
@@ -234,6 +234,25 @@
     @toggle-favorite="handleToggleFavorite"
   />
 </main>
+
+      <div v-if="paginatedResults.length === 0" class="min-h-[40vh] flex flex-col items-center justify-center p-6 text-center space-y-8 animate-entry">
+        <div class="relative group">
+          <div class="text-[6rem] md:text-[10rem] font-black opacity-5 italic select-none tracking-tighter leading-none">404</div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <img src="/images/what chara.webp" alt="Timi DB Logo" loading="lazy" decoding="async" width="160" height="160" class="w-28 h-28 md:w-40 md:h-40 object-contain drop-shadow-[0_0_30px_rgba(99,102,241,0.6)] animate-float-elegant" />
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="text-2xl md:text-3xl font-black italic uppercase tracking-tighter leading-tight">Hasil Pencarian <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">Tidak Ditemukan</span></h3>
+          <p class="text-xs md:text-sm font-black uppercase tracking-[0.4em] opacity-40 italic">Coba ubah kata kunci atau reset filter untuk melihat semua xtall.</p>
+        </div>
+
+        <div class="flex gap-3">
+          <button @click="handleResetAll" class="px-6 py-3 rounded-full bg-red-600 text-white font-black uppercase text-xs">Reset</button>
+          <button @click="$router.push('/')" class="px-6 py-3 rounded-full bg-indigo-600 text-white font-black uppercase text-xs">Kembali</button>
+        </div>
+      </div>
 
       <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 md:gap-3 py-10 flex-wrap">
   <button 
@@ -660,11 +679,30 @@ const setSearch = (name) => {
 
 const advancedFilter = computed(() => {
   try {
-    return route.query.filter ? JSON.parse(route.query.filter) : null;
+    const f = route.query.filter
+    if (!f) return null
+    if (typeof f === 'string' && /^[A-Za-z0-9_-]+$/.test(f)) {
+      // base64url -> JSON
+      try {
+        const decoded = fromBase64Url(f)
+        return JSON.parse(decoded)
+      } catch (e) {
+        return null
+      }
+    }
+    return JSON.parse(f)
   } catch {
     return null;
   }
 });
+
+function fromBase64Url(str) {
+  try {
+    let s = str.replace(/-/g, '+').replace(/_/g, '/')
+    while (s.length % 4) s += '='
+    return decodeURIComponent(escape(atob(s)))
+  } catch (e) { return null }
+}
 
 /**
  * COMPUTED ENGINE FILTERING
@@ -823,5 +861,28 @@ div, section, main {
 @keyframes slide-up {
   from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
   to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* float effect used for error sprite */
+.animate-float-elegant {
+  animation: floatEffect 4s ease-in-out infinite;
+}
+
+@keyframes floatEffect {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(-2deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .text-\[6rem\] {
+    font-size: 5rem;
+  }
 }
 </style>

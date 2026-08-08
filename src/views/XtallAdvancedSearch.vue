@@ -21,13 +21,33 @@ const filters = reactive({
 onMounted(() => {
   if (!route.query.filter) return
   try {
-    const saved = JSON.parse(route.query.filter)
+    let savedRaw = route.query.filter
+    const isBase64Url = typeof savedRaw === 'string' && /^[A-Za-z0-9_-]+$/.test(savedRaw)
+    if (isBase64Url) {
+      savedRaw = fromBase64Url(savedRaw)
+    }
+    const saved = JSON.parse(savedRaw)
     if (saved?.stats) filters.stats = saved.stats
     if (saved?.types) filters.types = saved.types
   } catch (e) {
     console.warn('Invalid filter data')
   }
 })
+
+// Encode JSON -> base64url (shorter and URL-safe)
+function toBase64Url(str) {
+  try {
+    return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  } catch (e) { return '' }
+}
+
+function fromBase64Url(str) {
+  try {
+    let s = str.replace(/-/g, '+').replace(/_/g, '/')
+    while (s.length % 4) s += '='
+    return decodeURIComponent(escape(atob(s)))
+  } catch (e) { return '' }
+}
 
 function goBack() { router.back() }
 
@@ -55,10 +75,8 @@ function toggleType(typeValue) {
 }
 
 function applyFilter() {
-  router.push({
-    name: 'xtall',
-    query: { filter: JSON.stringify(filters) }
-  })
+  const compact = toBase64Url(JSON.stringify(filters))
+  router.push({ name: 'xtall', query: { filter: compact } })
 }
 </script>
 

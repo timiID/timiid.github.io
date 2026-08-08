@@ -78,12 +78,13 @@ const router = useRouter();
     color: 'from-orange-500 to-red-500'
   },
   { 
-    name: 'XTALL ID', 
-    path: '/xtall', 
-    icon: iconXtall, 
-    desc: 'Find the best crystals for your equipment. Xtall with Indonesia Language!',
-    color: 'from-emerald-500 to-teal-500'
-  }
+  name: 'XTALL ID', 
+  flag: 'https://flagcdn.com/w20/id.png', // Atau file SVG lokal
+  path: '/xtall', 
+  icon: iconXtall, 
+  desc: 'Find the best crystals for your equipment. Xtall with Indonesia Language!',
+  color: 'from-emerald-500 to-teal-500'
+}
 ];
 
 const other = [
@@ -348,6 +349,45 @@ const navigateTo = (path) => router.push(path);
   </div>
 </div>
 
+    <div v-else class="min-h-[40vh] flex flex-col items-center justify-center p-6 text-center space-y-8 animate-fade-in">
+  
+      <div class="relative group">
+        <div class="text-[6rem] md:text-[10rem] font-black opacity-5 italic select-none tracking-tighter leading-none">
+          404
+        </div>
+        
+        <div class="absolute inset-0 flex items-center justify-center">
+          <img 
+            src="/images/what chara.webp" 
+            alt="Timi DB Logo" 
+            loading="lazy"
+            decoding="async"
+            width="160"
+            height="160"
+            class="w-28 h-28 md:w-40 md:h-40 object-contain drop-shadow-[0_0_30px_rgba(99,102,241,0.6)] animate-float-elegant"
+          />
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-2xl md:text-3xl font-black italic uppercase tracking-tighter leading-tight">
+          Xtall <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">Tidak Ditemukan</span>
+        </h3>
+        <p class="text-xs md:text-sm font-black uppercase tracking-[0.4em] opacity-40 italic">
+          Tidak ada xtall favorit yang disimpan.
+        </p>
+      </div>
+
+      <button @click="navigateTo('/xtall')"
+        class="group relative px-8 py-3 rounded-[2rem] bg-indigo-600 overflow-hidden transition-all duration-500 hover:scale-105 active:scale-95 shadow-2xl shadow-indigo-500/40"
+      >
+        <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <span class="relative flex items-center gap-4 text-white font-black uppercase tracking-[0.3em] text-[10px]">
+          Lihat Xtall
+        </span>
+      </button>
+    </div>
+
       <div class="w-full flex items-center gap-6 my-16 opacity-50">
         <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-blue-500 to-purple-500"></div>
         <h2 class="font-archivo italic text-2xl tracking-tighter uppercase shrink-0">
@@ -364,7 +404,15 @@ const navigateTo = (path) => router.push(path);
             <div class="mb-4 h-16 flex items-center justify-center">
               <img :src="item.icon" :alt="item.name" class="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-lg" />
             </div>
-            <h3 class="text-xl font-black mb-2 tracking-tight">{{ item.name }}</h3>
+            <h3 class="text-xl font-black mb-2 tracking-tight flex items-center gap-2">
+  <span>{{ item.name }}</span>
+  <img 
+    v-if="item.flag" 
+    :src="item.flag" 
+    alt="Flag" 
+    class="w-5 h-auto rounded-sm inline-block shadow-sm" 
+  />
+</h3>
             <p class="text-xs opacity-60 leading-loose">{{ item.desc }}</p>
             <div class="mt-6 flex items-center gap-2 text-[10px] font-black tracking-widest text-purple-400 uppercase">
               Open <span>→</span>
@@ -455,5 +503,28 @@ const navigateTo = (path) => router.push(path);
 @keyframes floatSlow {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-15px); }
+}
+
+/* float effect used for error sprite */
+.animate-float-elegant {
+  animation: floatEffect 4s ease-in-out infinite;
+}
+
+@keyframes floatEffect {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(-2deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .text-\[6rem\] {
+    font-size: 5rem;
+  }
 }
 </style>
