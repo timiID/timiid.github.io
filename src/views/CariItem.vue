@@ -6,19 +6,16 @@
     class="flex items-start gap-3 text-[13px] leading-relaxed p-3 px-4 rounded-lg mb-6 border"
     :class="isDark ? 'bg-[#3498db]/[0.08] border-[#3498db]/20 text-slate-400' : 'bg-blue-50 border-blue-200 text-slate-600'"
   >
-    <!-- Gambar -->
     <img 
       src="@/assets/iconfromhome/what chara39.jpg" 
       class="w-12 h-12 object-contain shrink-0" 
       alt="Icon"
     />
-    
-    <!-- Teks -->
     <div class="flex-1 min-w-0">
       <strong>Database Information:</strong> Data fetched real-time via
       <a href="https://coryn.club/" target="_blank" rel="noopener" class="text-[#3498db] font-semibold no-underline hover:underline">Coryn Club</a>.
       <a class="text-[#8768db] font-semibold no-underline hover:underline">(Max 100 Results)</a>. 
-      Or visit <a href="https://coryn.club/index2.php" target="_blank" rel="noopener" class="text-[#3498db] font-semibold no-underline hover:underline">Coryn Club</a>. if you need complete details... ^-^
+      Or visit <a href="https://coryn.club/index2.php" target="_blank" rel="noopener" class="text-[#3498db] font-semibold no-underline hover:underline">Coryn Club</a> if you need complete details... ^-^
     </div>
   </div>
 
@@ -30,7 +27,6 @@ isDark ? 'text-cyan-500' : 'text-blue-600']">
 SEARCH ITEM
 </label>
 <div class="flex flex-wrap gap-3 max-w-[700px]">
-<!-- Search Input -->
 <div ref="searchRef" class="relative group flex-1 min-w-[200px] flex gap-3">
 <div class="relative flex-1">
 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#3498db] transition-colors">
@@ -49,7 +45,6 @@ isDark
 ? 'bg-white/[0.05] border-white/10 focus:border-[#3498db]/60 text-white placeholder-slate-600'
 : 'bg-white border-slate-300 focus:border-[#3498db] text-slate-800 placeholder-slate-400']"
 />
-<!-- History Dropdown -->
 <div
 v-if="displayedSearchLogs.length > 0 && isHistoryOpen"
 :class="['absolute left-0 right-0 z-[100] mt-1.5 rounded-xl border shadow-xl overflow-hidden',
@@ -82,7 +77,6 @@ isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50']"
 </div>
 </div>
 
-<!-- Type Filter Dropdown -->
 <div class="relative">
 <select
 v-model="filterType"
@@ -102,7 +96,6 @@ isDark
 </span>
 </div>
 
-<!-- Search Button -->
 <button
 @click="cariItemDanDrop"
 :disabled="sedangLoading"
@@ -112,7 +105,6 @@ class="px-5 py-3 bg-[#3498db] hover:bg-[#2980b9] disabled:opacity-60 text-white 
 </button>
 </div>
 
-<!-- Active filter badge -->
 <div v-if="filterType" class="flex items-center gap-2 ml-1">
 <span :class="['text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5',
 isDark ? 'bg-[#3498db]/15 text-[#3498db]' : 'bg-blue-100 text-blue-700']">
@@ -129,7 +121,7 @@ Filtering: {{ filterType }}
 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
 </svg>
-Fetching item data, stats, and drop sources...
+Fetching item list...
 </p>
 <p v-if="pesanError" class="text-red-500 text-sm font-semibold"> <img src="@/assets/iconfromhome/what chara39.jpg" class="inline-block w-4 h-4 mr-2"> {{ pesanError }}</p>
 </div>
@@ -158,6 +150,10 @@ isDark ? 'border-white/8 bg-white/[0.02]' : 'border-slate-200 bg-slate-50']">
 </h3>
 <span :class="['text-[11px] font-medium px-1.5 py-0.5 rounded font-mono',
 isDark ? 'text-slate-500 bg-white/5' : 'text-slate-400 bg-slate-200']">#{{ item.id }}</span>
+<svg v-if="item.detailLoading" class="w-3.5 h-3.5 animate-spin text-[#3498db]" fill="none" viewBox="0 0 24 24">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+</svg>
 </div>
 <div v-if="getEventLabel(item)" :class="['inline-flex flex-wrap items-center gap-2 mt-2', isDark ? 'text-slate-200' : 'text-slate-700']">
 <span :class="['text-[10px] font-black uppercase tracking-[0.25em] px-2 py-1 rounded-full',
@@ -183,14 +179,22 @@ isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emeral
 </div>
 
 <!-- ── Stat / Effect Table ── -->
-<div v-if="item.statsNormal && item.statsNormal.length > 0" class="px-0">
+<!-- Skeleton while this card's detail is still loading -->
+<div v-if="item.detailLoading" class="px-5 py-4 flex items-center gap-2">
+<svg class="w-4 h-4 animate-spin text-[#3498db]" fill="none" viewBox="0 0 24 24">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+</svg>
+<p :class="['text-sm italic', isDark ? 'text-slate-500' : 'text-slate-400']">Loading stats…</p>
+</div>
+
+<div v-else-if="item.statsNormal && item.statsNormal.length > 0" class="px-0">
 <div :class="['grid grid-cols-[1fr_auto] px-5 py-2 text-[11px] font-black uppercase tracking-wider border-b',
 isDark ? 'text-[#3498db] border-white/8 bg-[#3498db]/5' : 'text-[#3498db] border-slate-200 bg-blue-50/60']">
 <span>Stat / Effect</span>
 <span class="text-right">Amount</span>
 </div>
 
-<!-- Upgrade for rows — clickable, opens modal -->
 <template v-if="item.upgradeForStats && item.upgradeForStats.length > 0">
 <div
 v-for="(uf, ufi) in item.upgradeForStats" :key="'uf-'+ufi"
@@ -218,7 +222,6 @@ isDark
 </div>
 </template>
 
-<!-- Stats normal -->
 <div
 v-for="(stat, si) in item.statsNormal" :key="'sn-'+si"
 :class="['grid grid-cols-[1fr_auto] px-5 py-2.5 items-center border-b text-sm',
@@ -233,7 +236,6 @@ stat.amount < 0
 </span>
 </div>
 
-<!-- Conditional stats -->
 <template v-if="item.statsConditional && item.statsConditional.length > 0">
 <template v-for="(group, gi) in item.statsConditional" :key="'cg-'+gi">
 <div :class="['px-5 pt-3 pb-1 text-[11px] font-black uppercase tracking-wider',
@@ -257,19 +259,25 @@ stat.amount < 0
 </template>
 </div>
 
-<!-- No stats fallback -->
 <div v-else class="px-5 py-4">
 <p :class="['text-sm italic', isDark ? 'text-slate-500' : 'text-slate-400']">No stat data available.</p>
 </div>
 
 <!-- ── Used For ── -->
 <div
-v-if="item.usedFor && item.usedFor.length > 0"
+v-if="item.usedForLoading || (item.usedFor && item.usedFor.length > 0)"
 :class="['mx-0 border-t', isDark ? 'border-white/8' : 'border-slate-200']"
 >
 <div :class="['px-5 py-2 text-[11px] font-black uppercase tracking-wider border-b',
 isDark ? 'text-purple-400 border-white/8 bg-purple-500/5' : 'text-purple-700 border-slate-200 bg-purple-50/60']">
 Used for (Upgrade into)
+</div>
+<div v-if="item.usedForLoading" class="px-5 py-2.5 text-xs italic opacity-60 flex items-center gap-2">
+<svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+</svg>
+Checking upgrade chain…
 </div>
 <div
 v-for="(used, ui) in item.usedFor" :key="'used-'+ui"
@@ -320,7 +328,6 @@ style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr))">
 <div :class="['px-5 py-2 text-[11px] font-black uppercase tracking-wider border-b flex items-center justify-between',
 isDark ? 'text-[#3498db] border-white/8 bg-[#3498db]/5' : 'text-[#3498db] border-slate-200 bg-blue-50/60']">
 <span>Obtained from</span>
-<!-- Toggle Map View -->
 <button
 v-if="item.drop_from && item.drop_from.length > 0"
 @click="toggleMapView(item.id)"
@@ -333,9 +340,7 @@ mapViewActive === item.id
 </button>
 </div>
 
-<!-- MAP VIEW -->
 <div v-if="mapViewActive === item.id && item.drop_from && item.drop_from.length > 0">
-<!-- Group by map -->
 <template v-for="(mapGroup, mgKey) in groupByMap(item.drop_from)" :key="'mg-'+mgKey">
 <div :class="['px-5 pt-3 pb-1 flex items-center gap-2',
 isDark ? 'bg-white/[0.015]' : 'bg-slate-50/80']">
@@ -379,7 +384,6 @@ Lv.{{ monster.level }}
 </template>
 </div>
 
-<!-- LIST VIEW (default) -->
 <div v-else-if="item.drop_from && item.drop_from.length > 0">
 <div
 v-for="(monster, mi) in item.drop_from" :key="'m-'+mi"
@@ -416,6 +420,9 @@ Lv. {{ monster.level }}
 </div>
 </div>
 
+<div v-else-if="item.detailLoading" class="px-5 py-3">
+<p :class="['text-sm italic m-0', isDark ? 'text-slate-600' : 'text-slate-400']">Loading drop sources…</p>
+</div>
 <div v-else-if="item.meta && item.meta.note" class="px-5 py-3">
 <p :class="['text-sm m-0 leading-relaxed', isDark ? 'text-slate-400' : 'text-slate-600']">{{ item.meta.note }}</p>
 </div>
@@ -462,18 +469,14 @@ v-if="upgradeModal.open"
 class="fixed inset-0 z-[200] flex items-center justify-center p-4"
 @click.self="tutupModal"
 >
-<!-- Backdrop -->
 <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
 
-<!-- Modal Panel -->
 <div :class="['relative w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden',
 isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200']">
 
-<!-- Modal Header -->
 <div :class="['px-6 py-4 border-b flex items-center justify-between gap-3',
 isDark ? 'border-white/8 bg-white/[0.02]' : 'border-slate-200 bg-slate-50']">
 <div class="flex items-center gap-3">
-<!-- Crystal icon -->
 <div :class="['w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0',
 isDark ? 'bg-violet-500/15' : 'bg-violet-100']">
 💎
@@ -498,10 +501,8 @@ isDark ? 'text-slate-400 hover:bg-white/8 hover:text-white' : 'text-slate-400 ho
 </button>
 </div>
 
-<!-- Modal Content -->
 <div class="px-6 py-5 max-h-[65vh] overflow-y-auto">
 
-<!-- Loading -->
 <div v-if="upgradeModal.loading" class="flex flex-col items-center py-10 gap-3">
 <svg class="w-7 h-7 animate-spin text-violet-400" fill="none" viewBox="0 0 24 24">
 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -510,18 +511,14 @@ isDark ? 'text-slate-400 hover:bg-white/8 hover:text-white' : 'text-slate-400 ho
 <p :class="['text-sm', isDark ? 'text-slate-400' : 'text-slate-500']">Loading upgrade data…</p>
 </div>
 
-<!-- Error -->
 <div v-else-if="upgradeModal.error" class="py-6 text-center">
 <p class="text-red-400 text-sm">⚠️ {{ upgradeModal.error }}</p>
 </div>
 
-<!-- Stats Table -->
 <div v-else-if="upgradeModal.stats && upgradeModal.stats.length > 0">
-<!-- Upgrade Chain Navigation -->
 <div v-if="upgradeModal.predecessor || upgradeModal.successor" class="mb-4 p-3 rounded-lg border flex items-center gap-2"
 :class="isDark ? 'border-violet-500/30 bg-violet-500/10' : 'border-violet-200 bg-violet-50'">
 
-<!-- Predecessor -->
 <button v-if="upgradeModal.predecessor"
 @click="bukaModalUpgrade(upgradeModal.predecessor.id, upgradeModal.predecessor.name)"
 :class="['flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all',
@@ -537,14 +534,12 @@ isDark
 ← Start/ This Xtall
 </div>
 
-<!-- Center divider -->
 <div class="flex-1 flex items-center gap-1">
 <div :class="['flex-1 h-0.5', isDark ? 'bg-violet-500/30' : 'bg-violet-300']"></div>
 <span :class="['text-xs font-black', isDark ? 'text-violet-400' : 'text-violet-600']">⭐</span>
 <div :class="['flex-1 h-0.5', isDark ? 'bg-violet-500/30' : 'bg-violet-300']"></div>
 </div>
 
-<!-- Successor -->
 <button v-if="upgradeModal.successor"
 @click="bukaModalUpgrade(upgradeModal.successor.id, upgradeModal.successor.name)"
 :class="['flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all',
@@ -561,7 +556,6 @@ Last upgrade →
 </div>
 </div>
 
-<!-- Type badge -->
 <div class="mb-4 flex items-center gap-2 flex-wrap">
 <span v-if="upgradeModal.typeLabel" :class="['text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg',
 isDark ? 'bg-[#3498db]/15 text-[#3498db]' : 'bg-blue-100 text-blue-700']">
@@ -573,14 +567,12 @@ Sell: {{ upgradeModal.sell === -1 ? 'Untradable' : upgradeModal.sell.toLocaleStr
 </span>
 </div>
 
-<!-- Stat table header -->
 <div :class="['grid grid-cols-[1fr_auto] px-4 py-2 text-[11px] font-black uppercase tracking-wider rounded-lg mb-1',
 isDark ? 'bg-violet-500/10 text-violet-400' : 'bg-violet-50 text-violet-700']">
 <span>Stat / Effect</span>
 <span class="text-right">Amount</span>
 </div>
 
-<!-- Upgrade for rows inside modal (no button, just text) -->
 <template v-if="upgradeModal.upgradeForRows && upgradeModal.upgradeForRows.length > 0">
 <div
 v-for="(uf2, uf2i) in upgradeModal.upgradeForRows" :key="'muf-'+uf2i"
@@ -594,7 +586,6 @@ isDark ? 'bg-white/[0.02] hover:bg-white/[0.04]' : 'bg-slate-50 hover:bg-slate-1
 </div>
 </template>
 
-<!-- Normal stats -->
 <div
 v-for="(stat, si) in upgradeModal.statsNormal" :key="'ms-'+si"
 :class="['grid grid-cols-[1fr_auto] px-4 py-2.5 items-center rounded-lg mb-0.5 text-sm',
@@ -609,7 +600,6 @@ stat.amount < 0
 </span>
 </div>
 
-<!-- Conditional stats in modal -->
 <template v-if="upgradeModal.statsConditional && upgradeModal.statsConditional.length > 0">
 <template v-for="(group, gi) in upgradeModal.statsConditional" :key="'mcg-'+gi">
 <div :class="['px-4 pt-3 pb-1 text-[11px] font-black uppercase tracking-wider',
@@ -634,12 +624,10 @@ stat.amount < 0
 
 </div>
 
-<!-- No stats fallback in modal -->
 <div v-else class="py-8 text-center">
 <p :class="['text-sm italic', isDark ? 'text-slate-500' : 'text-slate-400']">No stat data available for this item.</p>
 </div>
 
-<!-- Indikator saat index Crysta sedang dibangun pertama kali -->
 <div
 v-if="crystaIndexState.building && upgradeModal.item"
 :class="['mt-5 px-4 py-3 rounded-lg text-xs flex items-center gap-2',
@@ -649,11 +637,10 @@ isDark ? 'bg-purple-500/10 text-purple-300' : 'bg-purple-50 text-purple-700']"
 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
 </svg>
-Membangun index Crysta untuk "Used For" (sekali saja per sesi)…
+Building the Crysta index for "Used For" (once per session only)…
 {{ crystaIndexState.totalCrysta > 0 ? `${crystaIndexState.scanned}/${crystaIndexState.totalCrysta}` : '' }}
 </div>
 
-<!-- ── Used For di dalam modal (Crysta lanjutan) ── -->
 <div
 v-if="upgradeModal.item && upgradeModal.item.usedFor && upgradeModal.item.usedFor.length > 0"
 class="mt-5"
@@ -684,7 +671,6 @@ isDark
 </div>
 </div>
 
-<!-- Drop sources in modal -->
 <div v-if="upgradeModal.dropFrom && upgradeModal.dropFrom.length > 0" class="mt-5">
 <div :class="['text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-2',
 isDark ? 'text-[#3498db]' : 'text-[#2980b9]']">
@@ -717,7 +703,6 @@ Lv.{{ m.level }}
 
 </div><!-- end modal body -->
 
-<!-- Modal Footer -->
 <div :class="['px-6 py-3 border-t flex justify-end',
 isDark ? 'border-white/8 bg-white/[0.01]' : 'border-slate-200 bg-slate-50']">
 <button
@@ -822,14 +807,10 @@ const toggleMonsterLocation = (itemId, mi) => {
 }
 
 const expandedMaps = ref([])
-
 const toggleExpandedMap = (mapKey) => {
   const idx = expandedMaps.value.indexOf(mapKey)
-  if (idx > -1) {
-    expandedMaps.value.splice(idx, 1)
-  } else {
-    expandedMaps.value.push(mapKey)
-  }
+  if (idx > -1) expandedMaps.value.splice(idx, 1)
+  else expandedMaps.value.push(mapKey)
 }
 
 // ── Upgrade Modal State ──
@@ -850,7 +831,6 @@ const upgradeModal = ref({
   predecessor: null,
   successor: null,
   chainItems: [],
-  // Object bersih yang dibaca template modal untuk "Used For": { id, name, usedFor }
   item: { id: null, name: '', usedFor: [] }
 })
 
@@ -861,7 +841,6 @@ const placeholders = [
 const currentPlaceholder = ref(placeholders[0])
 let placeholderInterval = null
 
-// ── Available types for dropdown (populated after search) ──
 const availableTypes = computed(() => {
   const set = new Set()
   listHasilItem.value.forEach(item => {
@@ -873,7 +852,6 @@ const availableTypes = computed(() => {
   return Array.from(set).sort()
 })
 
-// ── Filtered results ──
 const listHasilFiltered = computed(() => {
   if (!filterType.value) return listHasilItem.value
   return listHasilItem.value.filter(item => {
@@ -882,7 +860,6 @@ const listHasilFiltered = computed(() => {
   })
 })
 
-// ── Pagination computed ──
 const itemsDiHalamanIni = computed(() => {
   const a = (halamanSekarang.value - 1) * itemPerHalaman
   return listHasilFiltered.value.slice(a, a + itemPerHalaman)
@@ -903,7 +880,6 @@ const paginasiClass = computed(() => [
     : 'bg-transparent border-slate-200 text-slate-500 hover:bg-slate-50'
 ])
 
-// ── Helpers ──
 const dapatkanNamaMaterial = (id) => {
   if (id === -1) return 'None'
   return { 1: 'Beast', 2: 'Wood', 3: 'Metal', 4: 'Cloth', 5: 'Medicine', 6: 'Mana' }[id] || `Type ${id}`
@@ -912,16 +888,12 @@ const dapatkanNamaMaterial = (id) => {
 const getEventLabel = (item) => {
   const note = item?.meta?.note
   if (!note || !/event/i.test(note)) return null
-
   let label = note.trim().replace(/[.]+$/g, '')
-  if (/event/i.test(label)) {
-    label = label.replace(/event[:\s]*/gi, '').trim()
-  }
+  if (/event/i.test(label)) label = label.replace(/event[:\s]*/gi, '').trim()
   if (!label) return null
   return `EVENT: ${label.toUpperCase()}`
 }
 
-// Fungsi kamus untuk menerjemahkan angka applies_to
 const dapatkanLabelApplies = (appliesId) => {
   const daftarApplies = {
     1: '(Shield Only: )',
@@ -934,7 +906,6 @@ const dapatkanLabelApplies = (appliesId) => {
   return daftarApplies[appliesId] || ''
 }
 
-// Group drop_from by map name
 const groupByMap = (dropFrom) => {
   const groups = {}
   dropFrom.forEach(m => {
@@ -945,22 +916,16 @@ const groupByMap = (dropFrom) => {
   return groups
 }
 
-// Toggle map view per item card
 const toggleMapView = (itemId) => {
   mapViewActive.value = mapViewActive.value === itemId ? null : itemId
 }
 
-// ────────────────────────────────────────────────────────────
-// ATURAN PENTING:
-// "Upgrade for" & "Used for" HANYA berlaku untuk Crysta / XTAL.
-// Deteksi lewat type_label (mis. "[Enhancer Crysta]", "[Crysta]").
-// ────────────────────────────────────────────────────────────
 const isCrystaItem = (item) => {
   const label = (item?.type_label || '').toLowerCase()
   return label.includes('crysta') || label.includes('xtal')
 }
 
-// Cache nama item
+// ── Cache: nama item (untuk label "Upgrade for") ──
 const cacheNama = {}
 const ambilNamaItem = async (id) => {
   if (!id || id <= 0) return null
@@ -974,7 +939,24 @@ const ambilNamaItem = async (id) => {
   return null
 }
 
-// Parse stats helper (reusable)
+// ── PENTING: Cache detail item PENUH (id -> data), supaya tidak
+// fetch ulang item yang sama saat pindah halaman / buka modal / index build ──
+const itemDetailCache = {}
+const ambilDetailItem = async (id) => {
+  if (!id) return null
+  if (itemDetailCache[id]) return itemDetailCache[id]
+  try {
+    const r = await fetch(`https://coryn.club/api/v1/items.php?id=${id}`)
+    if (!r.ok) return null
+    const j = await r.json()
+    if (j.success && j.data) {
+      itemDetailCache[id] = j.data
+      return j.data
+    }
+  } catch { return null }
+  return null
+}
+
 const parseStats = (rawStats) => {
   const upgradeForRows = rawStats.filter(s => s.effect_name === 'Upgrade for')
   const statsNormal = rawStats.filter(s => s.effect_name !== 'Upgrade for' && (!s.applies_to || s.applies_to === 0))
@@ -989,38 +971,17 @@ const parseStats = (rawStats) => {
   return { upgradeForRows, statsNormal, statsConditional }
 }
 
-// ────────────────────────────────────────────────────────────
-// "USED FOR" — REVERSE INDEX
-//
-// Kenapa tidak bisa dicari lewat nama: rantai upgrade Crysta sering
-// GANTI NAMA TOTAL antar tingkat (contoh dari spesifikasi awal:
-// "Vulture" naik jadi "Trickster Dragon Mimyugon" — dua nama itu
-// tidak ada hubungannya sama sekali). Jadi mencari kandidat successor
-// lewat items.php?name=<nama item ini> tidak akan pernah ketemu.
-//
-// Solusi yang benar: karena API tidak punya endpoint "cari item yang
-// Upgrade for-nya == id ini", kita bangun index terbalik SEKALI saja:
-// pindai semua item Crysta/XTAL, baca stat "Upgrade for" masing-masing,
-// lalu simpan sebagai predecessorId -> [ {id, name}, ... ].
-// Index di-cache di module scope, jadi cuma dibangun sekali per sesi
-// (dipicu lazy saat modal Crysta pertama kali dibuka / hasil pencarian
-// pertama yang mengandung Crysta).
-// ────────────────────────────────────────────────────────────
-const crystaSuccessorIndex = {}      // predecessorId -> [{ id, name }]
+// ── "USED FOR" — REVERSE INDEX (dibangun sekali per sesi, di background) ──
+const crystaSuccessorIndex = {}
 const crystaIndexState = ref({ building: false, built: false, scanned: 0, totalCrysta: 0 })
 let crystaIndexPromise = null
 
-// Ambil satu halaman daftar item. Offset dimajukan berdasarkan jumlah
-// data yang BENAR-BENAR dikembalikan server (bukan asumsi limit tetap),
-// supaya tetap aman walau server membatasi page size sendiri.
 const fetchItemsPage = async (offset, limit) => {
   const r = await fetch(`https://coryn.club/api/v1/items.php?limit=${limit}&offset=${offset}`)
   if (!r.ok) throw new Error('Gagal memuat daftar item')
   return r.json()
 }
 
-// Jalankan worker atas array dengan batas concurrency, supaya tidak
-// membanjiri server dengan ratusan request bersamaan.
 const runWithConcurrency = async (items, worker, concurrency = 15) => {
   let idx = 0
   const next = async () => {
@@ -1037,37 +998,29 @@ const buildCrystaIndex = () => {
   crystaIndexState.value.building = true
 
   crystaIndexPromise = (async () => {
-    // 1) Kumpulkan semua item yang type-nya Crysta/XTAL (scan penuh,
-    //    karena filter by-type di API belum tentu didukung/terverifikasi).
     const crystaCandidates = []
     let offset = 0
     let total = Infinity
     const PAGE_SIZE = 100
     while (offset < total) {
       let j
-      try {
-        j = await fetchItemsPage(offset, PAGE_SIZE)
-      } catch {
-        break
-      }
+      try { j = await fetchItemsPage(offset, PAGE_SIZE) } catch { break }
       if (!j?.success || !Array.isArray(j.data) || j.data.length === 0) break
       total = j.meta?.total ?? j.data.length
       j.data.forEach(it => { if (isCrystaItem(it)) crystaCandidates.push(it) })
       offset += j.data.length
-      if (offset > 30000) break // safety guard, jangan sampai infinite loop
+      if (offset > 30000) break
     }
 
     crystaIndexState.value.totalCrysta = crystaCandidates.length
 
-    // 2) Untuk tiap Crysta, ambil detail stat-nya dan baca "Upgrade for".
-    //    Ini yang membentuk index terbalik predecessorId -> successor.
+    // Pakai cache detail item di sini juga, biar tidak fetch ulang item
+    // yang detailnya sudah pernah diambil (mis. saat render list awal)
     await runWithConcurrency(crystaCandidates, async (c) => {
       try {
-        const r = await fetch(`https://coryn.club/api/v1/items.php?id=${c.id}`)
-        if (!r.ok) return
-        const j = await r.json()
-        if (!j.success || !j.data?.stats) return
-        const uf = j.data.stats.find(s => s.effect_name === 'Upgrade for')
+        const data = await ambilDetailItem(c.id)
+        if (!data?.stats) return
+        const uf = data.stats.find(s => s.effect_name === 'Upgrade for')
         if (uf) {
           if (!crystaSuccessorIndex[uf.amount]) crystaSuccessorIndex[uf.amount] = []
           crystaSuccessorIndex[uf.amount].push({ id: c.id, name: c.name })
@@ -1075,7 +1028,7 @@ const buildCrystaIndex = () => {
       } catch { /* ignore */ } finally {
         crystaIndexState.value.scanned++
       }
-    }, 15)
+    }, 20)
 
     crystaIndexState.value.building = false
     crystaIndexState.value.built = true
@@ -1084,65 +1037,12 @@ const buildCrystaIndex = () => {
   return crystaIndexPromise
 }
 
-// Lookup "Used For" — O(1) setelah index terbangun.
-// Hanya dipanggil untuk item Crysta/XTAL (dicek di caller).
 const cariUsedForCrysta = async (targetId) => {
   await buildCrystaIndex()
   return crystaSuccessorIndex[targetId] || []
 }
 
-// Build full enhancement chain (all items in upgrade path) — hanya relevan untuk Crysta
-const buildEnhancementChain = async (itemId, itemName) => {
-  const chain = []
-  const visited = new Set()
-
-  const fetchItemData = async (id) => {
-    if (visited.has(id)) return null
-    visited.add(id)
-    try {
-      const r = await fetch(`https://coryn.club/api/v1/items.php?id=${id}`)
-      if (!r.ok) return null
-      const j = await r.json()
-      if (j.success && j.data) {
-        return { id, name: j.data.name, data: j.data }
-      }
-    } catch { return null }
-    return null
-  }
-
-  let current = await fetchItemData(itemId)
-  if (!current || !isCrystaItem(current.data)) return []
-
-  const predecessors = []
-  let pred = current
-  while (pred) {
-    const stats = pred.data?.stats || []
-    const upgradeFor = stats.find(s => s.effect_name === 'Upgrade for')
-    if (!upgradeFor) break
-    const predData = await fetchItemData(upgradeFor.amount)
-    if (!predData || !isCrystaItem(predData.data)) break
-    predecessors.unshift(predData)
-    pred = predData
-  }
-
-  chain.push(...predecessors, current)
-
-  let succ = current
-  while (succ) {
-    const found = await cariUsedForCrysta(succ.id)
-    if (found.length === 0) break
-    const nextId = found[0].id
-    if (visited.has(nextId)) break
-    const succData = await fetchItemData(nextId)
-    if (!succData) break
-    chain.push(succData)
-    succ = succData
-  }
-
-  return chain
-}
-
-// ── Open Upgrade Modal ──
+// ── Open Upgrade Modal (pakai cache detail item) ──
 const bukaModalUpgrade = async (itemId, itemName) => {
   upgradeModal.value = {
     open: true,
@@ -1164,21 +1064,15 @@ const bukaModalUpgrade = async (itemId, itemName) => {
   }
 
   try {
-    // Fetch item detail
-    const r = await fetch(`https://coryn.club/api/v1/items.php?id=${itemId}`)
-    if (!r.ok) throw new Error('Failed to fetch item data')
-    const j = await r.json()
-    if (!j.success) throw new Error('Item not found')
+    const data = await ambilDetailItem(itemId)
+    if (!data) throw new Error('Item not found')
 
-    const data = j.data
     const rawStats = data.stats || []
     const isCrysta = isCrystaItem(data)
 
     const { upgradeForRows: rawUpgradeForRows, statsNormal, statsConditional } = parseStats(rawStats)
-    // "Upgrade for" hanya berlaku untuk Crysta/XTAL
     const upgradeForRows = isCrysta ? rawUpgradeForRows : []
 
-    // Resolve upgrade for names (hanya kalau Crysta)
     const upgradeForResolvedNames = {}
     if (isCrysta) {
       await Promise.all(upgradeForRows.map(async (s) => {
@@ -1187,7 +1081,6 @@ const bukaModalUpgrade = async (itemId, itemName) => {
       }))
     }
 
-    // Fetch monster drop data for this item name (berlaku untuk semua tipe item)
     let dropFrom = []
     try {
       const rm = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(itemName)}`)
@@ -1216,7 +1109,6 @@ const bukaModalUpgrade = async (itemId, itemName) => {
       }
     } catch { /* ignore */ }
 
-    // Predecessor ("Upgrade for") — hanya Crysta
     let predecessor = null
     if (isCrysta && upgradeForRows.length > 0) {
       const predId = upgradeForRows[0].amount
@@ -1224,7 +1116,6 @@ const bukaModalUpgrade = async (itemId, itemName) => {
       if (predName) predecessor = { id: predId, name: predName }
     }
 
-    // Successor / "Used for" — hanya Crysta, pakai reverse index (bukan cari nama)
     let usedFor = []
     let successor = null
     if (isCrysta) {
@@ -1245,7 +1136,6 @@ const bukaModalUpgrade = async (itemId, itemName) => {
       dropFrom,
       predecessor,
       successor,
-      // Object bersih untuk dibaca template modal (blok "Used For")
       item: { id: itemId, name: data.name || itemName, usedFor }
     }
   } catch (err) {
@@ -1254,7 +1144,7 @@ const bukaModalUpgrade = async (itemId, itemName) => {
   }
 }
 
-// ── Open Monster Modal (fetch monster details from Coryn) ──
+// ── Open Monster Modal ──
 const monsterModal = ref({ open: false, loading: false, error: '', data: null })
 const mapMonsters = ref([])
 
@@ -1307,31 +1197,8 @@ const bukaModalMonster = async (monster) => {
   }
 }
 
-const handleClickDrop = async (d) => {
-  if (!d) return
-  const id = d.id || d.item_id || d.itemId
-  const name = d.name || d.item || d.title || ''
-  if (id) {
-    await bukaModalUpgrade(id, name)
-    return
-  }
-  const lookup = name || (typeof d === 'string' ? d : '')
-  if (!lookup) return
-  try {
-    const r = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(lookup)}&limit=1`)
-    if (!r.ok) return
-    const j = await r.json()
-    if (j.success && Array.isArray(j.data) && j.data.length) {
-      await bukaModalUpgrade(j.data[0].id, j.data[0].name)
-    }
-  } catch (e) {}
-}
+const tutupModal = () => { upgradeModal.value.open = false }
 
-const tutupModal = () => {
-  upgradeModal.value.open = false
-}
-
-// Close modal on Escape
 const handleKeydown = (e) => {
   if (e.key === 'Escape' && upgradeModal.value.open) tutupModal()
 }
@@ -1374,7 +1241,26 @@ const clearSearchLogs = () => {
 }
 const pilihHistory = (k) => { namaItem.value = k; isHistoryOpen.value = false; cariItemDanDrop() }
 
-// ── Main Search ──
+// ────────────────────────────────────────────────────────────
+// MAIN SEARCH — DIOPTIMALKAN
+//
+// Perubahan inti dari versi lama:
+// 1) Daftar item & daftar monster diambil PARALEL (Promise.all),
+//    bukan berurutan.
+// 2) Kartu item langsung ditampilkan begitu daftar item didapat
+//    (sedangLoading dimatikan lebih awal) — user tidak lagi menunggu
+//    semua detail/stat/drop selesai sebelum melihat apa pun.
+// 3) Detail tiap item (stats, drop_from) diambil PARALEL dengan
+//    batas concurrency, dan tiap kartu di-update SATU PER SATU begitu
+//    detailnya siap (progressive rendering) — bukan menunggu Promise.all
+//    atas seluruh item baru merender apa pun.
+// 4) Index "Used For" untuk item Crysta (yang butuh scan seluruh
+//    database) TIDAK LAGI memblokir tampilnya stats/drop. Dijalankan
+//    di background dan kartu di-update begitu hasilnya siap.
+// 5) Semua fetch detail item (by id) memakai cache bersama
+//    (itemDetailCache), jadi item yang sama tidak pernah di-fetch dua kali,
+//    baik saat render list, saat build index Crysta, maupun saat modal dibuka.
+// ────────────────────────────────────────────────────────────
 const cariItemDanDrop = async () => {
   if (!namaItem.value.trim()) { pesanError.value = 'Please type an item name first!'; return }
   isHistoryOpen.value = false
@@ -1393,59 +1279,41 @@ const cariItemDanDrop = async () => {
   }
 
   try {
-    const resItem = await fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(q)}&limit=100`)
-    if (!resItem.ok) throw new Error('Failed to connect to Item API')
-    const jsonItem = await resItem.json()
+    // 1) Item list & monster list diambil BERSAMAAN
+    const [jsonItem, listMonster] = await Promise.all([
+      fetch(`https://coryn.club/api/v1/items.php?name=${encodeURIComponent(q)}&limit=100`)
+        .then(r => { if (!r.ok) throw new Error('Failed to connect to Item API'); return r.json() }),
+      fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(q)}`)
+        .then(r => r.ok ? r.json() : { success: false })
+        .then(j => (j.success && Array.isArray(j.data)) ? j.data : [])
+        .catch(() => [])
+    ])
 
     if (!jsonItem.success || !jsonItem.data?.length) {
       pesanError.value = 'Item not found in Toram Database.'
+      sedangLoading.value = false
       return
     }
 
-    let listMonster = []
-    try {
-      const rm = await fetch(`https://coryn.club/api/v1/monsters.php?name=${encodeURIComponent(q)}`)
-      if (rm.ok) {
-        const jm = await rm.json()
-        if (jm.success && Array.isArray(jm.data)) listMonster = jm.data
-      }
-    } catch { /* ignore */ }
+    // 2) Tampilkan kartu SEKARANG JUGA, detail menyusul (skeleton per kartu)
+    listHasilItem.value = jsonItem.data.map(it => ({
+      ...it,
+      statsNormal: [],
+      statsConditional: [],
+      upgradeForStats: [],
+      upgradeForNames: {},
+      usedFor: [],
+      drop_from: [],
+      detailLoading: true,
+      usedForLoading: false
+    }))
+    sedangLoading.value = false
 
-    const detailPromises = jsonItem.data.map(async (itemBiasa) => {
-      let rawStats = []
-      try {
-        const rd = await fetch(`https://coryn.club/api/v1/items.php?id=${itemBiasa.id}`)
-        if (rd.ok) {
-          const jd = await rd.json()
-          if (jd.success && jd.data?.stats) rawStats = jd.data.stats
-        }
-      } catch { /* ignore */ }
-
-      const { upgradeForRows: rawUpgradeForRows, statsNormal, statsConditional } = parseStats(rawStats)
-
-      // ── ATURAN: "Upgrade for" & "Used for" hanya untuk Crysta/XTAL ──
-      const isCrysta = isCrystaItem(itemBiasa)
-
-      const upgradeForRows = isCrysta ? rawUpgradeForRows : []
-      const upgradeForNames = {}
-      if (isCrysta) {
-        await Promise.all(upgradeForRows.map(async (s) => {
-          const nama = await ambilNamaItem(s.amount)
-          if (nama) upgradeForNames[s.amount] = nama
-        }))
-      }
-
-      // Jika BUKAN Crysta/XTAL: usedFor kosong, tidak ada API tambahan.
-      // Jika Crysta: lookup dari reverse index (bukan cari berdasarkan nama).
-      let usedFor = []
-      if (isCrysta) {
-        usedFor = await cariUsedForCrysta(itemBiasa.id)
-      }
-
+    const cocokkanMonster = (namaCari) => {
       const monsterCocok = listMonster.filter(m =>
-        itemBiasa.name.toLowerCase().includes(m.name.toLowerCase()) ||
+        namaCari.toLowerCase().includes(m.name.toLowerCase()) ||
         m.name.toLowerCase().includes(
-          itemBiasa.name.toLowerCase()
+          namaCari.toLowerCase()
             .replace('mask', '').replace('splinter', '').replace('fists', '')
             .replace('cane', '').replace('sword', '').replace('bow', '').trim()
         )
@@ -1458,22 +1326,56 @@ const cariItemDanDrop = async () => {
           type: m.type_label || 'Normal', map: m.map_name || 'Unknown Map'
         })
       })
+      return Array.from(mapUnik.values())
+    }
 
-      return {
-        ...itemBiasa,
+    // 3) Detail tiap item diambil paralel (concurrency 10), tiap kartu
+    //    di-update begitu siap — TIDAK menunggu item lain selesai.
+    const indexList = listHasilItem.value.map((_, idx) => idx)
+    await runWithConcurrency(indexList, async (idx) => {
+      const itemBiasa = listHasilItem.value[idx]
+      if (!itemBiasa) return
+
+      const data = await ambilDetailItem(itemBiasa.id)
+      const rawStats = data?.stats || []
+      const { upgradeForRows: rawUpgradeForRows, statsNormal, statsConditional } = parseStats(rawStats)
+      const isCrysta = isCrystaItem(itemBiasa)
+      const upgradeForRows = isCrysta ? rawUpgradeForRows : []
+      const drop_from = cocokkanMonster(itemBiasa.name)
+
+      listHasilItem.value[idx] = {
+        ...listHasilItem.value[idx],
         statsNormal,
         statsConditional,
         upgradeForStats: upgradeForRows,
-        upgradeForNames,
-        usedFor,
-        drop_from: Array.from(mapUnik.values())
+        drop_from,
+        detailLoading: false,
+        usedForLoading: isCrysta
       }
-    })
 
-    listHasilItem.value = await Promise.all(detailPromises)
+      // Resolusi nama "Upgrade for" — tidak menghalangi stats yang sudah tampil
+      if (isCrysta && upgradeForRows.length > 0) {
+        const upgradeForNames = {}
+        await Promise.all(upgradeForRows.map(async (s) => {
+          const nama = await ambilNamaItem(s.amount)
+          if (nama) upgradeForNames[s.amount] = nama
+        }))
+        const cur = listHasilItem.value[idx]
+        if (cur) listHasilItem.value[idx] = { ...cur, upgradeForNames }
+      }
+
+      // "Used for" (Crysta saja) — index besar dibangun di BACKGROUND,
+      // kartu di-update begitu hasil siap, tanpa memblokir apa pun.
+      if (isCrysta) {
+        cariUsedForCrysta(itemBiasa.id).then(usedFor => {
+          const cur = listHasilItem.value[idx]
+          if (cur) listHasilItem.value[idx] = { ...cur, usedFor, usedForLoading: false }
+        })
+      }
+    }, 10)
+
   } catch (err) {
     pesanError.value = 'Database Connection Error: ' + err.message
-  } finally {
     sedangLoading.value = false
   }
 }

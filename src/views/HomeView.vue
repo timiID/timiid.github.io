@@ -158,7 +158,7 @@ const navigateTo = (path) => router.push(path);
         backgroundPosition: 'center top',
         backgroundSize: 'cover',
         height: '1100px',
-        opacity: '0.7',
+        opacity: '1',
         maskImage: 'linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 95%)',
         webkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 95%)'
       }"
