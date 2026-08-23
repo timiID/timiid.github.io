@@ -62,22 +62,6 @@ const bubbles = Array.from({ length: 30 }, (_, i) => ({
     
     <!-- Slideshow hanya tampil di halaman home -->
     <!-- Tambah class 'hidden md:block' -->
-<div 
-  v-if="isHome"
-  class="absolute inset-0 pointer-events-none z-0 transition-all duration-[1500ms] ease-in-out hidden md:block"
-  :style="{
-        backgroundImage: `url(${backgrounds[currentBgIndex]})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center top', 
-        backgroundAttachment: 'scroll', 
-        backgroundSize: 'cover',
-        height: '1100px', 
-        opacity: '0.55',
-        /* Gradasi: transparan atas (0%-15%), jelas di tengah (20%-60%), transparan di bawah (60%-100%) */
-        maskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 65%, transparent 95%)',
-        webkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 65%, transparent 95%)'
-      }"
-    ></div>
 
     <div 
       class="absolute inset-0 pointer-events-none z-0"
