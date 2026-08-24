@@ -69,11 +69,10 @@
   @focus="isHistoryOpen = true" 
   @input="isHistoryOpen = true" 
   type="text" 
-  placeholder="Ketik nama xtall..." 
-        :class="['w-full pl-14 pr-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm transition-all', 
-        isDark ? 'bg-[#0f172a] border-white/5 focus:border-cyan-500 text-white placeholder-slate-600' : 'bg-white border-slate-200 focus:border-cyan-500']">
-
-    
+  :placeholder="dynamicPlaceholder" 
+  :class="['w-full pl-14 pr-6 py-4 rounded-2xl border-2 outline-none font-bold text-sm transition-all', 
+  isDark ? 'bg-[#0f172a] border-white/5 focus:border-cyan-500 text-white placeholder-slate-600' : 'bg-white border-slate-200 focus:border-cyan-500']"
+>
 
     <div 
       v-if="displayedSearchLogs.length > 0 && isHistoryOpen && !isMobile" 
@@ -356,6 +355,49 @@ import { parseXtallStats } from '@/utils/parseXtallStats'
 
 const route = useRoute();
 const router = useRouter();
+
+const dynamicPlaceholder = ref('');
+const placeholderTexts = [
+  'Ketik nama xtall...',
+  'Cari: Minotaur...',
+  'Cari: Gwaimol...',
+  'Cari: Ultimate Machina...',
+  'Cari: Hexter...'
+];
+
+let textIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let typingTimeout = null;
+
+const typeEffect = () => {
+  const currentText = placeholderTexts[textIndex];
+
+  if (isDeleting) {
+    dynamicPlaceholder.value = currentText.substring(0, charIndex - 1);
+    charIndex--;
+  } else {
+    dynamicPlaceholder.value = currentText.substring(0, charIndex + 1);
+    charIndex++;
+  }
+
+  // Speed configuration (ms)
+  let typingSpeed = isDeleting ? 50 : 100;
+
+  // Jeda saat kata selesai diketik
+  if (!isDeleting && charIndex === currentText.length) {
+    typingSpeed = 2000; // Tahan selama 2 detik
+    isDeleting = true;
+  } 
+  // Jeda saat kata selesai dihapus
+  else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    textIndex = (textIndex + 1) % placeholderTexts.length;
+    typingSpeed = 500; // Jeda 0.5 detik sebelum mulai kata berikutnya
+  }
+
+  typingTimeout = setTimeout(typeEffect, typingSpeed);
+};
 
 /**
  * RECTIVE STATE
@@ -815,11 +857,13 @@ onMounted(() => {
   window.addEventListener('click', closeOnOutside);
   checkMobile();
   window.addEventListener('resize', checkMobile);
+  typeEffect();
 });
 
 onUnmounted(() => {
   window.removeEventListener('click', closeOnOutside);
   window.removeEventListener('resize', checkMobile);
+  if (typingTimeout) clearTimeout(typingTimeout);
 });
 
 // Watcher skala & urutan saja yang mereset page (selectedTypes tidak lagi mereset page secara sepihak)

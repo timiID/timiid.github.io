@@ -5,14 +5,6 @@ import { useRoute, useRouter } from "vue-router";
 const props = defineProps(["isDark"]);
 defineEmits(["toggleDark"]);
 
-const navSearch = ref('')
-
-const submitNavSearch = () => {
-  if (!navSearch.value.trim()) return
-  router.push({ path: '/item-search', query: { q: navSearch.value.trim() } })
-  navSearch.value = ''
-}
-
 const route = useRoute();
 const router = useRouter();
 const itemRefs = ref({});
@@ -70,7 +62,6 @@ const updateIndicator = async () => {
       background: grad,
     };
   } else {
-    // Path tidak ada di navLinks (misal /favorite) → sembunyikan indicator
     indicatorStyle.value = {
       ...indicatorStyle.value,
       opacity: 0,
@@ -93,37 +84,47 @@ watch(
 </script>
 
 <template>
-  <!-- Pembungkus Tunggal Utama (Sembuhkan Warning Extraneous Attributes) -->
   <div class="w-full">
     
-    <!-- ═══ SIDEBAR OVERLAY ═══ -->
-    <div
-      v-if="isSidebarOpen"
-      @click="isSidebarOpen = false"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] lg:hidden"
-    ></div>
+    <!-- ═══ OVERLAY ═══ -->
+    <Transition name="fade">
+      <div
+        v-if="isSidebarOpen"
+        @click="isSidebarOpen = false"
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[150] lg:hidden"
+      ></div>
+    </Transition>
 
-    <!-- ═══ SIDEBAR MOBILE ═══ -->
+    <!-- ═══ ULTRA MODERN FLOATING SIDEBAR ═══ -->
     <aside :class="[
-      'fixed top-0 left-0 h-screen z-[200] transition-transform duration-500 flex flex-col',
-      'w-72 lg:hidden border-r shadow-2xl',
-      isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
-      isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-800',
+      'fixed top-3 left-3 bottom-3 z-[200] lg:hidden flex flex-col rounded-3xl border shadow-2xl backdrop-blur-2xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]',
+      'w-72 max-w-[80vw]',
+      isSidebarOpen ? 'translate-x-0 opacity-100 scale-100 shadow-indigo-500/20' : '-translate-x-[115%] opacity-0 scale-95 pointer-events-none',
+      isDark 
+        ? 'bg-slate-950/85 border-white/10 text-white' 
+        : 'bg-white/85 border-slate-200/80 text-slate-800',
     ]">
 
-      <!-- Sidebar Header -->
-      <div class="flex items-center justify-between px-5 py-3 border-b" :class="isDark ? 'border-white/5' : 'border-slate-100'">
-        <div class="flex items-center gap-3">
-          <img src="/images/logo.png" width="36" height="36" class="w-9 h-9 rounded-full shadow-md" alt="Logo" />
-          <span class="font-black italic text-lg uppercase tracking-tighter">
-            TIMI
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
-          </span>
+      <!-- Sidebar Header Compact -->
+      <div class="flex items-center justify-between px-5 py-4 border-b shrink-0" :class="isDark ? 'border-white/5' : 'border-slate-100'">
+        <div class="flex items-center gap-2.5">
+          <div class="relative group">
+            <div class="absolute -inset-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-60 blur-xs group-hover:opacity-100 transition"></div>
+            <img src="/images/logo.png" width="34" height="34" class="relative w-8 h-8 rounded-full object-cover border" :class="isDark ? 'border-white/20' : 'border-white'" alt="Logo" />
+          </div>
+          <div class="flex flex-col">
+            <span class="font-black italic text-lg uppercase tracking-tighter leading-none">
+              TIMI
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">DB</span>
+            </span>
+            <span class="text-[8px] font-bold tracking-widest opacity-40 uppercase">Database & Tools</span>
+          </div>
         </div>
+
         <button
           @click="isSidebarOpen = false"
-          class="w-8 h-8 rounded-xl flex items-center justify-center transition-colors"
-          :class="isDark ? 'hover:bg-white/10 text-slate-400' : 'hover:bg-slate-100 text-slate-500'"
+          class="w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-200 active:scale-90"
+          :class="isDark ? 'hover:bg-white/10 text-slate-400 bg-white/5' : 'hover:bg-slate-100 text-slate-500 bg-slate-100/60'"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -131,67 +132,75 @@ watch(
         </button>
       </div>
 
-      <!-- Sidebar Nav Links -->
-      <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+      <!-- Sidebar Links dengan Stagger Effect & Hover Spring -->
+      <div class="flex-1 overflow-y-auto px-3 py-3 space-y-1.5">
         <router-link
-          v-for="item in sidebarLinks"
+          v-for="(item, idx) in sidebarLinks"
           :key="item.path"
           :to="item.path"
-          class="flex items-center gap-3 px-4 py-3 rounded-2xl font-black italic tracking-widest text-[11px] uppercase transition-all duration-200"
-          :class="route.path === item.path
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
-            : isDark
-              ? 'text-slate-400 hover:bg-white/5 hover:text-white'
-              : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'"
+          :style="{
+            transitionDelay: isSidebarOpen ? `${idx * 40 + 80}ms` : '0ms'
+          }"
+          class="group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-black italic tracking-wider text-[11px] uppercase transition-all duration-300 ease-out hover:translate-x-1"
+          :class="[
+            isSidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0',
+            route.path === item.path
+              ? 'bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/25'
+              : isDark
+                ? 'text-slate-400 hover:bg-white/5 hover:text-white'
+                : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+          ]"
         >
-          <div class="w-7 h-7 flex items-center justify-center shrink-0">
+          <div class="w-6 h-6 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6">
             <span v-if="item.emoji" class="text-base">{{ item.emoji }}</span>
             <img v-else :src="item.icon" class="w-full h-full object-contain" />
           </div>
-          {{ item.name }}
+          <span class="truncate">{{ item.name }}</span>
+
+          <span v-if="route.path === item.path" class="ml-auto w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)] animate-pulse"></span>
         </router-link>
       </div>
 
-      <!-- Sidebar Footer -->
-      <div class="px-5 py-4 border-t" :class="isDark ? 'border-white/5' : 'border-slate-100'">
-        <div class="flex items-center justify-between">
-          <span class="text-[11px] font-black italic tracking-wider" :class="isDark ? 'text-indigo-400' : 'text-slate-500'">
+      <!-- Sidebar Footer Compact -->
+      <div class="p-3 border-t space-y-2.5 shrink-0" :class="isDark ? 'border-white/5 bg-white/[0.01]' : 'border-slate-100 bg-slate-50/50'">
+        <div class="flex items-center justify-between p-2.5 rounded-xl border" :class="isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-200/60'">
+          <span class="text-[10px] font-black italic tracking-wider" :class="isDark ? 'text-indigo-400' : 'text-slate-600'">
             {{ isDark ? "DARK MODE" : "LIGHT MODE" }}
           </span>
           <div
             @click="$emit('toggleDark')"
             :class="[
-              'relative h-7 w-12 rounded-full cursor-pointer transition-all duration-500 border p-1 shadow-inner',
+              'relative h-6 w-11 rounded-full cursor-pointer transition-all duration-500 border p-0.5 shadow-inner',
               isDark ? 'bg-indigo-950 border-white/20' : 'bg-blue-100 border-slate-300',
             ]"
           >
             <div :class="[
-              'absolute top-0.5 w-5 h-5 rounded-full flex items-center justify-center z-10 transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.27,1.55)]',
+              'absolute top-0.5 w-4 h-4 rounded-full flex items-center justify-center z-10 transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.27,1.55)] active:scale-90',
               isDark
-                ? 'translate-x-5 bg-gradient-to-br from-blue-300 to-cyan-800 shadow-[0_0_15px_3px_rgba(139,92,246,0.6)]'
-                : 'translate-x-0 bg-gradient-to-br from-yellow-100 to-orange-400 shadow-[0_0_10px_2px_rgba(251,191,36,0.4)]',
+                ? 'translate-x-5 bg-gradient-to-br from-blue-300 to-cyan-800 shadow-[0_0_10px_2px_rgba(139,92,246,0.6)]'
+                : 'translate-x-0 bg-gradient-to-br from-yellow-100 to-orange-400 shadow-[0_0_8px_2px_rgba(251,191,36,0.4)]',
             ]">
-              <span class="text-[10px]">{{ isDark ? "🌙" : "☀️" }}</span>
+              <span class="text-[8px]">{{ isDark ? "🌙" : "☀️" }}</span>
             </div>
           </div>
         </div>
-        <p class="text-[9px] opacity-30 uppercase tracking-widest mt-3">© 2026 TIMI DB</p>
+        <p class="text-[8px] font-bold text-center opacity-30 uppercase tracking-widest">© 2026 TIMI DB</p>
       </div>
     </aside>
 
-    <!-- ═══ NAVBAR DESKTOP ═══ -->
+    <!-- ═══ NAVBAR UTAMA ═══ -->
     <nav class="fixed top-2 md:top-4 left-1/2 -translate-x-1/2 z-[100] w-[96%] max-w-[1400px]">
       <div :class="[
-        'backdrop-blur-3xl border flex items-center justify-between rounded-full shadow-2xl px-3 py-3 transition-all duration-700',
-        isDark ? 'bg-black/50 border-white/10 shadow-indigo-500/10' : 'bg-white/80 border-white/50 shadow-blue-500/5',
+        'backdrop-blur-3xl border flex items-center justify-between rounded-full shadow-2xl px-3 py-2.5 transition-all duration-500',
+        isDark ? 'bg-black/60 border-white/10 shadow-indigo-500/10' : 'bg-white/80 border-white/50 shadow-blue-500/5',
       ]">
 
-        <!-- Left: Hamburger + Logo -->
-        <div class="flex items-center gap-2 pl-1">
+        <!-- Left: Hamburger (Mobile) + Logo -->
+        <div class="flex items-center gap-2 pl-1 shrink-0">
           <button
             @click="isSidebarOpen = true"
-            class="lg:hidden w-9 h-9 rounded-full flex items-center justify-center transition-colors"
-            :class="isDark ? 'hover:bg-white/10 text-slate-300' : 'hover:bg-black/5 text-slate-600'"
+            class="lg:hidden w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90"
+            :class="isDark ? 'hover:bg-white/10 text-slate-200 bg-white/5' : 'hover:bg-black/10 text-slate-700 bg-black/5'"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -209,30 +218,7 @@ watch(
           </div>
         </div>
 
-        <!-- Center: Nav links (desktop) -->
-        <!-- Center: Search bar (mobile only) -->
-<!-- Center: Search bar (mobile only) -->
-<div class="flex lg:hidden flex-1 justify-center px-2">
-  <div class="relative w-full max-w-[320px]">
-    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-      </svg>
-    </span>
-    <input
-      v-model="navSearch"
-      @keyup.enter="submitNavSearch"
-      type="text"
-      placeholder="Search item with API Coryn..."
-      :class="[
-        'w-full pl-8 pr-3 py-2 rounded-full border text-[13px] font-medium outline-none transition-all',
-        isDark
-          ? 'bg-white/5 border-white/10 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:bg-white/10'
-          : 'bg-black/5 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:bg-white'
-      ]"
-    />
-  </div>
-</div>
+        <!-- Center: Desktop Nav Links Pill (PC ONLY) -->
         <div class="hidden lg:flex flex-none px-1">
           <div class="relative flex bg-black/5 dark:bg-white/5 p-1 rounded-full border border-black/5 dark:border-white/5 shadow-inner backdrop-blur-md">
             <div
@@ -255,42 +241,39 @@ watch(
           </div>
         </div>
 
-        <!-- Right: Favorite + Dark toggle -->
-        <div class="flex items-center pr-1">
+        <!-- Right: Favorite + Dark mode toggle -->
+        <div class="flex items-center gap-2 pr-1 shrink-0">
 
           <!-- Favorite button -->
           <router-link
-  to="/favorite"
-  :class="[
-    'relative w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border transition-all duration-300 group active:scale-95',
-    route.path === '/favorite'
-      ? 'bg-red-500 border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]'
-      : isDark
-        ? 'bg-white/5 border-white/10 hover:bg-white/10'
-        : 'bg-black/5 border-slate-200 hover:bg-black/10',
-  ]"
->
-  <span 
-    class="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1 rounded-lg text-[10px] font-black italic tracking-widest uppercase opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 shadow-xl whitespace-nowrap z-[210] border"
-    :class="isDark 
-      ? 'bg-red-500/90 text-slate-300 border-slate-200' 
-      : 'bg-red-600 text-white border-yellow-800'"
-  >
-    Favorite
-  </span>
+            to="/favorite"
+            :class="[
+              'relative w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border transition-all duration-300 group active:scale-95',
+              route.path === '/favorite'
+                ? 'bg-red-500 border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]'
+                : isDark
+                  ? 'bg-white/5 border-white/10 hover:bg-white/10'
+                  : 'bg-black/5 border-slate-200 hover:bg-black/10',
+            ]"
+          >
+            <span 
+              class="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1 rounded-lg text-[10px] font-black italic tracking-widest uppercase opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 shadow-xl whitespace-nowrap z-[210] border"
+              :class="isDark 
+                ? 'bg-red-500/90 text-slate-300 border-slate-200' 
+                : 'bg-red-600 text-white border-yellow-800'"
+            >
+              Favorite
+            </span>
 
-  <img
-    src="@/assets/iconfromhome/favorite.png"
-    :class="['w-5 h-5 object-contain transition-transform group-hover:scale-110', route.path === '/favorite' ? 'brightness-0 invert' : '']"
-    alt="Favorite"
-  />
-</router-link>
-
-          <!-- Spacer lebih lebar -->
-          <div class="w-10"></div>
+            <img
+              src="@/assets/iconfromhome/favorite.png"
+              :class="['w-5 h-5 object-contain transition-transform group-hover:scale-110', route.path === '/favorite' ? 'brightness-0 invert' : '']"
+              alt="Favorite"
+            />
+          </router-link>
 
           <!-- Dark mode toggle -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 ml-1">
             <span class="hidden md:inline text-[10px] font-black italic tracking-wider" :class="isDark ? 'text-indigo-400' : 'text-slate-500'">
               {{ isDark ? "DARK" : "LIGHT" }}
             </span>
@@ -318,3 +301,14 @@ watch(
 
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

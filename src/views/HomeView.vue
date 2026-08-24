@@ -28,6 +28,44 @@ const backgrounds = ['/images/logo.png', '/images/my77.png', '/images/hanami11.p
 const currentBgIndex = ref(0);
 let homeInterval = null;
 
+const placeholders = [
+  'Search items, bosses with API Coryn...',
+  'Try typing: "Katana", "Kipina", "Megiston"...',
+  'Find armor, weapons, and xtall...',
+  'Search materials with API Coryn...'
+];
+
+const placeholderText = ref('');
+let placeholderIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let typingTimeout = null;
+
+const typeEffect = () => {
+  const currentFullText = placeholders[placeholderIndex];
+
+  if (isDeleting) {
+    placeholderText.value = currentFullText.substring(0, charIndex - 1);
+    charIndex--;
+  } else {
+    placeholderText.value = currentFullText.substring(0, charIndex + 1);
+    charIndex++;
+  }
+
+  let typingSpeed = isDeleting ? 40 : 80;
+
+  if (!isDeleting && charIndex === currentFullText.length) {
+    typingSpeed = 2000; // Tahan selama 2 detik setelah selesai mengetik
+    isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+    typingSpeed = 300;
+  }
+
+  typingTimeout = setTimeout(typeEffect, typingSpeed);
+};
+
 const getCrystaTheme = (type) => {
   const lower = type?.toLowerCase() || '';
   if (lower.includes('upgrade')) {
@@ -221,9 +259,9 @@ const getIconPath = (type) => {
 };
 
 const updates = [
-  { number: '03', title: 'Bag Expansion Guide v3.2026', meta: 'Feature information · Aug 18, 2026', path: '/bag-list' },
-  { number: '02', title: 'Leveling Spots', meta: 'Guide information · Aug 12, 2026', path: '/lvling' },
-  { number: '01', title: 'Xtal ID Guide', meta: 'Feature information · Aug 24, 2026', path: '/xtal-id' }
+  { number: '03', title: 'Bag Expansion Guide v3.2026', meta: 'Feature information · Aug 24, 2026', path: '/bag-list' },
+  { number: '02', title: 'Home Page', meta: 'Change UI/UX · Aug 24, 2026', path: '/' },
+  { number: '01', title: 'Xtall ID Guide', meta: 'Feature information · Aug 24, 2026', path: '/xtall' }
 ];
 
 const databaseActivity = [...crystalData]
@@ -245,13 +283,14 @@ const runSearch = () => {
 };
 
 onMounted(() => {
+  typeEffect();
   let favIds = [];
   try { favIds = JSON.parse(localStorage.getItem('xtall_favs') || '[]'); } catch { favIds = []; }
   favoriteXtalls.value = crystalData.filter((crystal) => favIds.includes(String(crystal.code))).slice(0, 5);
   homeInterval = setInterval(() => { currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length; }, 8000);
 });
 
-onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
+onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInterval) clearInterval(homeInterval); });
 </script>
 
 <template>
@@ -270,19 +309,48 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
           Access thousands of items, mission guides, and advanced stat calculators to dominate the world of Toram Online.
         </p>
         
-        <form class="w-full max-w-md mt-6 flex items-center gap-1 p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm focus-within:border-purple-500" @submit.prevent="runSearch">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="w-9 h-9 ml-3 stroke-slate-400 fill-none stroke-[2.5]"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
-          <input v-model="searchQuery" type="search" placeholder="Search items, bosses with API Coryn..." aria-label="Search the database" class="w-full bg-transparent text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none placeholder-slate-400 px-2">
-          <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-purple-600 hover:bg-purple-500 rounded-xl transition-colors">Search</button>
-        </form>
+        <form 
+  class="w-full max-w-xl mt-6 flex items-center gap-2 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-purple-500/10 focus-within:border-purple-500 dark:focus-within:border-purple-400 focus-within:ring-4 focus-within:ring-purple-500/10 transition-all duration-300" 
+  @submit.prevent="runSearch"
+>
+  <!-- Icon Search dengan Glow halus -->
+  <div class="flex items-center justify-center pl-3 text-purple-500 dark:text-purple-400">
+    <svg viewBox="0 0 24 24" aria-hidden="true" class="w-6 h-6 stroke-current fill-none stroke-[2.5]">
+      <circle cx="11" cy="11" r="7"></circle>
+      <path d="m20 20-4-4" stroke-linecap="round"></path>
+    </svg>
+  </div>
+
+  <!-- Input dengan Placeholder Animasi Ketikan -->
+  <input 
+    v-model="searchQuery" 
+    type="search" 
+    :placeholder="placeholderText" 
+    aria-label="Search the database" 
+    class="w-full bg-transparent text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 px-2"
+  >
+
+  <!-- Button Modern Gradient -->
+  <button 
+    type="submit" 
+    class="px-6 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-95 rounded-xl transition-all duration-200 shadow-md shadow-purple-500/25 shrink-0 flex items-center gap-1.5"
+  >
+    <span>Search</span>
+    <span class="text-xs">→</span>
+  </button>
+</form>
         <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">© 2026 TIMI DB㋡ Toram Online Digital Database Project</p>
       </div>
 
-      <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-2">
-        <div class="relative h-40 overflow-hidden rounded-2xl">
-          <img :src="backgrounds[currentBgIndex]" alt="Toram Online adventure" class="w-full h-full object-cover">
-          <span class="absolute top-3 left-3 px-2.5 py-1 text-[10px] font-extrabold uppercase bg-purple-600 text-white rounded-md">Album Gallery</span>
-        </div>
+      <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm p-2">
+        <div class="relative h-70 overflow-hidden rounded-2xl">
+  <img 
+    :src="backgrounds[currentBgIndex]" 
+    alt="Toram Online adventure" 
+    class="w-full h-full object-fill"
+  >
+  <span class="absolute top-3 left-3 px-2.5 py-1 text-[10px] font-extrabold uppercase bg-purple-600 text-white rounded-md">Album Gallery</span>
+</div>
         <div class="p-4">
           <div class="flex items-center justify-between mb-3">
             <h2 class="text-base font-bold text-slate-900 dark:text-white">Latest Updates</h2>
@@ -291,7 +359,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
             <button 
               v-for="update in updates" 
               :key="update.number" 
-              class="w-full flex items-center gap-3 p-3 text-left rounded-xl bg-gradient-to-r from-slate-50 to-slate-100/80 hover:from-purple-50 hover:to-purple-100/60 dark:from-slate-800/60 dark:to-slate-800/40 dark:hover:from-purple-950/40 dark:hover:to-slate-800/80 border border-slate-200/60 dark:border-slate-700/50 hover:border-purple-500 dark:hover:border-purple-400 transition-all" 
+              class="w-full flex items-center gap-3 p-3 text-left rounded-xl bg-gradient-to-r from-slate-50 to-slate-100/80 hover:from-purple-50 hover:to-purple-100/60 dark:from-slate-800/60 dark:to-slate-800/40 dark:hover:from-purple-950/40 dark:hover:to-slate-800/80 border border-slate-300/60 dark:border-slate-700/50 hover:border-purple-500 dark:hover:border-purple-400 transition-all" 
               @click="navigateTo(update.path)"
             >
               <span class="px-2.5 py-1 text-xs font-extrabold bg-purple-500/10 text-purple-600 dark:text-purple-300 rounded-lg">{{ update.number }}</span>
@@ -307,7 +375,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
     </section>
 
     <!-- FAVORITES -->
-    <section class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+    <section class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm">
       <div class="flex items-center justify-between mb-4">
         <div>
           <h2 class="text-lg font-black text-slate-900 dark:text-white">Your Favorites</h2>
@@ -332,7 +400,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
           ]" 
           @click="navigateTo(`/xtall/${favorite.code}`)"
         >
-          <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700/80 group-hover:scale-110 transition-transform shadow-sm">
+          <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-300/80 dark:border-slate-700/80 group-hover:scale-110 transition-transform shadow-sm">
             <img :src="getIconPath(favorite.type)" :alt="favorite.name" class="w-6 h-6 object-contain">
           </div>
           <span class="flex-1 min-w-0">
@@ -348,7 +416,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
         </button>
       </div>
       
-      <div v-else class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800">
+      <div v-else class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-300 dark:border-slate-800">
         <div class="flex items-center gap-3">
           <img src="/images/what chara.webp" alt="Timi DB character" class="w-20 h-20 object-contain">
           <div>
@@ -362,7 +430,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
     </section>
 
     <!-- ABOUT PROJECT -->
-    <section class="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+    <section class="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
       <div>
         <span class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">About the project</span>
         <h2 class="text-2xl font-black text-slate-900 dark:text-white mt-1 mb-2">Built for Toram Online Players</h2>
@@ -370,7 +438,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
           TIMI DB brings item data, quest references, calculators, leveling routes, and farming notes into one clean workspace.
         </p>
       </div>
-      <div class="border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-800 pt-4 md:pt-0 md:pl-6">
+      <div class="border-t md:border-t-0 md:border-l border-slate-300 dark:border-slate-800 pt-4 md:pt-0 md:pl-6">
         <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Web developer</span>
         <b class="text-lg font-black text-slate-900 dark:text-white block mt-1">TIMI</b>
         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Designed, maintained, and updated as an independent community web project.</p>
@@ -378,13 +446,24 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
       </div>
     </section>
 
-    <!-- ADVENTURER TOOLS GRID -->
+<!-- ADVENTURER TOOLS GRID -->
     <section>
-      <div class="flex items-center justify-between gap-4 pb-3 mb-6 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <h2 class="text-xl font-black text-slate-900 dark:text-white">Adventurer Tools</h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Utilize our calculators and database tools to accelerate your progress.</p>
+      <div class="flex items-center justify-between gap-4 pb-4 mb-6 relative">
+        <div class="flex items-center gap-3.5">
+          <!-- Aksen Batang Vertikal -->
+          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-purple-600 via-pink-500 to-rose-500 shrink-0"></span>
+          <div>
+            <h2 class="text-xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-rose-500 dark:from-purple-300 dark:via-pink-400 dark:to-rose-400 bg-clip-text text-transparent leading-tight drop-shadow-sm">
+              Adventurer Tools
+            </h2>
+            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400/90 mt-0.5 tracking-wide">
+              Utilize our calculators and database tools to accelerate your progress.
+            </p>
+          </div>
         </div>
+
+        <!-- Glowing Faded Line -->
+        <div class="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-purple-500 via-50% to-transparent opacity-90 dark:via-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.7)]"></div>
       </div>
       
       <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -392,7 +471,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
           v-for="item in features" 
           :key="item.path" 
           :class="[
-            'group relative overflow-hidden rounded-3xl p-6 transition-all duration-300 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between min-h-[290px]',
+            'group relative overflow-hidden rounded-3xl p-6 transition-all duration-300 border border-slate-300 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between min-h-[290px]',
             item.bgClass,
             item.borderClass
           ]"
@@ -413,7 +492,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
             </p>
           </div>
           
-          <div class="relative z-10 mt-6 pt-3 border-t border-slate-200/60 dark:border-slate-800/80 flex items-center justify-between w-full">
+          <div class="relative z-10 mt-6 pt-3 border-t border-slate-300/60 dark:border-slate-800/80 flex items-center justify-between w-full">
             <span class="text-xs font-bold text-slate-400 dark:text-slate-500">OPEN TOOL</span>
             <span :class="['px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1 group-hover:translate-x-1', item.btnClass]">
               Open →
@@ -425,11 +504,22 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
 
     <!-- POPULAR GUIDES & RESOURCES -->
     <section>
-      <div class="flex items-center justify-between gap-4 pb-3 mb-6 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <h2 class="text-xl font-black text-slate-900 dark:text-white">Popular Guides & Resources</h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Quick references for event calendars, leveling routes, and farming locations.</p>
+      <div class="flex items-center justify-between gap-4 pb-4 mb-6 relative">
+        <div class="flex items-center gap-3.5">
+          <!-- Batang Vertikal Cyan -->
+          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-cyan-500 via-sky-500 to-blue-600 shrink-0"></span>
+          <div>
+            <h2 class="text-xl font-black bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-600 dark:from-cyan-300 dark:via-sky-300 dark:to-blue-400 bg-clip-text text-transparent leading-tight drop-shadow-sm">
+              Popular Guides & Resources
+            </h2>
+            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400/90 mt-0.5 tracking-wide">
+              Quick references for event calendars, leveling routes, and farming locations.
+            </p>
+          </div>
         </div>
+
+        <!-- Glowing Line Cyan -->
+        <div class="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-cyan-500 via-50% to-transparent opacity-90 dark:via-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.7)]"></div>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -437,7 +527,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
           v-for="item in other" 
           :key="item.path" 
           :class="[
-            'group relative overflow-hidden rounded-3xl p-6 transition-all duration-300 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between min-h-[280px]',
+            'group relative overflow-hidden rounded-3xl p-6 transition-all duration-300 border border-slate-300 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between min-h-[280px]',
             item.bgClass,
             item.borderClass
           ]"
@@ -457,7 +547,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
             </p>
           </div>
           
-          <div class="relative z-10 mt-6 pt-3 border-t border-slate-200/60 dark:border-slate-800/80 flex items-center justify-between w-full">
+          <div class="relative z-10 mt-6 pt-3 border-t border-slate-300/60 dark:border-slate-800/80 flex items-center justify-between w-full">
             <span class="text-xs font-bold text-slate-400 dark:text-slate-500">VIEW GUIDE</span>
             <span :class="['px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1 group-hover:translate-x-1', item.btnClass]">
               Open →
@@ -469,12 +559,22 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
 
     <!-- XTALL DATABASE ACTIVITY -->
     <section>
-      <div class="flex items-center gap-3 pb-3 mb-6 border-b border-slate-200 dark:border-slate-800">
-        <div class="text-purple-600 dark:text-purple-400 text-xl font-bold">▰</div>
-        <div>
-          <h2 class="text-xl font-black text-slate-900 dark:text-white">Xtall Database Activity</h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Recently added entries with unique theme indicators.</p>
+      <div class="flex items-center justify-between gap-4 pb-4 mb-6 relative">
+        <div class="flex items-center gap-3.5">
+          <!-- Batang Vertikal Emerald -->
+          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-emerald-500 via-teal-500 to-green-600 shrink-0"></span>
+          <div>
+  <h2 class="text-xl font-black bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400 bg-clip-text text-transparent leading-tight drop-shadow-sm">
+    Latest Xtall Database
+  </h2>
+  <p class="text-xs font-semibold text-slate-500 dark:text-slate-400/90 mt-0.5 tracking-wide">
+    Recently added entries with unique theme indicators.
+  </p>
+</div>
         </div>
+
+        <!-- Glowing Line Emerald -->
+        <div class="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-emerald-500 via-50% to-transparent opacity-90 dark:via-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.7)]"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -489,7 +589,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
           ]"
         >
           <div class="flex items-center gap-4 min-w-0">
-            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700">
               <img :src="activity.icon" :alt="activity.name" class="w-8 h-8 object-contain" />
             </div>
             <div class="min-w-0">

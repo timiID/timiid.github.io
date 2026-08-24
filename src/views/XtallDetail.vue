@@ -6,168 +6,182 @@
       <div :class="['absolute inset-0 bg-[url(\'/images/logo.png\')] bg-center bg-no-repeat bg-[length:60%_auto] opacity-[0.03]', isDark ? 'brightness-200' : 'invert opacity-[0.02]']"></div>
     </div>
 
-    <div v-if="xtall" class="relative z-10 max-w-5xl mx-auto p-6 md:p-20 animate-fade-in">
-      
-      <button @click="toggleFavorite" 
-  :class="['absolute top-[60px] right-6 px-8 py-3.5 rounded-4xl flex items-center gap-3 transition-all duration-500 z-20 font-black uppercase italic text-[11px] tracking-[0.15em] border-2 shadow-lg group', 
-    isFavorite 
-      ? (isDark 
-          ? 'bg-yellow-500/10 border-yellow-500/50 text-yellow-500' 
-          : 'bg-yellow-500/10 border-yellow-500 text-yellow-600')
-      : (isDark 
-          ? 'bg-gradient-to-r from-red-600 to-rose-700 border-red-500/50 text-white' 
-          : 'bg-gradient-to-r from-red-500 to-red-600 border-red-400 text-white')
-  ]">
-
-  <svg :class="['w-4 h-4 flex-shrink-0 transition-all duration-300', isFavorite ? 'fill-yellow-500' : 'fill-white']" viewBox="0 0 24 24">
-    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-  </svg>
-
-  <span class="relative z-10">{{ isFavorite ? 'Saved' : 'Add to Favorite' }}</span>
-
-  <!-- Tooltip -->
-  <span :class="[
-    'pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-xl',
-    'opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300',
-    isDark 
-      ? 'bg-slate-800 border-white/10 text-slate-300' 
-      : 'bg-white border-slate-200 text-slate-600'
-  ]">
-    {{ isFavorite ? 'Hapus dari Favorit' : 'Tambahkan ke Favorit' }}
-  </span>
-</button>
-
-      <button @click="$router.push('/xtall')" class="group flex items-center gap-3 mb-5 transition-all hover:-translate-x-2">
-        <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-          <svg class="w-5 h-5 text-cyan-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"/></svg>
+    <!-- Baris Top Bar (Back di Kiri, Favorite di Kanan) -->
+    <div class="flex items-center justify-between gap-4 mb-6 relative z-20 w-full">
+      <!-- 1. Tombol Back (KIRI) -->
+      <button 
+        @click="$router.push('/xtall')" 
+        class="group flex items-center gap-3 transition-all hover:-translate-x-1 shrink-0"
+      >
+        <div class="w-10 h-10 rounded-full border-2 border-cyan-500/50 flex items-center justify-center group-hover:bg-cyan-500 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)] shrink-0">
+          <svg class="w-5 h-5 text-cyan-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 group-hover:opacity-100 group-hover:text-cyan-500">Back to Database</span>
+        <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 group-hover:opacity-100 group-hover:text-cyan-500">
+          Back to Database
+        </span>
       </button>
 
-      <div class="grid lg:grid-cols-12 gap-12 items-start">
-        <div class="lg:col-span-5 space-y-2 animate-slide-right">
-          <div :class="['relative aspect-square rounded-[3.5rem] border-4 flex items-center justify-center overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition-all duration-700 group',
-            isDark ? 'bg-slate-900 border-white/20' : 'bg-white border-slate-300']">
-            <div :class="['absolute inset-0 opacity-30 blur-3xl animate-pulse transition-colors duration-700', getGlowColor(xtall.type)]"></div>
-            <img :src="getIconPath(xtall.type)" class="relative w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-700 group-hover:scale-110 animate-float" />
-            <div :class="['absolute bottom-8 px-6 py-2 rounded-2xl border-2 font-black text-[10px] tracking-widest uppercase shadow-2xl whitespace-nowrap transition-all duration-500 group-hover:scale-110', getBadgeColor(xtall.type)]">
-              {{ formatBadgeText(xtall.type) }}
+      <!-- 2. Tombol Favorite (KANAN) -->
+      <button 
+        @click="toggleFavorite" 
+        :class="[
+          'h-10 px-5 rounded-full flex items-center gap-2 transition-all duration-500 font-black uppercase italic text-[10px] sm:text-[11px] tracking-[0.15em] border-2 shadow-lg group relative shrink-0 ml-auto', 
+          isFavorite 
+            ? (isDark 
+                ? 'bg-yellow-500/10 border-yellow-500/50 text-yellow-500' 
+                : 'bg-yellow-500/10 border-yellow-500 text-yellow-600')
+            : (isDark 
+                ? 'bg-gradient-to-r from-red-600 to-rose-700 border-red-500/50 text-white' 
+                : 'bg-gradient-to-r from-red-500 to-red-600 border-red-400 text-white')
+        ]"
+      >
+        <svg :class="['w-4 h-4 shrink-0 transition-all duration-300', isFavorite ? 'fill-yellow-500' : 'fill-white']" viewBox="0 0 24 24">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+
+        <span class="relative z-10 whitespace-nowrap">{{ isFavorite ? 'Saved' : 'Add to Favorite' }}</span>
+
+        <!-- Tooltip -->
+        <span :class="[
+          'pointer-events-none absolute -bottom-10 right-0 whitespace-nowrap px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border shadow-xl',
+          'opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-30',
+          isDark 
+            ? 'bg-slate-800 border-white/10 text-slate-300' 
+            : 'bg-white border-slate-200 text-slate-600'
+        ]">
+          {{ isFavorite ? 'Hapus dari Favorit' : 'Tambahkan ke Favorit' }}
+        </span>
+      </button>
+    </div>
+
+    <!-- Main Content jika data xtall ada -->
+    <div v-if="xtall" class="grid lg:grid-cols-12 gap-12 items-start">
+      <div class="lg:col-span-5 space-y-2 animate-slide-right">
+        <div :class="['relative aspect-square rounded-[3.5rem] border-4 flex items-center justify-center overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition-all duration-700 group',
+          isDark ? 'bg-slate-900 border-white/20' : 'bg-white border-slate-300']">
+          <div :class="['absolute inset-0 opacity-30 blur-3xl animate-pulse transition-colors duration-700', getGlowColor(xtall.type)]"></div>
+          <img :src="getIconPath(xtall.type)" class="relative w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-700 group-hover:scale-110 animate-float" />
+          <div :class="['absolute bottom-8 px-6 py-2 rounded-2xl border-2 font-black text-[10px] tracking-widest uppercase shadow-2xl whitespace-nowrap transition-all duration-500 group-hover:scale-110', getBadgeColor(xtall.type)]">
+            {{ formatBadgeText(xtall.type) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 space-y-8 animate-slide-left">
+        <div>
+          <p :class="['text-xs font-black uppercase tracking-[0.4em] mb-2 drop-shadow-sm', getLabelColor(xtall.name)]">
+            {{ formatBadgeText(xtall.type) }}
+          </p>
+          <div v-if="xtall.eventLabel" class="mb-4">
+            <span :class="[
+              'inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wide px-4 py-1.5 rounded-full border shadow-sm',
+              isDark
+                ? 'bg-amber-500/15 text-amber-200 border-amber-500/20'
+                : 'bg-amber-500/10 text-amber-700 border-amber-500/20'
+            ]">
+              <span class="inline-flex items-center justify-center p-1 bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/>
+                </svg>
+              </span> Event : 
+              {{ xtall.eventLabel }}
+            </span>
+          </div>
+          <h1 :class="[
+              'text-4xl md:text-6xl lg:text-7xl font-[1000] tracking-tighter italic uppercase leading-[0.9] mb-4 drop-shadow-2xl transition-all duration-500 break-words max-w-full', 
+              getLabelColor(xtall.type), 
+              isDark ? '[-webkit-text-stroke:1px_white]' : '[-webkit-text-stroke:1px_black]'
+            ]"
+            :style="{ 
+              maskImage: 'linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 100%)', 
+              webkitMaskImage: 'linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 100%)' 
+            }">
+            {{ xtall.name }}
+          </h1>
+          <div class="flex items-center gap-4">
+            <div class="h-[3px] w-16 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
+            <p class="text-[10px] font-black text-cyan-500 uppercase tracking-[0.5em]">System ID: #{{ xtall.code }}</p>
+          </div>
+        </div>
+
+        <div :class="['p-8 md:p-12 rounded-[3rem] border-2 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] backdrop-blur-3xl relative overflow-hidden transition-all hover:border-cyan-500/50',
+          isDark ? 'bg-slate-900/80 border-white/10 shadow-black' : 'bg-white border-slate-200 shadow-slate-300']">
+          <div class="absolute top-0 right-0 p-8 text-8xl opacity-[0.05] grayscale pointer-events-none animate-spin-slow">✨</div>
+          <h3 class="text-xs font-black uppercase tracking-[0.5em] text-slate-500 mb-8 flex items-center gap-3">
+            <span class="w-2 h-2 bg-cyan-500 rounded-full animate-ping"></span> Status/ Effect
+          </h3>
+          <div class="space-y-5">
+            <div v-for="(stat, idx) in parseStats(xtall.view)" :key="idx" 
+              class="flex items-start gap-4 group/stat animate-fade-in" 
+              :style="{ animationDelay: (idx * 100) + 'ms' }">
+              <div v-if="!stat.includes('Dengan')" class="mt-2.5 w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,1)] group-hover/stat:scale-150 transition-transform flex-shrink-0"></div>
+              <p :class="['text-base md:text-lg font-bold tracking-tight transition-colors', 
+                stat.includes('Dengan') ? 'text-green-500 italic' : (stat.includes('-') ? 'text-red-500' : (isDark ? 'text-slate-200 group-hover/stat:text-cyan-400' : 'text-slate-700'))]">
+                {{ stat }}
+              </p>
             </div>
           </div>
         </div>
 
-        <div class="lg:col-span-7 space-y-8 animate-slide-left">
-          <div>
-            <p :class="['text-xs font-black uppercase tracking-[0.4em] mb-2 drop-shadow-sm', getLabelColor(xtall.name)]">
-              {{ formatBadgeText(xtall.type) }}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div v-if="previousEvo" @click="goToXtall(previousEvo.code)"
+            :class="['group p-6 rounded-[2.5rem] border-2 cursor-pointer transition-all duration-500 hover:-translate-y-2 shadow-xl', 
+            isDark ? 'bg-slate-900 border-white/5 hover:border-cyan-500/50 hover:shadow-cyan-900/20' : 'bg-white border-slate-200 hover:border-cyan-500 shadow-slate-200']">
+            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">Previous Model</p>
+            <p class="text-sm font-bold flex items-center gap-2">
+              <span class="text-cyan-500 group-hover:-translate-x-2 transition-transform">←</span> {{ previousEvo.name }}
             </p>
-            <div v-if="xtall.eventLabel" class="mb-4">
-  <span :class="[
-    'inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wide px-4 py-1.5 rounded-full border shadow-sm',
-    isDark
-      ? 'bg-amber-500/15 text-amber-200 border-amber-500/20'
-      : 'bg-amber-500/10 text-amber-700 border-amber-500/20'
-  ]">
-  <span class="inline-flex items-center justify-center p-1 bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20">
-  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/>
-  </svg>
-</span> Event : 
-    {{ xtall.eventLabel }}
-  </span>
-</div>
-            <h1 :class="[
-    'text-4xl md:text-6xl lg:text-7xl font-[1000] tracking-tighter italic uppercase leading-[0.9] mb-4 drop-shadow-2xl transition-all duration-500 break-words max-w-full', 
-    getLabelColor(xtall.type), 
-    isDark ? '[-webkit-text-stroke:1px_white]' : '[-webkit-text-stroke:1px_black]'
-  ]"
-  :style="{ 
-    maskImage: 'linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 100%)', 
-    webkitMaskImage: 'linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 100%)' 
-  }">
-  {{ xtall.name }}
-</h1>
-            <div class="flex items-center gap-4">
-              <div class="h-[3px] w-16 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
-              <p class="text-[10px] font-black text-cyan-500 uppercase tracking-[0.5em]">System ID: #{{ xtall.code }}</p>
-            </div>
           </div>
-
-          <div :class="['p-8 md:p-12 rounded-[3rem] border-2 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] backdrop-blur-3xl relative overflow-hidden transition-all hover:border-cyan-500/50',
-            isDark ? 'bg-slate-900/80 border-white/10 shadow-black' : 'bg-white border-slate-200 shadow-slate-300']">
-            <div class="absolute top-0 right-0 p-8 text-8xl opacity-[0.05] grayscale pointer-events-none animate-spin-slow">✨</div>
-            <h3 class="text-xs font-black uppercase tracking-[0.5em] text-slate-500 mb-8 flex items-center gap-3">
-              <span class="w-2 h-2 bg-cyan-500 rounded-full animate-ping"></span> Status/ Effect
-            </h3>
-            <div class="space-y-5">
-              <div v-for="(stat, idx) in parseStats(xtall.view)" :key="idx" 
-                class="flex items-start gap-4 group/stat animate-fade-in" 
-                :style="{ animationDelay: (idx * 100) + 'ms' }">
-                <div v-if="!stat.includes('Dengan')" class="mt-2.5 w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,1)] group-hover/stat:scale-150 transition-transform flex-shrink-0"></div>
-                <p :class="['text-base md:text-lg font-bold tracking-tight transition-colors', 
-                  stat.includes('Dengan') ? 'text-green-500 italic' : (stat.includes('-') ? 'text-red-500' : (isDark ? 'text-slate-200 group-hover/stat:text-cyan-400' : 'text-slate-700'))]">
-                  {{ stat }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div v-if="previousEvo" @click="goToXtall(previousEvo.code)"
-              :class="['group p-6 rounded-[2.5rem] border-2 cursor-pointer transition-all duration-500 hover:-translate-y-2 shadow-xl', 
-              isDark ? 'bg-slate-900 border-white/5 hover:border-cyan-500/50 hover:shadow-cyan-900/20' : 'bg-white border-slate-200 hover:border-cyan-500 shadow-slate-200']">
-              <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">Previous Model</p>
-              <p class="text-sm font-bold flex items-center gap-2">
-                <span class="text-cyan-500 group-hover:-translate-x-2 transition-transform">←</span> {{ previousEvo.name }}
-              </p>
-            </div>
-            <div v-if="nextEvo" @click="goToXtall(nextEvo.code)"
-              :class="['group p-6 rounded-[2.5rem] border-2 cursor-pointer transition-all duration-500 hover:-translate-y-2 shadow-xl', 
-              isDark ? 'bg-slate-900 border-white/5 hover:border-purple-500/50 hover:shadow-purple-900/20' : 'bg-white border-slate-200 hover:border-purple-500 shadow-slate-200']">
-              <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">Advanced Upgrade</p>
-              <p class="text-sm font-bold flex items-center gap-2 justify-between">
-                {{ nextEvo.name }} <span class="text-purple-500 group-hover:translate-x-2 transition-transform">→</span>
-              </p>
-            </div>
+          <div v-if="nextEvo" @click="goToXtall(nextEvo.code)"
+            :class="['group p-6 rounded-[2.5rem] border-2 cursor-pointer transition-all duration-500 hover:-translate-y-2 shadow-xl', 
+            isDark ? 'bg-slate-900 border-white/5 hover:border-purple-500/50 hover:shadow-purple-900/20' : 'bg-white border-slate-200 hover:border-purple-500 shadow-slate-200']">
+            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">Advanced Upgrade</p>
+            <p class="text-sm font-bold flex items-center gap-2 justify-between">
+              {{ nextEvo.name }} <span class="text-purple-500 group-hover:translate-x-2 transition-transform">→</span>
+            </p>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- State Loading jika xtall belum ada -->
     <div v-else class="py-60 flex items-center justify-center">
        <div class="relative w-24 h-24">
          <div class="absolute inset-0 border-4 border-cyan-500/20 rounded-full"></div>
          <div class="absolute inset-0 border-4 border-t-cyan-500 rounded-full animate-spin"></div>
        </div>
     </div>
+
+    <!-- Notification Toast -->
     <Teleport to="body">
-  <transition
-    enter-active-class="transition ease-out duration-300"
-    enter-from-class="opacity-0 translate-y-4"
-    enter-to-class="opacity-100 translate-y-0"
-    leave-active-class="transition ease-in duration-200"
-    leave-from-class="opacity-100 translate-y-0"
-    leave-to-class="opacity-0 translate-y-4"
-  >
-    <div v-if="notification.show"
-      :class="[
-        'fixed top-24 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:max-w-md z-[9999] px-6 py-3 rounded-2xl shadow-2xl border flex items-center gap-3',
-        notification.type === 'add'
-          ? (isDark ? 'bg-green-700 border-green-500/50 text-slate-200' : 'bg-green-100 border-green-400 text-slate-900')
-          : (isDark ? 'bg-red-700/80 border-red-500/50 text-slate-200' : 'bg-red-100 border-red-400 text-slate-900')
-      ]">
+      <transition
+        enter-active-class="transition ease-out duration-300"
+        enter-from-class="opacity-0 translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition ease-in duration-200"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-4"
+      >
+        <div v-if="notification.show"
+          :class="[
+            'fixed top-24 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:max-w-md z-[9999] px-6 py-3 rounded-2xl shadow-2xl border flex items-center gap-3',
+            notification.type === 'add'
+              ? (isDark ? 'bg-green-700 border-green-500/50 text-slate-200' : 'bg-green-100 border-green-400 text-slate-900')
+              : (isDark ? 'bg-red-700/80 border-red-500/50 text-slate-200' : 'bg-red-100 border-red-400 text-slate-900')
+          ]">
 
-      <!-- Ikon gambar: sukses = my c20.png, gagal/hapus = my34.png -->
-      <img
-        :src="notification.type === 'add' ? '/images/my c20.png' : '/images/my34.png'"
-        :alt="notification.type === 'add' ? 'sukses' : 'hapus'"
-        class="w-8 h-8 object-contain flex-shrink-0"
-      />
+          <img
+            :src="notification.type === 'add' ? '/images/my c20.png' : '/images/my34.png'"
+            :alt="notification.type === 'add' ? 'sukses' : 'hapus'"
+            class="w-8 h-8 object-contain flex-shrink-0"
+          />
 
-      <p class="font-bold text-sm tracking-wide">{{ notification.message }}</p>
-    </div>
-  </transition>
-</Teleport>
+          <p class="font-bold text-sm tracking-wide">{{ notification.message }}</p>
+        </div>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
