@@ -221,13 +221,14 @@ const getIconPath = (type) => {
 };
 
 const updates = [
-  { number: '01', title: 'Bag Expansion Guide v3.2026', meta: 'Feature information · Aug 18, 2026', path: '/bag-list' },
-  { number: '02', title: 'Leveling Spots', meta: 'Guide information · Aug 12, 2026', path: '/lvling' }
+  { number: '03', title: 'Bag Expansion Guide v3.2026', meta: 'Feature information · Aug 18, 2026', path: '/bag-list' },
+  { number: '02', title: 'Leveling Spots', meta: 'Guide information · Aug 12, 2026', path: '/lvling' },
+  { number: '01', title: 'Xtal ID Guide', meta: 'Feature information · Aug 24, 2026', path: '/xtal-id' }
 ];
 
 const databaseActivity = [...crystalData]
-  .sort((first, second) => first.code - second.code)
-  .slice(-6)
+  .sort((first, second) => second.code - first.code)
+  .slice(0, 6)
   .map((crystal) => ({
     name: crystal.name,
     date: `Xtall ID #${crystal.code}`,
@@ -355,7 +356,7 @@ onUnmounted(() => { if (homeInterval) clearInterval(homeInterval); });
             <p class="text-xs text-slate-500 dark:text-slate-400">Tidak ada xtall favorit yang disimpan.</p>
           </div>
         </div>
-        <button class="px-4 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white rounded-xl shadow-sm transition-all hover:scale-105" @click="navigateTo('/xtall')">Lihat Xtall →</button>
+        <button class="px-4 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white rounded-xl shadow-sm transition-all hover:scale-105" @click="navigateTo('/xtall')">See Xtall →</button>
       </div>
       
     </section>

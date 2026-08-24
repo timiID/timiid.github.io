@@ -3827,6 +3827,13 @@ export const crystalData = [
           eventLabel: "Summer Event 2026",
           view: `\nMaxHP +1500\nMaxMP +300\nAttack MP Recovery +15`,
         },
+        {
+          code: 542,
+          link: 515,
+          type: "UPGRADE",
+          name: "Sang Juara Megiston IX",
+          view: `\nMaxHP +2600\nCritical Rate +35\nKebal Api +9%\nKebal Air +9%\nKebal Angin +6%\nKebal Bumi +6%\nKebal Cahaya +6%\nKebal Gelap +6%\nKebal Netral +6%`,
+        },
       ];
       
       import iconNormal from '@/assets/icons/crysta_normal.jpg'
