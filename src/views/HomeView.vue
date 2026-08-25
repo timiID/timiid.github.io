@@ -374,7 +374,7 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
     </section>
 
     <!-- FAVORITES -->
-<section class="p-6 md:p-8 rounded-3xl bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border border-red-500/20 dark:border-red-500/30 shadow-2xl section-fade-up relative overflow-hidden bg-[url('/images/batik.png')] bg-repeat bg-blend-overlay">
+<section class="p-6 md:p-8 rounded-3xl bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border border-red-500/20 dark:border-red-500/30 shadow-2xl section-fade-up relative overflow-hidden bg-white bg-repeat bg-blend-overlay">
   <!-- Soft Glow Ambient Light -->
   <div class="absolute -top-24 -right-24 w-72 h-72 bg-red-500/10 dark:bg-red-600/15 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -400,24 +400,35 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
       v-for="(favorite, idx) in favoriteXtalls" 
       :key="favorite.code" 
       :class="[
-        'group flex items-center gap-3 p-3.5 text-left rounded-2xl border transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-2xl cursor-pointer fav-card-anim backdrop-blur-md bg-white/80 dark:bg-slate-900/80',
-        getCrystaTheme(favorite.type).border
+        'group relative flex items-center gap-3 p-3.5 text-left rounded-2xl border transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-xl cursor-pointer fav-card-anim overflow-hidden backdrop-blur-md',
+        // Menggunakan tema warna background & border yang sama persis dengan fungsi getCrystaTheme
+        getCrystaTheme(favorite.type).bg,
+        getCrystaTheme(favorite.type).border,
+        'hover:shadow-2xl hover:brightness-105 dark:hover:brightness-110'
       ]"
       :style="{ animationDelay: `${idx * 0.08}s` }"
       @click="navigateTo(`/xtall/${favorite.code}`)"
     >
-      <div class="w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 group-hover:scale-110 group-hover:border-red-500/50 transition-all duration-300 shadow-sm">
+      <!-- Efek Kilau Shimmer saat Disentuh -->
+      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
+
+      <!-- Icon Box -->
+      <div class="w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 group-hover:scale-110 transition-all duration-300 shadow-sm relative z-10">
         <img :src="getIconPath(favorite.type)" :alt="favorite.name" class="w-6 h-6 object-contain group-hover:rotate-6 transition-transform">
       </div>
-      <span class="flex-1 min-w-0">
-        <b :class="['block text-xs font-extrabold truncate transition-colors group-hover:text-red-600 dark:group-hover:text-red-400', getCrystaTheme(favorite.type).text]">
+
+      <!-- Text Details -->
+      <span class="flex-1 min-w-0 relative z-10">
+        <b :class="['block text-xs font-extrabold truncate transition-colors', getCrystaTheme(favorite.type).text]">
           {{ favorite.name }}
         </b>
         <span :class="['inline-block px-2 py-0.5 text-[9px] font-extrabold uppercase rounded border tracking-wider mt-1 shadow-2xs', getCrystaTheme(favorite.type).badge]">
           {{ favorite.type }}
         </span>
       </span>
-      <span class="font-bold text-xs text-slate-400 group-hover:text-red-500 transition-all duration-300 group-hover:translate-x-1">→</span>
+
+      <!-- Arrow Indicator -->
+      <span :class="['font-bold text-xs transition-transform duration-300 group-hover:translate-x-1 relative z-10', getCrystaTheme(favorite.type).text]">→</span>
     </button>
   </div>
   
