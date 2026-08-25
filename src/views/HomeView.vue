@@ -374,75 +374,107 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
     </section>
 
     <!-- FAVORITES -->
-    <section class="p-6 rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-300/80 dark:border-slate-800 shadow-xl section-fade-up">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="text-lg font-black text-slate-900 dark:text-white">Your Favorites</h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Quick access to the xtall you saved from the database.</p>
-        </div>
-        <button 
-          class="px-3.5 py-1.5 text-xs font-bold text-rose-100 bg-red-600/90 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-400 border border-rose-500/30 rounded-xl transition-all duration-300 shadow-md active:scale-95 hover:shadow-red-500/25 hover:shadow-lg" 
-          @click="navigateTo('/favorite')"
-        >
-          View All →
-        </button>
+<section class="p-6 md:p-8 rounded-3xl bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border border-red-500/20 dark:border-red-500/30 shadow-2xl section-fade-up relative overflow-hidden bg-[url('/images/batik.png')] bg-repeat bg-blend-overlay">
+  <!-- Soft Glow Ambient Light -->
+  <div class="absolute -top-24 -right-24 w-72 h-72 bg-red-500/10 dark:bg-red-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- Header Section -->
+  <div class="flex items-center justify-between mb-6 relative z-10">
+    <div>
+      <h2 class="text-xl font-extrabold bg-gradient-to-r from-red-600 via-rose-500 to-yellow-400 bg-clip-text text-transparent dark:from-red-400 dark:via-rose-200 dark:to-red-500 animate-shimmer drop-shadow-sm">
+        Your Favorites♡
+      </h2>
+      <p class="text-xs font-medium text-slate-600 dark:text-slate-300 mt-0.5">Quick access to the xtall you saved from the database.</p>
+    </div>
+    <button 
+      class="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 border border-red-400/30 rounded-xl transition-all duration-300 shadow-md shadow-red-500/20 active:scale-95 hover:scale-105 hover:shadow-lg" 
+      @click="navigateTo('/favorite')"
+    >
+      View All →
+    </button>
+  </div>
+  
+  <!-- Content Grid -->
+  <div v-if="favoriteXtalls.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 relative z-10">
+    <button 
+      v-for="(favorite, idx) in favoriteXtalls" 
+      :key="favorite.code" 
+      :class="[
+        'group flex items-center gap-3 p-3.5 text-left rounded-2xl border transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-2xl cursor-pointer fav-card-anim backdrop-blur-md bg-white/80 dark:bg-slate-900/80',
+        getCrystaTheme(favorite.type).border
+      ]"
+      :style="{ animationDelay: `${idx * 0.08}s` }"
+      @click="navigateTo(`/xtall/${favorite.code}`)"
+    >
+      <div class="w-11 h-11 flex-shrink-0 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 group-hover:scale-110 group-hover:border-red-500/50 transition-all duration-300 shadow-sm">
+        <img :src="getIconPath(favorite.type)" :alt="favorite.name" class="w-6 h-6 object-contain group-hover:rotate-6 transition-transform">
       </div>
-      
-      <div v-if="favoriteXtalls.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-        <button 
-          v-for="(favorite, idx) in favoriteXtalls" 
-          :key="favorite.code" 
-          :class="[
-            'group flex items-center gap-3 p-3 text-left rounded-2xl border transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-xl cursor-pointer fav-card-anim',
-            getCrystaTheme(favorite.type).bg,
-            getCrystaTheme(favorite.type).border
-          ]"
-          :style="{ animationDelay: `${idx * 0.08}s` }"
-          @click="navigateTo(`/xtall/${favorite.code}`)"
-        >
-          <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-300/80 dark:border-slate-700/80 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-            <img :src="getIconPath(favorite.type)" :alt="favorite.name" class="w-6 h-6 object-contain group-hover:rotate-6 transition-transform">
-          </div>
-          <span class="flex-1 min-w-0">
-            <b :class="['block text-xs font-bold truncate transition-colors', getCrystaTheme(favorite.type).text]">
-              {{ favorite.name }}
-            </b>
-            <span :class="['inline-block px-1.5 py-0.5 text-[9px] font-extrabold uppercase rounded border tracking-wider mt-0.5', getCrystaTheme(favorite.type).badge]">
-              {{ favorite.type }}
-            </span>
-          </span>
-          <span :class="['font-bold text-xs transition-transform duration-300 group-hover:translate-x-1.5', getCrystaTheme(favorite.type).text]">→</span>
-        </button>
+      <span class="flex-1 min-w-0">
+        <b :class="['block text-xs font-extrabold truncate transition-colors group-hover:text-red-600 dark:group-hover:text-red-400', getCrystaTheme(favorite.type).text]">
+          {{ favorite.name }}
+        </b>
+        <span :class="['inline-block px-2 py-0.5 text-[9px] font-extrabold uppercase rounded border tracking-wider mt-1 shadow-2xs', getCrystaTheme(favorite.type).badge]">
+          {{ favorite.type }}
+        </span>
+      </span>
+      <span class="font-bold text-xs text-slate-400 group-hover:text-red-500 transition-all duration-300 group-hover:translate-x-1">→</span>
+    </button>
+  </div>
+  
+  <!-- Empty State -->
+  <div v-else class="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/80 relative z-10 shadow-sm">
+    <div class="flex items-center gap-4">
+      <img src="/images/what chara.webp" alt="Timi DB character" class="w-20 h-20 object-contain drop-shadow-md animate-float">
+      <div>
+        <b class="text-sm font-bold text-slate-800 dark:text-slate-200">No favorite xtall yet</b>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Tidak ada xtall favorit yang disimpan.</p>
       </div>
-      
-      <div v-else class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-300/60 dark:border-slate-800">
-        <div class="flex items-center gap-4">
-          <img src="/images/what chara.webp" alt="Timi DB character" class="w-20 h-20 object-contain drop-shadow-md animate-float">
-          <div>
-            <b class="text-sm font-bold text-slate-800 dark:text-slate-200">No favorite xtall yet</b>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Tidak ada xtall favorit yang disimpan.</p>
-          </div>
-        </div>
-        <button class="px-5 py-2.5 text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white rounded-xl shadow-md transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-purple-500/25" @click="navigateTo('/xtall')">See Xtall →</button>
-      </div>
-    </section>
+    </div>
+    <button class="px-5 py-2.5 text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl shadow-md transition-all duration-300 hover:scale-105 active:scale-95 shadow-purple-500/20" @click="navigateTo('/xtall')">See Xtall →</button>
+  </div>
+</section>
 
     <!-- ABOUT PROJECT -->
-    <section class="p-6 md:p-8 rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-300/80 dark:border-slate-800 shadow-xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center section-fade-up">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">About the project</span>
-        <h2 class="text-2xl font-black text-slate-900 dark:text-white mt-1 mb-2">Built for Toram Online Players</h2>
-        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          TIMI DB brings item data, quest references, calculators, leveling routes, and farming notes into one clean workspace.
-        </p>
-      </div>
-      <div class="border-t md:border-t-0 md:border-l border-slate-300 dark:border-slate-800 pt-4 md:pt-0 md:pl-6">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Web developer</span>
-        <b class="text-lg font-black text-slate-900 dark:text-white block mt-1">TIMI</b>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Designed, maintained, and updated as an independent community web project.</p>
-        <a href="https://www.facebook.com/J7Timi" target="_blank" rel="noopener" class="inline-block mt-3 text-xs font-extrabold text-purple-600 dark:text-purple-400 hover:underline hover:translate-x-1 transition-transform">View developer profile →</a>
-      </div>
-    </section>
+<section class="p-6 md:p-8 rounded-3xl bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border border-purple-500/20 dark:border-purple-500/30 shadow-2xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center section-fade-up relative overflow-hidden bg-[url('/images/batik.png')] bg-repeat bg-blend-overlay">
+  <!-- Soft Ambient Glow -->
+  <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-purple-500/10 dark:bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- Left Content -->
+  <div class="relative z-10">
+    <span class="inline-block px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest text-purple-600 dark:text-purple-300 bg-purple-100/80 dark:bg-purple-950/60 border border-purple-300/50 dark:border-purple-800/60 rounded-lg shadow-2xs mb-2">
+      About the project
+    </span>
+    <h2 class="text-2xl font-black tracking-tight bg-gradient-to-r from-purple-700 via-pink-500 to-indigo-700 bg-clip-text text-transparent dark:from-purple-400 dark:via-pink-300 dark:to-indigo-400 animate-shimmer drop-shadow-sm mt-1 mb-2">
+      Built for Toram Online Players
+    </h2>
+    <p class="text-sm font-medium text-slate-600 dark:text-slate-300 leading-relaxed">
+      TIMI DB brings item data, quest references, calculators, leveling routes, and farming notes into one clean workspace.
+    </p>
+  </div>
+
+  <!-- Right Content (Web Developer Info) -->
+  <div class="border-t md:border-t-0 md:border-l border-slate-300/70 dark:border-slate-800/80 pt-4 md:pt-0 md:pl-6 relative z-10">
+    <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-400">
+      Web developer
+    </span>
+    <div class="flex items-center gap-2 mt-1">
+      <b class="text-lg font-black text-slate-900 dark:text-white">TIMI</b>
+      <span class="px-2 py-0.5 text-[9px] font-extrabold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 rounded-full">Creator</span>
+    </div>
+    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-normal">
+      Designed, maintained, and updated as an independent community web project.
+    </p>
+    <a 
+      href="https://www.facebook.com/J7Timi" 
+      target="_blank" 
+      rel="noopener" 
+      class="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-xs font-extrabold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border border-purple-400/30 rounded-xl shadow-md shadow-purple-500/20 transition-all duration-300 hover:translate-x-1 hover:shadow-lg"
+    >
+      <span>View developer profile</span>
+      <span>→</span>
+    </a>
+  </div>
+</section>
 
     <!-- ADVENTURER TOOLS GRID -->
     <section>
@@ -710,4 +742,15 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
   box-shadow: 0 8px 20px -4px rgba(168, 85, 247, 0.5);
   transform: translateY(-1px);
 }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite;
+}
+
 </style>
