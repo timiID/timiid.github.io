@@ -33,7 +33,7 @@ const lang = ref('en');
 const translations = {
   id: {
     title: "DAFTAR TAS", subtitle: "EKSPANSI",
-    searchLabel: "Cari Item", searchPlaceholder: "Cari nama, monster, atau lokasi...",
+    searchLabel: "Cari Item", searchPlaceholders: ["Cari nama item...", "Cari monster...", "Cari lokasi map..."],
     catLabel: "Kategori", slotLabel: "Lompat ke Slot",
     allClass: "Semua Kelas", allSlot: "Semua Slot",
     exploreBtn: "Lihat Semua", collapseBtn: "Sembunyikan Data",
@@ -43,7 +43,7 @@ const translations = {
   },
   en: {
     title: "BAG LIST", subtitle: "EXPANSION",
-    searchLabel: "Search Item", searchPlaceholder: "Find items, monsters, or maps...",
+    searchLabel: "Search Item", searchPlaceholders: ["Find items...", "Find monsters...", "Find maps..."],
     catLabel: "Category", slotLabel: "Jump to Slot",
     allClass: "All Class", allSlot: "All Slot",
     exploreBtn: "Show All", collapseBtn: "Collapse to 10 Rows",
@@ -54,6 +54,41 @@ const translations = {
 };
 
 const t = computed(() => translations[lang.value]);
+
+// --- ANIMASI KETIKAN PLACEHOLDER ---
+const currentPlaceholderIndex = ref(0);
+const displayedPlaceholder = ref('');
+let typingInterval = null;
+
+const startTypingEffect = () => {
+  const currentPhrases = t.value.searchPlaceholders;
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+
+  if (typingInterval) clearInterval(typingInterval);
+
+  typingInterval = setInterval(() => {
+    const fullText = currentPhrases[phraseIndex];
+    if (!isDeleting) {
+      displayedPlaceholder.value = fullText.substring(0, charIndex + 1);
+      charIndex++;
+      if (charIndex === fullText.length) {
+        setTimeout(() => { isDeleting = true; }, 1500);
+      }
+    } else {
+      displayedPlaceholder.value = fullText.substring(0, charIndex - 1);
+      charIndex--;
+      if (charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % currentPhrases.length;
+      }
+    }
+  }, 100);
+};
+
+onMounted(() => { startTypingEffect(); });
+watch(lang, () => { startTypingEffect(); });
 
 const search = ref('');
 const selectedKelas = ref('All Class');
@@ -201,13 +236,13 @@ const getBadgeClass = (kelas) => {
       <!-- FILTER -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 
-        <!-- SEARCH -->
+        <!-- SEARCH DENGAN ANIMASI KETIKAN -->
         <div class="relative">
           <label class="text-[8px] font-black uppercase ml-3 mb-0.5 block text-indigo-500 tracking-widest">{{ t.searchLabel }}</label>
           <div class="relative">
-            <input v-model="search" type="text" :placeholder="t.searchPlaceholder"
+            <input v-model="search" type="text" :placeholder="displayedPlaceholder + '|'"
               :class="['w-full h-10 pl-10 pr-4 rounded-xl border-[2px] font-bold text-xs outline-none transition-all',
-              isDark ? 'bg-white/5 border-white/10 text-white focus:border-indigo-500' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-indigo-600']" />
+              isDark ? 'bg-white/5 border-white/10 text-white focus:border-indigo-500 placeholder:text-indigo-300/40' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-indigo-600 placeholder:text-slate-400']" />
             <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-indigo-500 pointer-events-none scale-75">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             </div>
@@ -254,17 +289,16 @@ const getBadgeClass = (kelas) => {
             </button>
 
             <div v-if="isSlotOpen"
-              :class="['absolute top-full left-0 mt-1 w-full rounded-xl border-[2px] shadow-2xl z-50 p-2 grid grid-cols-3 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto',
+              :class="['absolute top-full left-0 mt-1 w-full rounded-xl border-[2px] shadow-2xl z-50 p-2 grid grid-cols-3 gap-2 max-h-48 overflow-y-auto',
                 isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200']">
-                <button v-if="selectedSlot.length > 0" @click="selectedSlot = []"
-    :class="['col-span-full w-full mt-1 py-1 rounded-lg text-[9px] font-black uppercase border transition-colors',
-      isDark ? 'bg-red-500 text-white/90 hover:bg-red-800/90' : 'bg-red-500 text-white hover:bg-red-800/90']">
-    ✕ Reset
-  </button>
+              <button v-if="selectedSlot.length > 0" @click="selectedSlot = []"
+                class="col-span-full w-full mt-1 py-1 rounded-lg text-[9px] font-black uppercase border bg-red-500 text-white hover:bg-red-700 transition-colors">
+                ✕ Reset
+              </button>
               <label v-for="s in uniqueSlots" :key="s" class="cursor-pointer">
                 <input type="checkbox" :value="String(s)" v-model="selectedSlot" class="hidden" />
                 <span :class="[
-                  'px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border transition-all select-none block',
+                  'px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border transition-all select-none block text-center',
                   selectedSlot.includes(String(s))
                     ? 'bg-indigo-600 border-indigo-400 text-white'
                     : (isDark
@@ -274,7 +308,6 @@ const getBadgeClass = (kelas) => {
                   {{ s }}
                 </span>
               </label>
-            
             </div>
           </div>
         </div>

@@ -46,6 +46,13 @@ const paginatedItems = computed(() => {
     return filteredItems.value.slice(start, start + itemsPerPage.value);
 });
 
+// --- CLEAR SEARCH ---
+const clearSearch = () => {
+    search.value = '';
+    currentPage.value = 1;
+    updateRouter();
+};
+
 // --- TOGGLE SHOW ALL ---
 const toggleShowAll = () => {
     if (itemsPerPage.value === 10) {
@@ -104,11 +111,10 @@ const stats = computed(() => [
     <div class="bg-transparent py-0 px-2 md:px-4 font-sans">
         
         <div class="max-w-9xl mx-auto space-y-6 md:space-y-10">
-            <!-- HERO BANNER WRAPPER (TATA LETAK PERSIS HALAMAN BAG, GA BAKAL NGEBLOKIR) -->
+            <!-- HERO BANNER WRAPPER -->
             <div :class="['relative p-6 md:p-10 rounded-[2rem] md:rounded-[3.5rem] border-[3px] overflow-hidden backdrop-blur-2xl transition-all duration-700 shadow-xl flex flex-row items-center justify-between gap-4',
               isDark ? 'border-blue-500 bg-black/40' : 'border-blue-600 bg-white/60 shadow-blue-200']">
                 
-                <!-- BAGIAN KIRI: TEKS JUDUL -->
                 <div class="relative z-10 text-left flex-1">
                     <h2 :class="['text-2xl md:text-6xl font-black italic uppercase leading-none tracking-tighter', props.isDark ? 'text-white' : 'text-slate-900']">
                         MAIN QUEST<br>
@@ -122,7 +128,6 @@ const stats = computed(() => [
                     </div> 
                 </div>
 
-                <!-- BAGIAN KANAN: GAMBAR MQ2 (IKUT STRUKTUR HALAMAN BAG, PASTI NYALA UTUH) -->
                 <img src="/images/mq2.png" 
                      class="block h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40 object-contain z-10 flex-shrink-0" 
                      alt="MQ Banner Image" />
@@ -132,17 +137,25 @@ const stats = computed(() => [
             <div :class="['grid grid-cols-1 md:grid-cols-3 gap-6 p-6 md:p-10 border-[4px] rounded-[2rem] md:rounded-[3.5rem] shadow-2xl backdrop-blur-md',
                 props.isDark ? 'border-fuchsia-500 bg-black/40' : 'border-fuchsia-600 bg-white/80']">
                 
+                <!-- FILTER SEARCH DENGAN TOMBOL CLEAR -->
                 <div class="flex flex-col gap-2">
                     <label class="text-[10px] font-black uppercase tracking-widest ml-4 text-fuchsia-500">Search Item</label>
                     <div class="relative group">
                         <input v-model="search" type="text" placeholder="Find MQ item..." 
-                            :class="['w-full border-[3px] rounded-xl md:rounded-2xl py-4 md:py-5 pr-4 pl-14 text-sm font-bold outline-none transition-all focus:border-indigo-500', 
+                            :class="['w-full border-[3px] rounded-xl md:rounded-2xl py-4 md:py-5 pr-12 pl-14 text-sm font-bold outline-none transition-all focus:border-indigo-500', 
                             props.isDark ? 'bg-white/5 border-white/10 text-white placeholder:text-white/20' : 'bg-slate-50 border-slate-200 text-slate-900']"/>
                         <div class="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-500 pointer-events-none group-focus-within:scale-110 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
                             </svg>
                         </div>
+                        <!-- Tombol Clear Search (Muncul jika ada teks) -->
+                        <button v-if="search" @click="clearSearch" type="button" 
+                            class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-500 transition-colors p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
@@ -162,41 +175,42 @@ const stats = computed(() => [
                 </div>
 
                 <div class="flex flex-col gap-2">
-    <label class="text-[10px] font-black uppercase tracking-[0.2em] ml-4 text-orange-500 opacity-80">
-        Select Language
-    </label>
+                    <label class="text-[10px] font-black uppercase tracking-[0.2em] ml-4 text-orange-500 opacity-80">
+                        Select Language
+                    </label>
 
-    <button @click="toggleLocale" 
-        :class="[
-            'h-16 px-5 rounded-2xl border-[3px] flex items-center justify-between font-black transition-all duration-300 active:scale-95 shadow-xl group',
-            isDark 
-                ? 'bg-orange-500/5 border-orange-500/40 text-orange-400 hover:border-orange-500 hover:bg-orange-500/10' 
-                : 'bg-white border-slate-200 text-slate-800 hover:border-orange-500 shadow-orange-100'
-        ]">
-        
-        <div class="flex items-center gap-3">
-            <div class="relative w-7 h-5 overflow-hidden rounded-md border border-black/10 shadow-sm">
-                <img :src="locale === 'id' ? idFlag : enFlag" 
-                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                     alt="flag" />
+                    <button @click="toggleLocale" 
+                        :class="[
+                            'h-16 px-5 rounded-2xl border-[3px] flex items-center justify-between font-black transition-all duration-300 active:scale-95 shadow-xl group',
+                            isDark 
+                                ? 'bg-orange-500/5 border-orange-500/40 text-orange-400 hover:border-orange-500 hover:bg-orange-500/10' 
+                                : 'bg-white border-slate-200 text-slate-800 hover:border-orange-500 shadow-orange-100'
+                        ]">
+                        
+                        <div class="flex items-center gap-3">
+                            <div class="relative w-7 h-5 overflow-hidden rounded-md border border-black/10 shadow-sm">
+                                <img :src="locale === 'id' ? idFlag : enFlag" 
+                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                                     alt="flag" />
+                            </div>
+                            <span class="text-sm uppercase italic tracking-tight">
+                                {{ locale === 'id' ? 'Indonesia' : 'English' }}
+                            </span>
+                        </div>
+
+                        <div :class="[
+                            'px-2.5 py-1 rounded-lg text-[10px] font-black transition-colors',
+                            isDark 
+                                ? 'bg-orange-500 text-black shadow-[0_0_15px_rgba(249,115,22,0.4)]' 
+                                : 'bg-orange-600 text-white'
+                        ]">
+                            {{ locale.toUpperCase() }}
+                        </div>
+                    </button>
+                </div>
             </div>
-            <span class="text-sm uppercase italic tracking-tight">
-                {{ locale === 'id' ? 'Indonesia' : 'English' }}
-            </span>
-        </div>
 
-        <div :class="[
-            'px-2.5 py-1 rounded-lg text-[10px] font-black transition-colors',
-            isDark 
-                ? 'bg-orange-500 text-black shadow-[0_0_15px_rgba(249,115,22,0.4)]' 
-                : 'bg-orange-600 text-white'
-        ]">
-            {{ locale.toUpperCase() }}
-        </div>
-    </button>
-</div>
-            </div>
-
+            <!-- TABLE WRAPPER -->
             <div :class="['border-[4px] rounded-[2rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl transition-all backdrop-blur-xl',
                 props.isDark ? 'border-lime-400 bg-black/60' : 'border-indigo-600 bg-white/90']">
                 
@@ -226,8 +240,8 @@ const stats = computed(() => [
                                     <div class="flex flex-col leading-tight">
                                         <span>{{ locale === 'id' ? item.name_id : item.name_en }}</span>
                                         <span class="text-[10px] opacity-30 font-bold italic tracking-normal normal-case mt-1">
-    {{ locale === 'id' ? 'EN' : 'ID' }}: {{ locale === 'id' ? item.name_en : item.name_id }}
-</span>
+                                            {{ locale === 'id' ? 'EN' : 'ID' }}: {{ locale === 'id' ? item.name_en : item.name_id }}
+                                        </span>
                                     </div>
                                 </td>
                                 <td class="p-8 text-center bg-black/5">
@@ -263,12 +277,13 @@ const stats = computed(() => [
                 </div>
             </div>
 
+            <!-- PAGINATION -->
             <div class="flex flex-col gap-6 justify-center items-center pb-20">
                 <div v-if="totalPages > 1" class="flex flex-wrap justify-center items-center gap-2">
                     <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" 
                         :class="['h-12 w-12 flex items-center justify-center rounded-xl border-[3px] font-black transition-all disabled:opacity-20',
                         props.isDark ? 'border-indigo-600 bg-black/40 text-indigo-400' : 'border-indigo-600 bg-white text-indigo-600']">
-                        <
+                        &lt;
                     </button>
 
                     <template v-for="(page, index) in displayedPages" :key="index">
@@ -285,7 +300,7 @@ const stats = computed(() => [
                     <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" 
                         :class="['h-12 w-12 flex items-center justify-center rounded-xl border-[3px] font-black transition-all disabled:opacity-20',
                         props.isDark ? 'border-indigo-600 bg-black/40 text-indigo-400' : 'border-indigo-600 bg-white text-indigo-600']">
-                        >
+                        &gt;
                     </button>
                 </div>
 
@@ -300,20 +315,17 @@ const stats = computed(() => [
 </template>
 
 <style scoped>
-/* Scrollbar Stylings */
 ::-webkit-scrollbar { height: 6px; width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(79, 70, 229, 0.3); border-radius: 10px; }
 
 .border-inherit { border-color: inherit; }
 
-/* Tambahan untuk background dropdown saat dark mode */
 select option {
-    background-color: #1a1a1a; /* Warna gelap saat dropdown terbuka */
+    background-color: #1a1a1a; 
     color: white;
 }
 
-/* Memastikan input/select tidak berubah warna putih saat auto-fill atau fokus */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus {

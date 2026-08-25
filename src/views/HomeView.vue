@@ -55,7 +55,7 @@ const typeEffect = () => {
   let typingSpeed = isDeleting ? 40 : 80;
 
   if (!isDeleting && charIndex === currentFullText.length) {
-    typingSpeed = 2000; // Tahan selama 2 detik setelah selesai mengetik
+    typingSpeed = 2000;
     isDeleting = true;
   } else if (isDeleting && charIndex === 0) {
     isDeleting = false;
@@ -294,80 +294,79 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
 </script>
 
 <template>
-  <div :class="{ dark: props.isDark }" class="w-full space-y-12">
+  <div :class="{ dark: props.isDark }" class="w-full space-y-12 animate-fade-in transition-colors duration-300">
     
     <!-- HERO SECTION -->
-    <section class="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <div class="flex flex-col items-center sm:items-start text-center sm:text-left">
-        <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20 mb-4">
-          The Most Comprehensive Toram Online Database
+    <section class="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] hero-animate-wrapper">
+      <div class="flex flex-col items-center sm:items-start text-center sm:text-left hero-text-area">
+        <span class="px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20 mb-4 shadow-sm animate-pulse badge-float">
+          ✨ The Most Comprehensive Toram Online Database
         </span>
-        <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight text-slate-900 dark:text-white">
-          Discover Your <br><span class="text-purple-600 dark:text-purple-400">True Power</span>
+        <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight text-slate-900 dark:text-white title-glow">
+          Discover Your <br><span class="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent animate-gradient">True Power</span>
         </h1>
-        <p class="mt-3 max-w-lg text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+        <p class="mt-4 max-w-lg text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium leading-relaxed subtitle-fade">
           Access thousands of items, mission guides, and advanced stat calculators to dominate the world of Toram Online.
         </p>
         
         <form 
-  class="w-full max-w-xl mt-6 flex items-center gap-2 p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-purple-500/10 focus-within:border-purple-500 dark:focus-within:border-purple-400 focus-within:ring-4 focus-within:ring-purple-500/10 transition-all duration-300" 
-  @submit.prevent="runSearch"
->
-  <!-- Icon Search dengan Glow halus -->
-  <div class="flex items-center justify-center pl-3 text-purple-500 dark:text-purple-400">
-    <svg viewBox="0 0 24 24" aria-hidden="true" class="w-6 h-6 stroke-current fill-none stroke-[2.5]">
-      <circle cx="11" cy="11" r="7"></circle>
-      <path d="m20 20-4-4" stroke-linecap="round"></path>
-    </svg>
-  </div>
+          class="w-full max-w-xl mt-6 flex items-center gap-2 p-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-xl shadow-purple-500/5 focus-within:border-purple-500 dark:focus-within:border-purple-400 focus-within:ring-4 focus-within:ring-purple-500/15 transition-all duration-300 search-box-pop" 
+          @submit.prevent="runSearch"
+        >
+          <div class="flex items-center justify-center pl-3 text-purple-500 dark:text-purple-400 animate-bounce-short">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-6 h-6 stroke-current fill-none stroke-[2.5]">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-4-4" stroke-linecap="round"></path>
+            </svg>
+          </div>
 
-  <!-- Input dengan Placeholder Animasi Ketikan -->
-  <input 
-    v-model="searchQuery" 
-    type="search" 
-    :placeholder="placeholderText" 
-    aria-label="Search the database" 
-    class="w-full bg-transparent text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 px-2"
-  >
+          <input 
+            v-model="searchQuery" 
+            type="search" 
+            :placeholder="placeholderText" 
+            aria-label="Search the database" 
+            class="w-full bg-transparent text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 px-2"
+          >
 
-  <!-- Button Modern Gradient -->
-  <button 
-    type="submit" 
-    class="px-6 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-95 rounded-xl transition-all duration-200 shadow-md shadow-purple-500/25 shrink-0 flex items-center gap-1.5"
-  >
-    <span>Search</span>
-    <span class="text-xs">→</span>
-  </button>
-</form>
-        <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">© 2026 TIMI DB㋡ Toram Online Digital Database Project</p>
+          <button 
+            type="submit" 
+            class="px-6 py-3 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-95 rounded-xl transition-all duration-300 shadow-md shadow-purple-500/30 shrink-0 flex items-center gap-1.5 btn-pulse-hover"
+          >
+            <span>Search</span>
+            <span class="text-xs transition-transform group-hover:translate-x-1">→</span>
+          </button>
+        </form>
+        <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">© 2026 TIMI DB㋡ Toram Online Digital Database Project</p>
       </div>
 
-      <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm p-2">
-        <div class="relative h-70 overflow-hidden rounded-2xl">
-  <img 
-    :src="backgrounds[currentBgIndex]" 
-    alt="Toram Online adventure" 
-    class="w-full h-full object-fill"
-  >
-  <span class="absolute top-3 left-3 px-2.5 py-1 text-[10px] font-extrabold uppercase bg-purple-600 text-white rounded-md">Album Gallery</span>
-</div>
+      <div class="relative overflow-hidden rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-300/80 dark:border-slate-800 shadow-2xl p-2.5 transition-all duration-500 card-slide-in">
+        <div class="relative h-72 overflow-hidden rounded-2xl group">
+          <img 
+            :src="backgrounds[currentBgIndex]" 
+            alt="Toram Online adventure" 
+            class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+          >
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
+          <span class="absolute top-3 left-3 px-3 py-1 text-[10px] font-extrabold uppercase bg-purple-600/90 backdrop-blur-md text-white rounded-lg shadow-md animate-pulse">Album Gallery</span>
+        </div>
         <div class="p-4">
           <div class="flex items-center justify-between mb-3">
             <h2 class="text-base font-bold text-slate-900 dark:text-white">Latest Updates</h2>
           </div>
           <div class="space-y-2">
             <button 
-              v-for="update in updates" 
+              v-for="(update, idx) in updates" 
               :key="update.number" 
-              class="w-full flex items-center gap-3 p-3 text-left rounded-xl bg-gradient-to-r from-slate-50 to-slate-100/80 hover:from-purple-50 hover:to-purple-100/60 dark:from-slate-800/60 dark:to-slate-800/40 dark:hover:from-purple-950/40 dark:hover:to-slate-800/80 border border-slate-300/60 dark:border-slate-700/50 hover:border-purple-500 dark:hover:border-purple-400 transition-all" 
+              class="w-full flex items-center gap-3 p-3 text-left rounded-xl bg-gradient-to-r from-slate-50 to-slate-100/80 hover:from-purple-50 hover:to-purple-100/60 dark:from-slate-800/60 dark:to-slate-800/40 dark:hover:from-purple-950/40 dark:hover:to-slate-800/80 border border-slate-300/60 dark:border-slate-700/50 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-300 group update-item-stagger" 
+              :style="{ animationDelay: `${idx * 0.1}s` }"
               @click="navigateTo(update.path)"
             >
-              <span class="px-2.5 py-1 text-xs font-extrabold bg-purple-500/10 text-purple-600 dark:text-purple-300 rounded-lg">{{ update.number }}</span>
+              <span class="px-2.5 py-1 text-xs font-extrabold bg-purple-500/10 text-purple-600 dark:text-purple-300 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">{{ update.number }}</span>
               <span class="flex-1 min-w-0">
-                <b class="block text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{{ update.title }}</b>
+                <b class="block text-xs font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">{{ update.title }}</b>
                 <small class="block text-[11px] text-slate-500 dark:text-slate-400">{{ update.meta }}</small>
               </span>
-              <span class="text-xs font-bold text-purple-600 dark:text-purple-400">View →</span>
+              <span class="text-xs font-bold text-purple-600 dark:text-purple-400 transition-transform duration-300 group-hover:translate-x-1.5">View →</span>
             </button>
           </div>
         </div>
@@ -375,33 +374,34 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
     </section>
 
     <!-- FAVORITES -->
-    <section class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm">
+    <section class="p-6 rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-300/80 dark:border-slate-800 shadow-xl section-fade-up">
       <div class="flex items-center justify-between mb-4">
         <div>
           <h2 class="text-lg font-black text-slate-900 dark:text-white">Your Favorites</h2>
           <p class="text-xs text-slate-500 dark:text-slate-400">Quick access to the xtall you saved from the database.</p>
         </div>
         <button 
-  class="px-3 py-1.5 text-xs font-bold text-rose-100 dark:text-rose-250 bg-red-600/80 hover:bg-rose-800/80 dark:bg-red-500 dark:hover:bg-red-300 border border-rose-500/30 hover:border-rose-500 rounded-xl transition-all shadow-sm" 
-  @click="navigateTo('/favorite')"
->
-  View All →
-</button>
+          class="px-3.5 py-1.5 text-xs font-bold text-rose-100 bg-red-600/90 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-400 border border-rose-500/30 rounded-xl transition-all duration-300 shadow-md active:scale-95 hover:shadow-red-500/25 hover:shadow-lg" 
+          @click="navigateTo('/favorite')"
+        >
+          View All →
+        </button>
       </div>
       
       <div v-if="favoriteXtalls.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         <button 
-          v-for="favorite in favoriteXtalls" 
+          v-for="(favorite, idx) in favoriteXtalls" 
           :key="favorite.code" 
           :class="[
-            'group flex items-center gap-3 p-3 text-left rounded-2xl border transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md cursor-pointer',
+            'group flex items-center gap-3 p-3 text-left rounded-2xl border transition-all duration-300 hover:-translate-y-1.5 shadow-sm hover:shadow-xl cursor-pointer fav-card-anim',
             getCrystaTheme(favorite.type).bg,
             getCrystaTheme(favorite.type).border
-          ]" 
+          ]"
+          :style="{ animationDelay: `${idx * 0.08}s` }"
           @click="navigateTo(`/xtall/${favorite.code}`)"
         >
-          <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-300/80 dark:border-slate-700/80 group-hover:scale-110 transition-transform shadow-sm">
-            <img :src="getIconPath(favorite.type)" :alt="favorite.name" class="w-6 h-6 object-contain">
+          <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-300/80 dark:border-slate-700/80 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+            <img :src="getIconPath(favorite.type)" :alt="favorite.name" class="w-6 h-6 object-contain group-hover:rotate-6 transition-transform">
           </div>
           <span class="flex-1 min-w-0">
             <b :class="['block text-xs font-bold truncate transition-colors', getCrystaTheme(favorite.type).text]">
@@ -410,31 +410,29 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
             <span :class="['inline-block px-1.5 py-0.5 text-[9px] font-extrabold uppercase rounded border tracking-wider mt-0.5', getCrystaTheme(favorite.type).badge]">
               {{ favorite.type }}
             </span>
-            
           </span>
-          <span :class="['font-bold text-xs transition-transform group-hover:translate-x-1', getCrystaTheme(favorite.type).text]">→</span>
+          <span :class="['font-bold text-xs transition-transform duration-300 group-hover:translate-x-1.5', getCrystaTheme(favorite.type).text]">→</span>
         </button>
       </div>
       
-      <div v-else class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-300 dark:border-slate-800">
-        <div class="flex items-center gap-3">
-          <img src="/images/what chara.webp" alt="Timi DB character" class="w-20 h-20 object-contain">
+      <div v-else class="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-300/60 dark:border-slate-800">
+        <div class="flex items-center gap-4">
+          <img src="/images/what chara.webp" alt="Timi DB character" class="w-20 h-20 object-contain drop-shadow-md animate-float">
           <div>
             <b class="text-sm font-bold text-slate-800 dark:text-slate-200">No favorite xtall yet</b>
             <p class="text-xs text-slate-500 dark:text-slate-400">Tidak ada xtall favorit yang disimpan.</p>
           </div>
         </div>
-        <button class="px-4 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white rounded-xl shadow-sm transition-all hover:scale-105" @click="navigateTo('/xtall')">See Xtall →</button>
+        <button class="px-5 py-2.5 text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white rounded-xl shadow-md transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-purple-500/25" @click="navigateTo('/xtall')">See Xtall →</button>
       </div>
-      
     </section>
 
     <!-- ABOUT PROJECT -->
-    <section class="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+    <section class="p-6 md:p-8 rounded-3xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-300/80 dark:border-slate-800 shadow-xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center section-fade-up">
       <div>
         <span class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">About the project</span>
         <h2 class="text-2xl font-black text-slate-900 dark:text-white mt-1 mb-2">Built for Toram Online Players</h2>
-        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
           TIMI DB brings item data, quest references, calculators, leveling routes, and farming notes into one clean workspace.
         </p>
       </div>
@@ -442,16 +440,15 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
         <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Web developer</span>
         <b class="text-lg font-black text-slate-900 dark:text-white block mt-1">TIMI</b>
         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Designed, maintained, and updated as an independent community web project.</p>
-        <a href="https://www.facebook.com/J7Timi" target="_blank" rel="noopener" class="inline-block mt-3 text-xs font-extrabold text-purple-600 dark:text-purple-400 hover:underline">View developer profile →</a>
+        <a href="https://www.facebook.com/J7Timi" target="_blank" rel="noopener" class="inline-block mt-3 text-xs font-extrabold text-purple-600 dark:text-purple-400 hover:underline hover:translate-x-1 transition-transform">View developer profile →</a>
       </div>
     </section>
 
-<!-- ADVENTURER TOOLS GRID -->
+    <!-- ADVENTURER TOOLS GRID -->
     <section>
       <div class="flex items-center justify-between gap-4 pb-4 mb-6 relative">
         <div class="flex items-center gap-3.5">
-          <!-- Aksen Batang Vertikal -->
-          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-purple-600 via-pink-500 to-rose-500 shrink-0"></span>
+          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-purple-600 via-pink-500 to-rose-500 shrink-0 shadow-md animate-pulse"></span>
           <div>
             <h2 class="text-xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-rose-500 dark:from-purple-300 dark:via-pink-400 dark:to-rose-400 bg-clip-text text-transparent leading-tight drop-shadow-sm">
               Adventurer Tools
@@ -461,40 +458,39 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
             </p>
           </div>
         </div>
-
-        <!-- Glowing Faded Line -->
         <div class="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-purple-500 via-50% to-transparent opacity-90 dark:via-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.7)]"></div>
       </div>
       
-      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <button 
-          v-for="item in features" 
+          v-for="(item, idx) in features" 
           :key="item.path" 
           :class="[
-            'group relative overflow-hidden rounded-3xl p-6 transition-all duration-300 border border-slate-300 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between min-h-[290px]',
+            'group relative overflow-hidden rounded-3xl p-6 transition-all duration-500 border border-slate-300/80 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-2 flex flex-col justify-between min-h-[300px] tool-card-hover',
             item.bgClass,
             item.borderClass
           ]"
+          :style="{ animationDelay: `${idx * 0.1}s` }"
           @click="navigateTo(item.path)"
         >
           <div class="relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left w-full">
-            <div :class="['w-22 h-22 rounded-2xl flex items-center justify-center border mb-4 shadow-sm', item.iconBg]">
-              <img :src="item.icon" :alt="item.name" class="w-full h-full object-contain group-hover:scale-110 transition-transform">
+            <div :class="['w-20 h-20 rounded-2xl flex items-center justify-center border mb-4 shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3', item.iconBg]">
+              <img :src="item.icon" :alt="item.name" class="w-12 h-12 object-contain drop-shadow-md">
             </div>
             
-            <strong class="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 mb-2">
+            <strong class="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
               {{ item.name }} 
-              <img v-if="item.flag" :src="item.flag" alt="Indonesia" class="w-5 h-auto rounded">
+              <img v-if="item.flag" :src="item.flag" alt="Indonesia" class="w-5 h-auto rounded shadow-sm">
             </strong>
             
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
               {{ item.desc }}
             </p>
           </div>
           
           <div class="relative z-10 mt-6 pt-3 border-t border-slate-300/60 dark:border-slate-800/80 flex items-center justify-between w-full">
-            <span class="text-xs font-bold text-slate-400 dark:text-slate-500">OPEN TOOL</span>
-            <span :class="['px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1 group-hover:translate-x-1', item.btnClass]">
+            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 tracking-wider">OPEN TOOL</span>
+            <span :class="['px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-md transition-all duration-300 flex items-center gap-1 group-hover:translate-x-1.5', item.btnClass]">
               Open →
             </span>
           </div>
@@ -506,8 +502,7 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
     <section>
       <div class="flex items-center justify-between gap-4 pb-4 mb-6 relative">
         <div class="flex items-center gap-3.5">
-          <!-- Batang Vertikal Cyan -->
-          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-cyan-500 via-sky-500 to-blue-600 shrink-0"></span>
+          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-cyan-500 via-sky-500 to-blue-600 shrink-0 shadow-md animate-pulse"></span>
           <div>
             <h2 class="text-xl font-black bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-600 dark:from-cyan-300 dark:via-sky-300 dark:to-blue-400 bg-clip-text text-transparent leading-tight drop-shadow-sm">
               Popular Guides & Resources
@@ -517,39 +512,38 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
             </p>
           </div>
         </div>
-
-        <!-- Glowing Line Cyan -->
         <div class="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-cyan-500 via-50% to-transparent opacity-90 dark:via-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.7)]"></div>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <button 
-          v-for="item in other" 
+          v-for="(item, idx) in other" 
           :key="item.path" 
           :class="[
-            'group relative overflow-hidden rounded-3xl p-6 transition-all duration-300 border border-slate-300 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between min-h-[280px]',
+            'group relative overflow-hidden rounded-3xl p-6 transition-all duration-500 border border-slate-300/80 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-2 flex flex-col justify-between min-h-[300px] tool-card-hover',
             item.bgClass,
             item.borderClass
           ]"
+          :style="{ animationDelay: `${idx * 0.1}s` }"
           @click="navigateTo(item.path)"
         >
           <div class="relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left w-full">
-            <div :class="['w-22 h-22 rounded-2xl flex items-center justify-center border mb-4 shadow-sm', item.iconBg]">
-              <img :src="item.icon" :alt="item.name" class="w-full h-full object-contain group-hover:scale-110 transition-transform">
+            <div :class="['w-20 h-20 rounded-2xl flex items-center justify-center border mb-4 shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3', item.iconBg]">
+              <img :src="item.icon" :alt="item.name" class="w-12 h-12 object-contain drop-shadow-md">
             </div>
             
-            <strong class="text-base font-black text-slate-900 dark:text-white mb-2">
+            <strong class="text-base font-black text-slate-900 dark:text-white mb-2 group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
               {{ item.name }}
             </strong>
             
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
               {{ item.desc }}
             </p>
           </div>
           
           <div class="relative z-10 mt-6 pt-3 border-t border-slate-300/60 dark:border-slate-800/80 flex items-center justify-between w-full">
-            <span class="text-xs font-bold text-slate-400 dark:text-slate-500">VIEW GUIDE</span>
-            <span :class="['px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1 group-hover:translate-x-1', item.btnClass]">
+            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 tracking-wider">VIEW GUIDE</span>
+            <span :class="['px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-md transition-all duration-300 flex items-center gap-1 group-hover:translate-x-1.5', item.btnClass]">
               Open →
             </span>
           </div>
@@ -561,35 +555,33 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
     <section>
       <div class="flex items-center justify-between gap-4 pb-4 mb-6 relative">
         <div class="flex items-center gap-3.5">
-          <!-- Batang Vertikal Emerald -->
-          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-emerald-500 via-teal-500 to-green-600 shrink-0"></span>
+          <span class="w-2 h-10 rounded-full bg-gradient-to-b from-emerald-500 via-teal-500 to-green-600 shrink-0 shadow-md animate-pulse"></span>
           <div>
-  <h2 class="text-xl font-black bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400 bg-clip-text text-transparent leading-tight drop-shadow-sm">
-    Latest Xtall Database
-  </h2>
-  <p class="text-xs font-semibold text-slate-500 dark:text-slate-400/90 mt-0.5 tracking-wide">
-    Recently added entries with unique theme indicators.
-  </p>
-</div>
+            <h2 class="text-xl font-black bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400 bg-clip-text text-transparent leading-tight drop-shadow-sm">
+              Latest Xtall Database
+            </h2>
+            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400/90 mt-0.5 tracking-wide">
+              Recently added entries with unique theme indicators.
+            </p>
+          </div>
         </div>
-
-        <!-- Glowing Line Emerald -->
         <div class="absolute bottom-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-transparent via-emerald-500 via-50% to-transparent opacity-90 dark:via-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.7)]"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div 
-          v-for="activity in databaseActivity" 
+          v-for="(activity, idx) in databaseActivity" 
           :key="activity.name"
           @click="navigateTo(activity.path)"
           :class="[
-            'group flex items-center justify-between p-4 rounded-2xl border transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md',
+            'group flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-1.5 activity-card-anim',
             activity.theme.bg,
             activity.theme.border
           ]"
+          :style="{ animationDelay: `${idx * 0.08}s` }"
         >
           <div class="flex items-center gap-4 min-w-0">
-            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700">
+            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
               <img :src="activity.icon" :alt="activity.name" class="w-8 h-8 object-contain" />
             </div>
             <div class="min-w-0">
@@ -599,10 +591,10 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
           </div>
 
           <div class="flex flex-col items-end justify-between self-stretch flex-shrink-0 ml-3 gap-2">
-            <span :class="['px-2.5 py-0.5 text-[10px] font-extrabold border rounded-md uppercase tracking-wider', activity.theme.badge]">
+            <span :class="['px-2.5 py-0.5 text-[10px] font-extrabold border rounded-md uppercase tracking-wider shadow-sm', activity.theme.badge]">
               {{ activity.type }}
             </span>
-            <div :class="['px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 shadow-sm', activity.theme.btn]">
+            <div :class="['px-3 py-1 rounded-lg text-xs font-bold transition-all duration-300 flex items-center gap-1 shadow-md group-hover:translate-x-1.5', activity.theme.btn]">
               OPEN <span>→</span>
             </div>
           </div>
@@ -612,3 +604,110 @@ onUnmounted(() => { if (typingTimeout) clearTimeout(typingTimeout); if (homeInte
 
   </div>
 </template>
+
+<style scoped>
+/* Keyframe Animations for Full Animated CSS UI */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatAnim {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: 0.9; }
+}
+
+/* Base Component Entry Animation */
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Floating mascot/image effect */
+.animate-float {
+  animation: floatAnim 4s ease-in-out infinite;
+}
+
+/* Badge Float */
+.badge-float {
+  display: inline-block;
+  animation: floatAnim 3s ease-in-out infinite;
+}
+
+/* Shimmer Gradient Text */
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradientShift 6s ease infinite;
+}
+
+/* Card Entry & Hover Micro-interactions */
+.card-slide-in {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  opacity: 0;
+}
+
+.section-fade-up {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.update-item-stagger {
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.fav-card-anim {
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.tool-card-hover {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+  will-change: transform;
+}
+
+.activity-card-anim {
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Search Box Interactive Ring Glow */
+.search-box-pop {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.search-box-pop:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 30px -10px rgba(168, 85, 247, 0.25);
+}
+
+/* Button Hover Pulses */
+.btn-pulse-hover {
+  transition: all 0.3s ease;
+}
+
+.btn-pulse-hover:hover {
+  box-shadow: 0 8px 20px -4px rgba(168, 85, 247, 0.5);
+  transform: translateY(-1px);
+}
+</style>
