@@ -199,7 +199,7 @@ const features = [
     path: '/xtall', 
     icon: iconXtall, 
     desc: 'Find the best crystals for your equipment with Indonesian Database Name! Filter by stats, weapon types, boss drops, and upgrade chains.', 
-    bgClass: 'bg-gradient-to-b from-emerald-500/10 via-slate-50/50 to-white hover:from-emerald-500/20 hover:via-slate-100/80 hover:to-slate-100 dark:from-emerald-950/40 dark:via-slate-900/80 dark:to-slate-900/90 dark:hover:from-emerald-900/60 dark:hover:via-slate-800/90 dark:hover:to-slate-900',
+    bgClass: 'bg-[url(\'/linearperfect.png\')] bg-cover bg-center opacity-100 bg-gradient-to-br from-purple-600/20 via-purple-500/10 to-slate-900/60 hover:from-purple-600/30 hover:via-purple-500/20 hover:to-slate-900/80',
     borderClass: 'border-emerald-500/30 hover:border-emerald-500 dark:hover:border-emerald-400',
     iconBg: 'bg-emerald-500/10 dark:bg-emerald-500/20 border-emerald-500/30',
     btnClass: 'bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-400 text-white'
@@ -536,33 +536,46 @@ onUnmounted(() => {
       </div>
 
       <div class="tools-bento">
-        <button 
-          class="tool-featured gem-cut stagger-item" 
-          @click="navigateTo(featuredTool.path)"
-          @mousemove="(e) => handleTiltMove(e, 7)"
-          @mouseleave="handleTiltLeave"
+        <!-- Flagship Tool (XTALL ID Card) -->
+<button 
+  class="tool-featured gem-cut stagger-item" 
+  @click="navigateTo(featuredTool.path)"
+  @mousemove="handleTiltMove($event, 7)"
+  @mouseleave="handleTiltLeave"
+>
+  <span class="tilt-shine"></span>
+  <div class="relative z-10 flex flex-col h-full justify-between">
+    <div>
+      <span class="tool-featured-tag">Main tool</span>
+      <div class="flex items-center gap-3 mt-4">
+        
+        <!-- Ikon PNG Transparan (Tanpa Box/Bingkai di belakang) -->
+        <img 
+          :src="featuredTool.icon" 
+          :alt="featuredTool.name" 
+          class="w-14 h-14 object-contain filter drop-shadow-[0_4px_10px_rgba(168,85,247,0.5)] hover:scale-110 transition-transform duration-300"
         >
-          <span class="tilt-shine"></span>
-          <div class="relative z-10 flex flex-col h-full justify-between">
-            <div>
-              <span class="tool-featured-tag">Flagship tool</span>
-              <div class="flex items-center gap-3 mt-4">
-                <div class="w-16 h-16 rounded-2xl flex items-center justify-center bg-purple-500/10 dark:bg-white/10 border border-purple-500/20 dark:border-white/15">
-                  <img :src="featuredTool.icon" :alt="featuredTool.name" class="w-10 h-10 object-contain">
-                </div>
-                <strong class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  {{ featuredTool.name }}
-                  <img v-if="featuredTool.flag" :src="featuredTool.flag" alt="Indonesia" class="w-5 h-auto rounded shadow-sm">
-                </strong>
-              </div>
-              <p class="mt-4 text-sm text-slate-700 dark:text-white/70 leading-relaxed max-w-md">{{ featuredTool.desc }}</p>
-            </div>
-            <div class="flex items-center justify-between mt-6 pt-4 border-t border-purple-500/15 dark:border-white/10">
-              <span class="text-xs font-bold text-slate-500 dark:text-white/40 tracking-wider">OPEN TOOL</span>
-              <span class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-white">Open →</span>
-            </div>
-          </div>
-        </button>
+        
+        <!-- Judul XTALL ID + Bendera PNG -->
+        <strong class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          {{ featuredTool.name }}
+          <img 
+            v-if="featuredTool.flag" 
+            :src="featuredTool.flag" 
+            alt="Indonesia" 
+            class="w-6 h-auto object-contain rounded drop-shadow-sm"
+          >
+        </strong>
+      </div>
+      <p class="mt-4 text-sm text-slate-700 dark:text-white/70 leading-relaxed max-w-md">{{ featuredTool.desc }}</p>
+    </div>
+
+    <div class="flex items-center justify-between mt-6 pt-4 border-t border-purple-500/15 dark:border-white/10">
+      <span class="text-xs font-bold text-slate-500 dark:text-white/40 tracking-wider">OPEN TOOL</span>
+      <span class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-600 text-white transition-colors">Open →</span>
+    </div>
+  </div>
+</button>
 
         <button 
           v-for="(item, idx) in supportTools" 
@@ -1077,6 +1090,13 @@ onUnmounted(() => {
   gap: 1.1rem;
 }
 
+/* Mengoptimalkan tampilan Ikon PNG agar menyatu dengan latar */
+.tool-featured img {
+  /* Memastikan gambar tidak terpotong dan transparansi PNG sempurna */
+  background: transparent !important;
+  border: none !important;
+}
+
 .tool-featured {
   position: relative;
   overflow: hidden;
@@ -1084,18 +1104,35 @@ onUnmounted(() => {
   grid-row: span 2;
   padding: 1.75rem;
   border-radius: 1.5rem;
-  border: 1px solid rgba(109, 40, 217, 0.18);
+  border: 1px solid rgba(109, 40, 217, 0.25);
   cursor: pointer;
   text-align: left;
-  /* Light mode gradient: soft lavender, matches the rest of the light theme */
-  background: linear-gradient(150deg, #f5f3ff 0%, #ede9fe 55%, #ddd6fe 100%);
+
+  /* Warna dasar solid agar pattern website tidak menembus */
+  background-color: #ede9fe; 
+  z-index: 1;
 }
 
-/* Menyesuaikan otomatis jika kelas dark aktif di elemen root/body */
 .dark .tool-featured {
-  /* Dark mode gradient yang lebih gelap */
-  border-color: rgba(255, 255, 255, 0.1);
-  background: linear-gradient(150deg, #4f46e5, #0b0a14 70%);
+  border-color: rgba(168, 85, 247, 0.3);
+  background-color: #130d25; /* Warna dasar dark mode */
+}
+
+/* Layer khusus gambar PNG transparan */
+.tool-featured::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('images/my34.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* Atur kepekatan gambar PNG di sini (0.1 = sangat tipis, 0.3 = sedang) */
+  opacity: 0.2; 
+  
+  z-index: -1; /* Menempatkan gambar di belakang teks */
+  pointer-events: none;
 }
 
 .tool-featured-tag {
