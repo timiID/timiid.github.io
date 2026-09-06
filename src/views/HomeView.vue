@@ -270,8 +270,8 @@ const getIconPath = (type) => {
 
 const updates = [
   { number: '03', title: 'Bag Expansion Guide v3.2026', meta: 'Feature information · Aug 24, 2026', path: '/bag-list' },
-  { number: '02', title: 'Home Page', meta: 'Change UI/UX · Aug 24, 2026', path: '/' },
-  { number: '01', title: 'Xtall ID Guide', meta: 'Feature information · Aug 24, 2026', path: '/xtall' }
+  { number: '02', title: 'Xtall ID Guide', meta: 'Feature information · Aug 24, 2026', path: '/xtall' },
+  { number: '01', title: 'Home Page', meta: 'Change UI/UX · Sep 6, 2026', path: '/' }
 ];
 
 const databaseActivity = [...crystalData]
