@@ -24,6 +24,39 @@ const props = defineProps({ isDark: Boolean });
 const router = useRouter();
 const searchQuery = ref('');
 const favoriteXtalls = ref([]);
+// Buat ref terpisah untuk menyimpan total jumlah ID favorit
+const totalFavoriteCount = ref(0);
+
+// Di dalam onMounted(), perbarui totalFavoriteCount dengan panjang array sebenarnya
+onMounted(() => {
+  typeEffect();
+  let favIds = [];
+  try { 
+    favIds = JSON.parse(localStorage.getItem('xtall_favs') || '[]'); 
+  } catch { 
+    favIds = []; 
+  }
+  
+  // Simpan total jumlah favorit sebenarnya
+  totalFavoriteCount.value = favIds.length;
+  
+  // Tampilan shelf tetap dibatasi maksimal 5 item
+  favoriteXtalls.value = crystalData.filter((crystal) => favIds.includes(String(crystal.code))).slice(0, 5);
+  
+  homeInterval = setInterval(() => { 
+    currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length; 
+  }, 8000);
+
+  window.addEventListener('mousemove', onGlobalMouseMove);
+  parallaxRaf = requestAnimationFrame(runParallax);
+});
+
+// Perbarui computed stats untuk menggunakan totalFavoriteCount.value
+const stats = computed(() => [
+  { value: crystalData.length, label: 'Xtall entries tracked' },
+  { value: features.length + other.length, label: 'Tools & guides' },
+  { value: totalFavoriteCount.value, label: 'Your favorites' }
+]);
 const backgrounds = ['/images/logo.png', '/images/my77.png', '/images/hanami11.png'];
 const currentBgIndex = ref(0);
 let homeInterval = null;
@@ -286,12 +319,6 @@ const databaseActivity = [...crystalData]
     theme: getCrystaTheme(crystal.type)
   }));
 
-const stats = computed(() => [
-  { value: crystalData.length, label: 'Xtall entries tracked' },
-  { value: features.length + other.length, label: 'Tools & guides' },
-  { value: favoriteXtalls.value.length, label: 'Your favorites' }
-]);
-
 const navigateTo = (path) => router.push(path);
 
 const runSearch = () => {
@@ -345,16 +372,6 @@ const handleTiltLeave = (e) => {
   el.style.setProperty('--tilt-y', '0deg');
 };
 
-onMounted(() => {
-  typeEffect();
-  let favIds = [];
-  try { favIds = JSON.parse(localStorage.getItem('xtall_favs') || '[]'); } catch { favIds = []; }
-  favoriteXtalls.value = crystalData.filter((crystal) => favIds.includes(String(crystal.code))).slice(0, 5);
-  homeInterval = setInterval(() => { currentBgIndex.value = (currentBgIndex.value + 1) % backgrounds.length; }, 8000);
-
-  window.addEventListener('mousemove', onGlobalMouseMove);
-  parallaxRaf = requestAnimationFrame(runParallax);
-});
 
 onUnmounted(() => {
   if (typingTimeout) clearTimeout(typingTimeout);
