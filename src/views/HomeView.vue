@@ -1140,7 +1140,7 @@ onUnmounted(() => {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('images/my34.png');
+  background-image: url('/images/my34.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
