@@ -2,6 +2,8 @@
 import { useRouter } from 'vue-router';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
+import Logo from '@/assets/Pixel/logo.png';
+import Emo from '@/assets/Pixel/what chara39.jpg';
 import normalCrystas from '@/assets/icons/crysta_normal.jpg';
 import weaponCrystas from '@/assets/icons/crysta_senjata.jpg';
 import armorCrystas from '@/assets/icons/crysta_zirah.jpg';
@@ -327,12 +329,12 @@ const runSearch = () => {
 
 const heroCrystalsEl = ref(null);
 const heroFloaters = [
-  { src: normalCrystas, cls: 'gs1', color: '#38bdf8' },
-  { src: weaponCrystas, cls: 'gs2', color: '#fb7185' },
-  { src: armorCrystas, cls: 'gs3', color: '#34d399' },
-  { src: additionalCrystas, cls: 'gs4', color: '#a78bfa' },
-  { src: specialCrystas, cls: 'gs5', color: '#fbbf24' },
-  { src: favoriteCrystaIcon, cls: 'gs6', color: '#f472b6' }
+  { src: Logo, cls: 'gs1', color: '#38bdf8' },
+  { src: Emo, cls: 'gs2', color: '#fb7185' },
+  { src: Logo, cls: 'gs3', color: '#facc15' },
+  { src: Emo, cls: 'gs4', color: '#a78bfa' },
+  { src: Logo, cls: 'gs5', color: '#34d399' },
+  { src: Emo, cls: 'gs6', color: '#f472b6' }
 ];
 
 let mouseX = 0;
